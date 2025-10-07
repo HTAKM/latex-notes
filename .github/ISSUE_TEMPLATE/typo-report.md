@@ -1,9 +1,9 @@
 ---
 name: Typo report
 about: Create a report to help us improve
-title: ''
-labels: ''
-assignees: ''
+title: Notes typo
+labels: typo
+assignees: HTAKM
 
 ---
 
