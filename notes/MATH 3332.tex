@@ -1,0 +1,2174 @@
+\documentclass{huhtakm-template-book-v2}
+\usepackage{tikz}
+\DeclareMathOperator{\dist}{dist}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\median}{median}
+\setlength{\parindent}{0pt}
+\title{
+	\Huge MATH 3332: Data Analytic Tools
+}
+\author{
+	HU-HTAKM\\
+	\small Website: \url{https://htakm.github.io/htakm_test/}
+}
+\date{
+	Last major change: October 18, 2025\\
+	Last small update: October 18, 2025
+}
+\begin{document}
+\maketitle
+\tableofcontents
+
+\chapter{Introduction}
+    \label{Chapter 1: Introduction}
+    Machine Learning is a type of artificial intelligence that focuses on the development of algorithms and models to perform tasks without being explicitly programmed to do so. Machine learning algorithms create a model based on sample data, known as training data. There are three common types of machine learning:
+    \begin{enumerate}
+        \item Supervised learning: Classification, Regression\\
+        Data: $N$ input-output pairs
+        \begin{equation*}
+            (\mathbf{x}_{i}, \mathbf{y}_{i}) \qquad \text{for } \mathbf{x}_{i} \in X, \mathbf{y}_{i} \in Y, \ i = 1, \cdots, N.
+        \end{equation*}
+        Goal: Find a function map $f: X \to Y$ such that:
+        \begin{equation*}
+            f(\mathbf{x}_{i}) \approx \mathbf{y}_{i} \qquad \text{for } i = 1, \cdots, N.
+        \end{equation*}
+        If a new input $\mathbf{x}$ is provided, $f(\mathbf{x})$ should accurately predict the label of $\mathbf{x}$.
+        \item Unsupervised learning: Clustering, Self-supervised Learning\\
+        Data: $N$ inputs without labels
+        \begin{equation*}
+            \mathbf{x}_{i} \qquad \text{for } \mathbf{x}_{i} \in X, \ i = 1, \cdots, N.
+        \end{equation*}
+        Goal: Different applications have their own goals. For example, in the case of denoising, find a function map $f$ such that:
+        \begin{equation*}
+            f(\mathbf{x}_{i} + \boldsymbol{\varepsilon}_{i}) = \mathbf{x}_{i} \qquad \text{for } i = 1, \cdots, N,
+        \end{equation*}
+        where $\boldsymbol{\varepsilon}_{i}$ are noise vectors.
+        \item Reinforcement learning (Reinforcement learning algorithms are usually iterative algorithms).
+    \end{enumerate}
+    In general, we want to find a good function $f$ that maps the training data well while generalizing to other inputs.
+    \begin{defn}
+        The set of all 'good' candidate functions (models) is called the \textbf{hypothesis space}.
+    \end{defn}
+    In our case studies, we will follow Pedro Domingos' definition of machine learning:
+    \begin{equation*}
+        \text{Learning} = \text{Representation} + \text{Evaluation} + \text{Optimization}.
+    \end{equation*}
+    \begin{enumerate}
+        \item Representation: Mainly focuses on 'vector' representations.
+        \begin{enumerate}
+            \item How can we effectively represent the input data $\mathbf{x}_{i}$?
+            \item How can we represent the function $f$?
+        \end{enumerate}
+        \item Evaluation: Evaluate the problem.
+        \begin{enumerate}
+            \item How do we define 'the best' function in the hypothesis space?\\
+            We need to define a function $f': f \to \mathbb{R}$ to compare.
+            \item How do we define 'the best' representation of the input data?
+        \end{enumerate}
+        \item Optimization: Find the optimal model.
+        \begin{enumerate}
+            \item How can we obtain the optimal solution numerically using a computer?
+            \item Is convex optimization feasible? (Some problems involve non-convex optimization.)
+        \end{enumerate}
+    \end{enumerate}
+
+\chapter{Vector spaces, metrics, limits, and convergence}
+    \label{Chapter 2: Vector spaces, metrics, limits, and convergence}
+\section{Vector spaces (linear space)}
+    \begin{defn}
+        A \textbf{vector space} over $\mathbb{R}$ is a set $V$ together with two operations:
+        \begin{enumerate}
+            \item Addition: For all $\mathbf{u}, \mathbf{v} \in V$, $\mathbf{u} + \mathbf{v} \in V$.
+            \item Scalar multiplication: For all $\alpha \in \mathbb{R}$ and $\mathbf{v} \in V$, $\alpha \mathbf{v} \in V$.
+        \end{enumerate}
+        These two operations satisfy the following eight properties for all $\mathbf{u}, \mathbf{v}, \mathbf{w} \in V$ and $\alpha, \beta \in \mathbb{R}$:
+        \begin{align*}
+            \tag{Addition Commutativity}
+            &(+1) & &\mathbf{u} + \mathbf{v} = \mathbf{v} + \mathbf{u},\\
+            \tag{Addition Associativity}
+            &(+2) & &(\mathbf{u} + \mathbf{v}) + \mathbf{w} = \mathbf{u} + (\mathbf{v} + \mathbf{w}),\\
+            \tag{Zero Exists}
+            &(+3) & &\text{There exists } \mathbf{0} \in V \text{ such that } \mathbf{u} + \mathbf{0} = \mathbf{u},\\
+            \tag{Additive Inverse Exists}
+            &(+4) & &\text{For every } \mathbf{u} \in V, \text{ there exists } \mathbf{u}' \in V \text{ such that } \mathbf{u} + \mathbf{u}' = \mathbf{0} \quad (\mathbf{u}' = -\mathbf{u}),\\
+            \tag{Multiplication Associativity}
+            &(\cdot 1) & &(\alpha \beta)\mathbf{u} = \alpha(\beta \mathbf{u}),\\
+            \tag{Unity}
+            &(\cdot 2) & & 1 \cdot \mathbf{u} = \mathbf{u},\\
+            \tag{Distributivity 1}
+            &(\cdot 3) & & \alpha(\mathbf{u} + \mathbf{v}) = \alpha \mathbf{u} + \alpha \mathbf{v},\\
+            \tag{Distributivity 2}
+            &(\cdot 4) & & (\alpha + \beta)\mathbf{u} = \alpha \mathbf{u} + \beta \mathbf{u}.
+        \end{align*}
+    \end{defn}
+    \begin{rem}
+        A vector space over the complex domain $\mathbb{C}$ can be defined in a similar way.
+    \end{rem}
+    \begin{eg}
+        The set of real numbers $\mathbb{R}$, with the standard addition and multiplication of real numbers, forms a vector space.
+    \end{eg}
+    \begin{eg}
+        The $n$-dimensional Euclidean space $\mathbb{R}^{n}$, with the following operations, forms a vector space over $\mathbb{R}$:
+        \begin{align*}
+            +&: & &\text{For all } \mathbf{x} = \begin{pmatrix}x_{1}\\\vdots\\x_{n}\end{pmatrix}, \mathbf{y} = \begin{pmatrix}y_{1}\\\vdots\\y_{n}\end{pmatrix} \in \mathbb{R}^{n},\ \mathbf{x} + \mathbf{y} = \begin{pmatrix}x_{1} + y_{1}\\\vdots\\x_{n} + y_{n}\end{pmatrix} \in \mathbb{R}^{n},\\
+            \bullet&: & &\text{For all } \mathbf{x} = \begin{pmatrix}x_{1}\\\vdots\\x_{n}\end{pmatrix} \in \mathbb{R}^{n} \text{ and } \alpha \in \mathbb{R},\ \alpha \cdot \mathbf{x} = \begin{pmatrix}\alpha x_{1}\\\vdots\\\alpha x_{n}\end{pmatrix} \in \mathbb{R}^{n}.
+        \end{align*}
+    \end{eg}
+    \begin{rem}
+        Many types of input data can be modeled as vectors in $\mathbb{R}^{n}$, such as:
+        \begin{enumerate}
+            \item Digital signals of length $n$,
+            \item Stock prices over $n$ time intervals,
+            \item $n$ different features or attributes of a single object.
+        \end{enumerate}
+    \end{rem}
+    \newpage
+    
+    \begin{eg}
+        All real $m \times n$ matrices $\mathbb{R}^{m \times n}$ with
+        \begin{align*}
+            +&: & &\text{For all } \mathbf{A} = \begin{pmatrix}
+                a_{11} & \hdots & a_{1n}\\
+                \vdots & \ddots & \vdots\\
+                a_{m1} & \hdots & a_{mn}
+            \end{pmatrix}, \mathbf{B} = \begin{pmatrix}
+                b_{11} & \hdots & b_{1n}\\
+                \vdots & \ddots & \vdots\\
+                b_{m1} & \hdots & b_{mn}
+            \end{pmatrix} \in \mathbb{R}^{m \times n},\\
+            & & &\text{we have } \mathbf{A} + \mathbf{B} = \begin{pmatrix}
+                a_{11} + b_{11} & \hdots & a_{1n} + b_{1n}\\
+                \vdots & \ddots & \vdots\\
+                a_{m1} + b_{m1} & \hdots & a_{mn} + b_{mn}
+            \end{pmatrix} \in \mathbb{R}^{m \times n},\\
+            \bullet&: & &\text{For all } \mathbf{B} = \begin{pmatrix}
+                b_{11} & \hdots & b_{1n}\\
+                \vdots & \ddots & \vdots\\
+                b_{m1} & \hdots & b_{mn}
+            \end{pmatrix} \in \mathbb{R}^{m \times n} \text{ and } \alpha \in \mathbb{R}, \text{ we have } \alpha \cdot \mathbf{B} = \begin{pmatrix}
+                \alpha b_{11} & \hdots & \alpha b_{1n}\\
+                \vdots & \ddots & \vdots\\
+                \alpha b_{m1} & \hdots & \alpha b_{mn}
+            \end{pmatrix} \in \mathbb{R}^{m \times n}
+        \end{align*}
+        is a vector space over $\mathbb{R}$.
+    \end{eg}
+    \begin{rem}
+        This vector space is equivalent to $\mathbb{R}^{mn}$:
+        \begin{equation*}
+            \begin{pmatrix}
+                x_{11} & \hdots & x_{1n}\\
+                x_{21} & \hdots & x_{2n}\\
+                \vdots & \ddots & \vdots\\
+                x_{m1} & \hdots & x_{mn}
+            \end{pmatrix} \xrightarrow{\text{vectorization}} \begin{pmatrix}
+                x_{11}\\\vdots\\x_{1n}\\x_{21}\\\vdots\\x_{2n}\\\vdots\\x_{mn}
+            \end{pmatrix} \in \mathbb{R}^{mn}.
+        \end{equation*}
+    \end{rem}
+    \begin{rem}
+        An $m \times n$ matrix can be used to represent a black-and-white digital image.
+    \end{rem}
+    \begin{eg}
+        All real 3-arrays of size $m \times n \times \ell$, $\mathbb{R}^{m \times n \times \ell}$, with
+        \begin{align*}
+            +&: & &\text{For all } X = (x_{ijk})_{i,j,k}, Y = (y_{ijk})_{i,j,k} \in \mathbb{R}^{m \times n \times \ell}, \text{ we have } X + Y = (x_{ijk} + y_{ijk})_{i,j,k} \in \mathbb{R}^{m \times n \times \ell},\\
+            \bullet&: & &\text{For all } X = (x_{ijk})_{i,j,k} \in \mathbb{R}^{m \times n \times \ell} \text{ and } \alpha \in \mathbb{R}, \text{ we have } \alpha \cdot X = (\alpha x_{ijk})_{i,j,k} \in \mathbb{R}^{m \times n \times \ell}
+        \end{align*}
+        is a vector space over $\mathbb{R}$.
+    \end{eg}
+    \begin{rem}
+        Similar to matrices, this vector space is equivalent to $\mathbb{R}^{mn\ell}$.
+    \end{rem}
+    \begin{rem}
+        Many types of data can be modeled by this vector space $\mathbb{R}^{m \times n \times \ell}$, such as:
+        \begin{enumerate}
+            \item Color images with 3 color channels (RGB) ($\ell = 3$),
+            \item Black-and-white videos with $\ell$ frames, each of size $m \times n$.
+        \end{enumerate}
+        More complex data, such as color videos, are represented as 4-arrays. These arrays are usually collectively called \textbf{tensors}.
+    \end{rem}
+    \begin{eg}
+        Consider the set of all strings. We can quickly see that strings do not satisfy the commutativity property:
+        \begin{equation*}
+            \text{`Standing'} = \text{`Stand'} + \text{`ing'} \neq \text{`ing'} + \text{`Stand'} = \text{`ingStand'}.
+        \end{equation*}
+        Therefore, vector spaces cannot be used to model text data.
+    \end{eg}
+    \newpage
+    
+    \begin{eg}
+        The set of all continuous functions on $[a, b]$, denoted by:
+        \begin{equation*}
+            \mathcal{C}[a, b] = \{f : f \text{ is a continuous function on } [a, b]\},
+        \end{equation*}
+        with, for all $t \in [a, b]$,
+        \begin{align*}
+            +&: & &\text{For all } f, g \in \mathcal{C}[a, b], \text{ we have } (f + g)(t) = f(t) + g(t) \in \mathcal{C}[a, b],\\
+            \bullet&: & &\text{For all } f \in \mathcal{C}[a, b] \text{ and } \alpha \in \mathbb{R}, \text{ we have } (\alpha f)(t) = \alpha f(t) \in \mathcal{C}[a, b].
+        \end{align*}
+        is a vector space over $\mathbb{R}$. It is referred to as a \textbf{function space}.
+    \end{eg}
+    \begin{rem}
+        $\mathcal{C}[a, b]$ can be considered as a hypothesis space of a learner with one input and one output. Given a dataset of $x_{i} \in [a, b]$ and $y_{i} \in \mathbb{R}$, find the function $f \in \mathcal{C}[a, b]$ such that $f(x_{i}) \approx y_{i}$ for all $i$.
+    \end{rem}
+    \begin{eg}
+        The infinite sequences:
+        \begin{equation*}
+            \ell_{\infty} = \left\{\begin{pmatrix}
+                a_{1}\\\vdots\\a_{n}\\\vdots
+            \end{pmatrix} : \text{There exists } c < \infty \text{ such that } \abs{a_{i}} \leq c \text{ for any } i\right\},
+        \end{equation*}
+        with
+        \begin{align*}
+            +&: & &\text{For all } \mathbf{x} = \begin{pmatrix}x_{1}\\\vdots\\x_{n}\\\vdots\end{pmatrix}, \mathbf{y} = \begin{pmatrix}y_{1}\\\vdots\\y_{n}\\\vdots\end{pmatrix} \in \ell_{\infty}, \text{ we have } \mathbf{x} + \mathbf{y} = \begin{pmatrix}x_{1} + y_{1}\\\vdots\\x_{n} + y_{n}\\\vdots\end{pmatrix} \in \ell_{\infty},\\
+            \bullet&: & &\text{For all } \mathbf{x} = \begin{pmatrix}x_{1}\\\vdots\\x_{n}\\\vdots\end{pmatrix} \in \ell_{\infty} \text{ and } \alpha \in \mathbb{R}, \text{ we have } \alpha \cdot \mathbf{x} = \begin{pmatrix}\alpha x_{1}\\\vdots\\\alpha x_{n}\\\vdots\end{pmatrix} \in \ell_{\infty}.
+        \end{align*}
+        is a vector space over $\mathbb{R}$.
+    \end{eg}
+    \newpage
+    
+\section{Metrics on vector space}
+    We can convert some types of input data into vector space. However, how do we determine the distance between two vectors? Our goal is to define the distance in order to perform calculus.
+
+    Let $V$ be a vector space and $\mathbf{u}, \mathbf{v} \in V$. We want to find a function such that:
+    \begin{equation*}
+        \dist(\mathbf{u}, \mathbf{v}) = \dist(\mathbf{0}, \mathbf{u} - \mathbf{v}) = \text{length of } \mathbf{u} - \mathbf{v}.
+    \end{equation*}
+    Therefore, to define the distance, we only need to define the length of vectors.
+    \begin{defn}
+        Let $V$ be a vector space over $\mathbb{R}$. A \textbf{norm} on $V$ is a function $\norm{\cdot}: V \to \mathbb{R}$ such that for $\mathbf{x}, \mathbf{y} \in V$,
+        \begin{enumerate}
+            \item $\norm{\mathbf{x}} \geq 0$ and $\norm{\mathbf{x}} = 0 \Longleftrightarrow \mathbf{x} = \mathbf{0}$.
+            \item $\norm{\alpha \mathbf{x}} = \abs{\alpha} \norm{\mathbf{x}}$ for $\alpha \in \mathbb{R}$.
+            \item $\norm{\mathbf{x} + \mathbf{y}} \leq \norm{\mathbf{x}} + \norm{\mathbf{y}}$. 
+        \end{enumerate}
+        The ordered pair $(V, \norm{\cdot})$ is called a \textbf{normed vector space}.
+    \end{defn}
+    \begin{rem}
+        If it is clear from the context which norm is intended, then it is common to denote the normed vector space by $V$.
+    \end{rem}
+    \begin{rem}
+        $\norm{\mathbf{x}}$ represents the \textbf{length} of $\mathbf{x}$.
+    \end{rem}
+    \begin{rem}
+        The distance between $\mathbf{x}$ and $\mathbf{y}$ can now be defined as $\dist(\mathbf{x}, \mathbf{y}) = \norm{\mathbf{x} - \mathbf{y}}$.
+    \end{rem}
+    \begin{eg}
+        If we set $V = \mathbb{R}$, the following can be norms on $\mathbb{R}$ for all $x \in \mathbb{R}$:
+        \begin{enumerate}
+            \item $\norm{x} = \abs{x}$,
+            \item $\norm{x} = \frac{1}{2} \abs{x}$,
+            \item $\norm{x} = c \abs{x}$ for some $c > 0$.
+        \end{enumerate}
+    \end{eg}
+    \begin{rem}
+        In fact, there are infinitely many norms on the same vector space.
+    \end{rem}
+    \begin{eg}
+        For $\mathbf{x} \in \mathbb{R}^{n}$, the \textbf{Manhattan norm} ($1$-norm or $L_{1}$-norm) defined by:
+        \begin{equation*}
+            \pnorm[1]{\mathbf{x}} = \sum_{i=1}^{n} \abs{x_{i}}
+        \end{equation*}
+        is a norm on $\mathbb{R}^{n}$. The induced distance $\pnorm[1]{\mathbf{x} - \mathbf{y}}$ for $\mathbf{x}, \mathbf{y} \in V$ is called the \textbf{Manhattan distance}.
+    \end{eg}
+    \begin{proofing}
+        \begin{enumerate}
+            \item For any $\mathbf{x}, \in \mathbb{R}^{n}$,
+            \begin{equation*}
+                \pnorm[1]{\mathbf{x}} = \sum_{i=1}^{n} \abs{x_{i}} \geq 0.
+            \end{equation*}
+            Moreover,
+            \begin{align*}
+                \pnorm[1]{\mathbf{x}} = 0 &\Longleftrightarrow \sum_{i=1}^{n} \abs{x_{i}} = 0\\
+                &\Longleftrightarrow \abs{x_{i}} = 0 \Longleftrightarrow x_{i} = 0 \qquad \text{for } i = 1, \cdots, n,\\
+                &\Longleftrightarrow \mathbf{x} = \mathbf{0}.
+            \end{align*}
+            \item For any $\mathbf{x} \in \mathbb{R}^{n}$ and $\alpha \in \mathbb{R}$, 
+            \begin{equation*}
+                \pnorm[1]{\alpha \mathbf{x}} = \sum_{i=1}^{n} \abs{\alpha x_{i}} = \abs{\alpha} \sum_{i=1}^{n} \abs{x_{i}} = \abs{\alpha} \pnorm[1]{\mathbf{x}}.
+            \end{equation*}
+            \item Using the Triangle Inequality, for $\mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}$,
+            \begin{equation*}
+                \pnorm[1]{\mathbf{x} + \mathbf{y}} = \sum_{i=1}^{n} \abs{x_{i} + y_{i}} \leq \sum_{i=1}^{n} (\abs{x_{i}} + \abs{y_{i}}) = \pnorm[1]{\mathbf{x}} + \pnorm[1]{\mathbf{y}}.
+            \end{equation*}
+        \end{enumerate}
+        Therefore, by definition, the 1-norm is a norm on $\mathbb{R}^{n}$.
+    \end{proofing}
+    \newpage
+    
+    \begin{eg}
+        For $\mathbf{x} \in \mathbb{R}^{n}$, the Euclidean norm ($2$-norm or $L_{2}$-norm) defined by:
+        \begin{equation*}
+            \pnorm[2]{\mathbf{x}} = \sqrt{\sum_{i=1}^{n}x_{i}^{2}}
+        \end{equation*}
+        is a norm on $\mathbb{R}^{n}$. The induced distance $\pnorm[2]{\mathbf{x} - \mathbf{y}}$ for $\mathbf{x}, \mathbf{y} \in V$ is called the \textbf{Euclidean distance}.
+    \end{eg}
+    \begin{proofing}
+        \begin{enumerate}
+            \item For $\mathbf{x} \in \mathbb{R}^{n}$,
+            \begin{equation*}
+                \pnorm[2]{\mathbf{x}} = \sqrt{\sum_{i=1}^{n}x_{i}^{2}} \geq 0.
+            \end{equation*}
+            Moreover,
+            \begin{align*}
+                \pnorm[2]{\mathbf{x}} = 0 &\Longleftrightarrow \sum_{i=1}^{n}x_{i}^{2} = 0\\
+                &\Longleftrightarrow x_{i}^{2} = 0 \Longleftrightarrow x_{i} = 0 \qquad \text{for } i = 1, \cdots, n,\\
+                &\Longleftrightarrow \mathbf{x} = \mathbf{0}.
+            \end{align*}
+            \item For any $\alpha \in \mathbb{R}$, $\mathbf{x} \in \mathbb{R}^{n}$,
+            \begin{equation*}
+                \pnorm[2]{\alpha \mathbf{x}} = \sqrt{\sum_{i=1}^{n}(\alpha x_{i})^{2}} = \sqrt{\alpha^{2}} \sqrt{\sum_{i=1}^{n}x_{i}^{2}} = \abs{\alpha} \pnorm[2]{\mathbf{x}}.
+            \end{equation*}
+            \item This is a bit more complicated, but it is similar to the proof of the Cauchy-Schwarz inequality. 
+            
+            For $\mathbf{x} \in \mathbb{R}^{n}$, if $\mathbf{y} = \mathbf{0}$, then:
+            \begin{equation*}
+            	\pnorm[2]{\mathbf{x} + \mathbf{y}} = \pnorm[2]{\mathbf{x}} = \pnorm[2]{\mathbf{x}} + \pnorm[2]{\mathbf{y}}
+            \end{equation*}
+            If $\mathbf{y} \neq 0$, then for any $t \in \mathbb{R}$,
+            \begin{equation*}
+                \pnorm[2]{\mathbf{x} + t\mathbf{y}}^{2} = \sum_{i=1}^{n}(x_{i} + ty_{i})^{2} = \left(\sum_{i=1}^{n}x_{i}^{2}\right) + t\left(2\sum_{i=1}^{n}x_{i}y_{i}\right) + t^{2}\left(\sum_{i=1}^{n}y_{i}^{2}\right).
+            \end{equation*}
+            By (1), $\pnorm[2]{\mathbf{x} + t\mathbf{y}}^{2} \geq 0$. Therefore, since $\sum_{i=1}^{n} y_{i}^{2}>0$, $\pnorm[2]{\mathbf{x} + t\mathbf{y}}^{2}$ is a quadratic function with at most one real root. Using the discriminant, we have:
+            \begin{align*}
+                \Delta &\leq 0,\\
+                \left(2\sum_{i=1}^{n}x_{i}y_{i}\right)^{2} - 4\left(\sum_{i=1}^{n}x_{i}^{2}\right)\left(\sum_{i=1}^{n}y_{i}^{2}\right) &\leq 0,\\
+                \left(\sum_{i=1}^{n}x_{i}y_{i}\right)^{2} &\leq \left(\sum_{i=1}^{n}x_{i}^{2}\right)\left(\sum_{i=1}^{n}y_{i}^{2}\right),\\
+                \tag{Cauchy-Schwarz Inequality for $\mathbb{R}^{n}$}
+                \sum_{i=1}^{n}x_{i}y_{i} &\leq \sqrt{\sum_{i=1}^{n}x_{i}^{2}\sum_{i=1}^{n}y_{i}^{2}}.
+            \end{align*}
+            Consequently, 
+            \begin{align*}
+                \pnorm[2]{\mathbf{x} + \mathbf{y}}^{2} &= \sum_{i=1}^{n}(x_{i} + y_{i})^{2}\\
+                &= \sum_{i=1}^{n}x_{i}^{2} + 2\sum_{i=1}^{n}x_{i}y_{i} + \sum_{i=1}^{n}y_{i}^{2}\\
+                &\leq \sum_{i=1}^{n}x_{i}^{2} + 2\sqrt{\sum_{i=1}^{n}x_{i}^{2}\sum_{i=1}^{n}y_{i}^{2}} + \sum_{i=1}^{n}y_{i}^{2} = \pnorm[2]{\mathbf{x}}^{2} + 2\pnorm[2]{\mathbf{x}}\pnorm[2]{\mathbf{y}} + \pnorm[2]{\mathbf{y}}^{2},\\
+                \pnorm[2]{\mathbf{x} + \mathbf{y}} &\leq \pnorm[2]{\mathbf{x}} + \pnorm[2]{\mathbf{y}}.
+            \end{align*}
+        \end{enumerate}
+        Therefore, by definition, the 2-norm is a norm on $\mathbb{R}^{n}$.
+    \end{proofing}
+    \newpage
+
+    \begin{eg}
+        For $\mathbf{x} \in \mathbb{R}^{n}$, the $p$-norm or $L_{p}$-norm with $p \geq 1$ defined by:
+        \begin{equation*}
+            \pnorm[p]{\mathbf{x}} = \left(\sum_{i=1}^{n}\abs{x_{i}}^{p}\right)^{\frac{1}{p}}
+        \end{equation*}
+        is a norm on $\mathbb{R}^{n}$.
+    \end{eg}
+    \begin{eg}
+        For $\mathbf{x} \in \mathbb{R}^{n}$, the maximum norm ($L_{\infty}$-norm) defined by:
+        \begin{equation*}
+            \pnorm[\infty]{\mathbf{x}} = \lim_{p \to \infty}\pnorm[p]{\mathbf{x}} = \max_{1 \leq i \leq n}\abs{x_{i}}
+        \end{equation*}
+        is a norm on $\mathbb{R}^{n}$.
+    \end{eg}
+    \begin{figure}[h]
+        \centering
+        \begin{subfigure}[h]{0.3\textwidth}
+            \centering
+            \begin{tikzpicture}
+                \node[anchor=north east] at (0,0) {O};
+                \node[anchor=north west] at (2,0) {A};
+                \node[anchor=south west] at (2,1) {B};
+                \draw[help lines] 		(-1,-1) grid (3,3);
+                \draw[thick, ->]		(-1,0) -- (3,0);
+                \draw[thick, ->]		(0,-1) -- (0,3);
+                \draw[thick, ->, blue]	(0,0) -- (2,1);
+                \draw[thick, red]		(0,0) -- (2,0) -- (2,1);
+            \end{tikzpicture}
+        \end{subfigure}
+        \begin{subfigure}[h]{0.4\textwidth}
+            \centering
+            \begin{itemize}
+                \color{red}
+                \item[] Red: Manhattan distance from O to B
+                \begin{equation*}
+                    \abs{\text{OA}} + \abs{\text{AB}}
+                \end{equation*}
+                \color{blue}
+                \item[] Blue: Euclidean distance from O to B
+                \begin{equation*}
+                    \abs{\text{OB}}
+                \end{equation*}
+            \end{itemize}
+        \end{subfigure}
+        \caption{Difference between Manhattan distance and Euclidean distance}
+    \end{figure}
+    \begin{defn}
+        The \textbf{open unit ball} of a norm $\norm{\cdot}$ is defined by:
+        \begin{equation*}
+            B = \{\mathbf{x} \in \mathbb{R}^{n} : \norm{\mathbf{x}} < 1\}.
+        \end{equation*}
+    \end{defn}
+    \begin{eg}
+        For $p$-norm, the open unit ball of $\pnorm[p]{\cdot}$ is defined by:
+        \begin{equation*}
+            B_{p} = \left\{\mathbf{x} \in \mathbb{R}^{n} : \pnorm[p]{\mathbf{x}} = \left(\sum_{i=1}^{n}\abs{x_{i}}^{p}\right)^{\frac{1}{p}} < 1\right\}.
+        \end{equation*}
+    \end{eg}
+    \begin{figure}[h]
+        \centering
+        \begin{subfigure}[h]{0.3\textwidth}
+            \centering
+            \begin{tikzpicture}
+                \draw[help lines] 	(-2,-2) grid (2,2);
+                \draw[thick, ->]	(-2,0) -- (2,0);
+                \draw[thick, ->]	(0,-2) -- (0,2);
+                \draw[thick, red]	(0,0) circle (1cm);
+                \draw[thick, blue]	(1,0) -- (0,1) -- (-1,0) -- (0,-1) -- (1,0);	
+                \draw[thick, green] (1,1) -- (-1,1) -- (-1,-1) -- (1,-1) -- (1,1);
+            \end{tikzpicture}
+        \end{subfigure}
+        \begin{subfigure}[h]{0.5\textwidth}
+            \centering
+            \begin{itemize}
+                \color{red}
+                \item[] $B_{2} = \{\mathbf{x} \in \mathbb{R}^{n} : \pnorm[2]{\mathbf{x}} < 1\}$
+                \color{blue}
+                \item[] $B_{1} = \{\mathbf{x} \in \mathbb{R}^{n} : \pnorm[1]{\mathbf{x}} < 1\}$
+                \color{green}
+                \item[] $B_{\infty} = \{\mathbf{x} \in \mathbb{R}^{n} : \pnorm[\infty]{\mathbf{x}} < 1\}$
+            \end{itemize}
+        \end{subfigure}
+        \caption{Unit balls of $p$-norm for different $p$}
+    \end{figure}
+    \begin{thm}
+        If $0 < q \leq p < \infty$, then for any $\mathbf{x} \in \mathbb{R}^{n}$,
+        \begin{equation*}
+            \pnorm[p]{\mathbf{x}} \leq \pnorm[q]{\mathbf{x}}.
+        \end{equation*}
+    \end{thm}
+    \begin{rem}
+        There are other norms on $\mathbb{R}^{n}$, not just $p$-norms.
+    \end{rem}
+    \newpage
+    
+    For a set of matrices $\mathbb{R}^{m \times n}$, we can view them as $\mathbb{R}^{mn}$.
+    \begin{eg}
+        For $\mathbf{A} \in \mathbb{R}^{m \times n}$, the \textbf{vector $p$-norm} with $p \geq 1$ defined by:
+        \begin{equation*}
+            \pnorm[p,\text{vec}]{\mathbf{A}} = \left(\sum_{i=1}^{m}\sum_{j=1}^{n}\abs{a_{ij}}^{p}\right)^{\frac{1}{p}}
+        \end{equation*}
+        is a norm on $\mathbb{R}^{m \times n}$.
+    \end{eg}
+    \begin{eg}
+        For $\mathbf{A} \in \mathbb{R}^{m \times n}$, when $p = 2$, the \textbf{Frobenius norm} (vector $2$-norm) defined by:
+        \begin{equation*}
+            \pnorm[F]{\mathbf{A}} = \pnorm[2,\text{vec}]{\mathbf{A}} = \sqrt{\sum_{i=1}^{m}\sum_{j=1}^{n}a_{ij}^{2}}
+        \end{equation*}
+        is a norm on $\mathbb{R}^{m \times n}$.
+    \end{eg}
+    We can also view $\mathbb{R}^{m \times n}$ as a linear transformation $\mathbb{R}^{n} \to \mathbb{R}^{m}$. Given a vector $\mathbf{x} \in \mathbb{R}^{n}$, one can consider the function:
+    \begin{equation*}
+        f(\mathbf{x}) = \mathbf{Ax} \in \mathbb{R}^{m}
+    \end{equation*}
+    as a linear transformation from $\mathbb{R}^{n}$ to $\mathbb{R}^{m}$.
+    \begin{eg}
+        For $\mathbf{A} \in \mathbb{R}^{m \times n}$, the \textbf{matrix $p$-norm} with $p\geq 1$ defined by:
+        \begin{equation*}
+            \pnorm[p]{\mathbf{A}} = \max_{\substack{\mathbf{x} \neq \mathbf{0}\\\mathbf{x} \in \mathbb{R}^{n}}}\frac{\pnorm[p]{\mathbf{Ax}}}{\pnorm[p]{\mathbf{x}}} = \max_{\substack{\mathbf{x} \in \mathbb{R}^{n}\\\pnorm[p]{\mathbf{x}} = 1}}\pnorm[p]{\mathbf{Ax}}
+        \end{equation*}
+        is a norm on $\mathbb{R}^{m \times n}$.
+    \end{eg}
+    \begin{eg}
+        For $\mathbf{A} \in \mathbb{R}^{m \times n}$, when $p = 1$, the matrix $1$-norm defined by:
+        \begin{equation*}
+            \pnorm[1]{\mathbf{A}} = \max_{\substack{\mathbf{x} \in \mathbb{R}^{n}\\\pnorm[1]{\mathbf{x}} = 1}}\pnorm[1]{\mathbf{Ax}} = \max_{1 \leq j \leq n}\sum_{i=1}^{m}\abs{a_{ij}}
+        \end{equation*}
+        is a norm on $\mathbb{R}^{m \times n}$.
+    \end{eg}
+    \begin{eg}
+        \label{Chapter 2 (Example) Matrix 2-norm}
+        For $\mathbf{A} \in \mathbb{R}^{m \times n}$, when $p = 2$, the matrix $2$-norm can be described with the following properties:
+        \begin{align*}
+            \pnorm[2]{\mathbf{A}}^{2} &= \max_{\substack{\mathbf{x} \in \mathbb{R}^{n}\\\pnorm[2]{\mathbf{x}} = 1}}\pnorm[2]{\mathbf{Ax}}^{2} = \max_{\substack{\mathbf{x} \in \mathbb{R}^{n}\\\pnorm[2]{\mathbf{x}} = 1}}\mathbf{x}^{T}\mathbf{A}^{T}\mathbf{Ax} = \text{max eigenvalue of } \mathbf{A}^{T}\mathbf{A},\\
+            \pnorm[2]{\mathbf{A}} &= \sqrt{\text{max eigenvalue of } \mathbf{A}^{T}\mathbf{A}} = \text{max singular value of } \mathbf{A}.
+        \end{align*}
+        Therefore, the matrix $2$-norm is also called the \textbf{operator norm} of $\mathbf{A}$.
+    \end{eg}
+    \begin{figure}[h]
+        \centering
+        \begin{subfigure}[h]{0.3\textwidth}
+            \centering
+            \begin{tikzpicture}
+                \draw[thick, ->]	(-2,0) -- (2,0);
+                \draw[thick, ->]	(0,-2) -- (0,2);
+                \draw[thick, red]	(0,0) circle (1cm);
+            \end{tikzpicture}
+            
+            $B_{2}$
+        \end{subfigure}
+        $\xrightarrow{\mathbf{A}}$
+        \begin{subfigure}[h]{0.3\textwidth}
+            \centering
+            \begin{tikzpicture}
+                \draw[thick, ->]	(-2,0) -- (2,0);
+                \draw[thick, ->]	(0,-2) -- (0,2);
+                \draw[thick, red, rotate=20]	(0,0) ellipse (1.5cm and 1cm);
+                \draw[thick, blue, rotate=20]	(0,0) -- (1.5,0) node[above, midway] {$\pnorm[2]{\mathbf{A}}$};
+            \end{tikzpicture}
+            
+            $\{\mathbf{Ax} : \mathbf{x} \in B_{2}\}$
+        \end{subfigure}
+        \caption{Meaning of matrix $2$-norm when $n = 2$ and $m = 2$}
+    \end{figure}
+    \newpage
+
+    In addition, the matrix $p$-norm can be generalized with two different $p$-norms.
+    \begin{eg}
+        For $\mathbf{A} \in \mathbb{R}^{m \times n}$, the matrix norm induced by $p$-norm in $\mathbb{R}^{n}$ and $q$-norm in $\mathbb{R}^{m}$ defined by:
+        \begin{equation*}
+            \pnorm[p \to q]{\mathbf{A}} = \max_{\substack{\mathbf{x} \in \mathbb{R}^{n}\\\pnorm[p]{\mathbf{x}} = 1}}\pnorm[q]{\mathbf{Ax}}
+        \end{equation*}
+        is a norm on $\mathbb{R}^{m \times n}$. Moreover, the matrix $p$-norm is a special case of this norm.
+    \end{eg}
+    Matrix norms do not need to be defined using vector norms.
+    \begin{eg}
+        For $\mathbf{A} \in \mathbb{R}^{m \times n}$, the \textbf{nuclear norm} (trace norm or Ky Fan $n$-norm) defined by:
+        \begin{equation*}
+            \pnorm[*]{\mathbf{A}} = \Tr(\sqrt{\mathbf{A}^{T}\mathbf{A}})
+        \end{equation*}
+        is a norm on $\mathbb{R}^{m \times n}$.
+    \end{eg}
+    How about norms for continuous functions?
+    \begin{eg}
+        For $f \in \mathcal{C}[a, b]$, where the set is defined as:
+        \begin{equation*}
+            \mathcal{C}[a, b] = \{f : f \text{ is a continuous function on } [a, b]\},
+        \end{equation*}
+        the \textbf{maximum norm} (Chebyshev norm) defined by:
+        \begin{equation*}
+            \pnorm[\infty]{f} = \max_{t \in [a, b]}\abs{f(t)}
+        \end{equation*}
+        is a norm on $\mathcal{C}[a, b]$.
+    \end{eg}
+    \begin{eg}
+        For $f \in \mathcal{C}[a, b]$, the \textbf{$p$-norm} with $p\geq 1$ defined by:
+        \begin{equation*}
+            \pnorm[p]{f} = \left(\int_{a}^{b}\abs{f(t)}^{p}\,dt\right)^{\frac{1}{p}}
+        \end{equation*}
+        is a norm on $\mathcal{C}[a, b]$.
+    \end{eg}
+    Is there a norm for the set of vectors with infinite dimensions?
+    \begin{eg}
+        For $\mathbf{x} \in \ell_{\infty}$, where the set is defined as:
+        \begin{equation*}
+            \ell_{\infty} = \left\{\begin{pmatrix}
+                a_{1}\\
+                \vdots\\
+                a_{n}\\
+                \vdots
+            \end{pmatrix} : \text{There exists $c < \infty$ such that $\abs{a_{i}} \leq c$ for any $i$}\right\},
+        \end{equation*}
+        the \textbf{supremum norm} defined by:
+        \begin{equation*}
+            \pnorm[\infty]{\mathbf{x}} = \sup_{i}\abs{x_{i}}
+        \end{equation*}
+        is a norm on $\ell_{\infty}$.
+    \end{eg}
+    \begin{eg}
+        For $\mathbf{x} \in \ell_{p}$ with $p\geq 1$, where the set is defined as:
+        \begin{equation*}
+            \ell_{p} = \{\mathbf{x} \in \ell_{\infty} : \pnorm[p]{\mathbf{x}} < \infty\} \subset \ell_{\infty},
+        \end{equation*}
+        the $p$-norm defined by:
+        \begin{equation*}
+            \pnorm[p]{\mathbf{x}} = \left(\sum_{i=1}^{\infty}\abs{x_{i}}^{p}\right)^{\frac{1}{p}}
+        \end{equation*}
+        is a norm on $\ell_{p}$. However, it is important to note that it is not a norm on $\ell_{\infty}$.
+    \end{eg}
+    \begin{rem}
+        For the same vector space, we can define infinitely many norms on it. The simplest would be by adding or subtracting different norms.
+    \end{rem}
+    \newpage
+    
+\section{Limit and convergence on normed vector space}
+    In this section, assume that $V$ is a vector space over $\mathbb{R}$ with norm $\norm{\cdot}$.
+
+    In data analysis, many algorithms are iterative algorithms, which generate $n$ sequences of vectors:
+    \begin{equation*}
+        \{\mathbf{x}_{i}^{(k)}\} \subset V, \qquad i = 1, \cdots, n,
+    \end{equation*}
+    where $V$ is endowed with a norm $\norm{\cdot}$. As the iteration continues, it is important that the output stays within the hypothesis space. If the algorithm generates an output that is outside the expected domain, then it is not considered a good solution.
+    \begin{defn}
+        Let $\mathbf{x} \in V$. We say the sequence $\{\mathbf{x}^{(k)}\} \in V$ \textbf{converges} to $\mathbf{x}$, denoted by $\mathbf{x}^{(k)} \to \mathbf{x}$, if:
+        \begin{equation*}
+            \lim_{k \to \infty}\snorm{\mathbf{x}^{(k)} - \mathbf{x}} = 0.
+        \end{equation*}
+        More rigorously, the sequence $\{\mathbf{x}^{(k)}\}$ \textbf{converges} to $\mathbf{x}$ if, for any $\varepsilon > 0$, there exists $N$ such that for any $n \geq N$,
+        \begin{equation*}
+            \snorm{\mathbf{x}^{(n)} - \mathbf{x}} < \varepsilon.
+        \end{equation*}
+    \end{defn}
+    \begin{eg}
+        Consider $V = \mathbb{R}^{n}$ with $\pnorm[2]{\cdot}$. Let:
+        \begin{align*}
+            \mathbf{x}^{(k)} &= \begin{pmatrix}
+                \frac{1}{k}\\
+                \vdots\\
+                \frac{n}{k}
+            \end{pmatrix}, & \mathbf{x} &= \mathbf{0}.
+        \end{align*}
+        Then we have:
+        \begin{align*}
+            \spnorm[2]{\mathbf{x}^{(k)} - \mathbf{x}} &= \spnorm[2]{\mathbf{x}^{(k)}} = \sqrt{\sum_{i=1}^{n}\left(\frac{i}{k}\right)^{2}} = \frac{1}{k}\sqrt{\sum_{i=1}^{n}i^{2}},\\
+            \lim_{k \to \infty}\spnorm[2]{\mathbf{x}^{(k)} - \mathbf{x}} &= \lim_{k \to \infty}\frac{1}{k}\sqrt{\sum_{i=1}^{n}i^{2}} = 0.
+        \end{align*}
+        Therefore, $\mathbf{x}^{(k)} \to \mathbf{x}$.
+    \end{eg}
+    \begin{eg}
+        Consider $V = \mathcal{C}[0, 1]$ with $\pnorm[\infty]{\cdot}$. Let:
+        \begin{equation*}
+            f^{(k)}(t) = \frac{\sin(2\pi kt)}{k^{2}} \in \mathcal{C}[0, 1].
+        \end{equation*}
+        Let $0$ be the zero function. We can easily find that $0 \in \mathcal{C}[0, 1]$. Then we have:
+        \begin{align*}
+            \spnorm[\infty]{f^{(k)} - 0} &= \spnorm[\infty]{f^{(k)}} = \max_{t \in [0, 1]}\abs{\frac{\sin(2\pi kt)}{k^{2}}} = \frac{1}{k^{2}},\\
+            \lim_{k \to \infty}\spnorm[\infty]{f^{(k)} - 0} &= \lim_{k \to \infty}\frac{1}{k^{2}} = 0.
+        \end{align*}
+        Therefore, $f^{(k)} \to 0$.
+    \end{eg}
+    \begin{figure}[h]
+        \centering
+        \begin{subfigure}[h]{0.2\textwidth}
+            \centering
+            \begin{tikzpicture}
+                \draw[thick, ->]	(-0.5,0) -- (1.5,0);
+                \draw[thick, red, domain=0:1]	plot (\x, {sin(deg(2*pi*\x))});
+            \end{tikzpicture}
+            
+            $k = 1$
+        \end{subfigure}
+        \begin{subfigure}[h]{0.2\textwidth}
+            \centering
+            \begin{tikzpicture}
+                \draw[thick, ->]	(-0.5,0) -- (1.5,0);
+                \draw[thick, red, domain=0:1]	plot (\x, {sin(deg(2*pi*2*\x))/4});
+            \end{tikzpicture}
+            
+            $k = 2$
+        \end{subfigure}
+        \begin{subfigure}[h]{0.2\textwidth}
+            \centering
+            \begin{tikzpicture}
+                \draw[thick, ->]	(-0.5,0) -- (1.5,0);
+                \draw[thick, red, domain=0:1]	plot (\x, {sin(deg(2*pi*3*\x))/9});
+            \end{tikzpicture}
+            
+            $k = 3$
+        \end{subfigure}
+        $\cdots$
+        \begin{subfigure}[h]{0.2\textwidth}
+            \centering
+            \begin{tikzpicture}
+                \draw[thick, ->]	(-0.5,0) -- (1.5,0);
+                \draw[thick, red, domain=0:1]	plot (\x, {0});
+            \end{tikzpicture}
+            
+            $k = \infty$
+        \end{subfigure}
+        \caption{As $k$ increases, the wave keeps shrinking in amplitude.}
+    \end{figure}
+    \newpage
+
+    \begin{rem}
+        Convergence depends on the norm used.
+    \end{rem}
+    \begin{eg}
+        Consider $V = \ell_{p}$ for any $p$ with $\pnorm[p]{\cdot}$. Let:
+        \begin{align*}
+            \mathbf{x}^{(k)} &= \begin{pmatrix}
+                \frac{1}{k}\\
+                \vdots\\
+                \frac{1}{k}\\
+                0\\
+                \vdots
+            \end{pmatrix}~\begin{array}{@{} c @{}}
+                \\
+                k\text{-terms}\\[1.5ex]
+                \\
+                \\
+                \mathstrut
+            \end{array} = \sum_{i=1}^{k}\frac{1}{k}\mathbf{e}_{i} \in \ell_{p}, & \mathbf{x} &= \begin{pmatrix}
+                0\\
+                0\\
+                \vdots\\
+                0\\
+                \vdots
+            \end{pmatrix} = \mathbf{0} \in \ell_{p}.
+        \end{align*}
+        \begin{itemize}
+            \item[] When $p = 2$,
+            \begin{align*}
+                \spnorm[2]{\mathbf{x}^{(k)} - \mathbf{x}} &= \spnorm[2]{\mathbf{x}^{(k)}} = \sqrt{\sum_{i=1}^{k}\frac{1}{k^{2}}} = \frac{1}{\sqrt{k}},\\
+                \lim_{k \to \infty}\spnorm[2]{\mathbf{x}^{(k)} - \mathbf{x}} &= \lim_{k \to \infty}\frac{1}{\sqrt{k}} = 0.
+            \end{align*}
+            Therefore, $\mathbf{x}^{(k)} \to \mathbf{x}$ with the norm $\spnorm[2]{\cdot}$.
+            \item[] When $p = \infty$,
+            \begin{align*}
+                \spnorm[\infty]{\mathbf{x}^{(k)} - \mathbf{x}} &= \spnorm[\infty]{\mathbf{x}^{(k)}} = \frac{1}{k},\\
+                \lim_{k \to \infty}\spnorm[\infty]{\mathbf{x}^{(k)} - \mathbf{x}} &= \lim_{k \to \infty}\frac{1}{k} = 0.
+            \end{align*}
+            Therefore, $\mathbf{x}^{(k)} \to \mathbf{x}$ with the norm $\spnorm[\infty]{\cdot}$.
+            \item[] When $p = 1$,
+            \begin{align*}
+                \spnorm[1]{\mathbf{x}^{(k)} - \mathbf{x}} &= \spnorm[1]{\mathbf{x}^{(k)}} = \sum_{i=1}^{k}\frac{1}{k} = 1,\\
+                \lim_{k \to \infty}\spnorm[1]{\mathbf{x}^{(k)} - \mathbf{x}} &= \lim_{k \to \infty}1 = 1 \neq 0.
+            \end{align*}
+            Therefore, $\mathbf{x}^{(k)} \not\to \mathbf{x}$ with the norm $\pnorm[1]{\cdot}$.
+        \end{itemize}
+    \end{eg}
+    \begin{rem}
+        The limit may not be in the same vector space. If this happens, the normed vector space is called \textbf{incomplete}.
+    \end{rem}
+    \begin{eg}
+        Consider $V = \ell_{1}$ with $\pnorm[\infty]{\cdot}$. Let:
+        \begin{align*}
+            \mathbf{x}^{(k)} &= \begin{pmatrix}
+                1\\
+                \frac{1}{2}\\
+                \vdots\\
+                \frac{1}{k}\\
+                0\\
+                \vdots
+            \end{pmatrix}=\sum_{i=1}^{k}\frac{1}{i}\mathbf{e}_{i} \in \ell_{1}, & \mathbf{x} &= \begin{pmatrix}
+                1\\
+                \frac{1}{2}\\
+                \vdots\\
+                \frac{1}{k}\\
+                \frac{1}{k+1}\\
+                \vdots
+            \end{pmatrix}=\sum_{i=1}^{\infty}\frac{1}{i}\mathbf{e}_{i}.
+        \end{align*}
+        Then we have:
+        \begin{align*}
+            \lim_{k \to \infty}\spnorm[\infty]{\mathbf{x}^{(k)} - \mathbf{x}} = \lim_{k \to \infty}\pnorm[\infty]{\begin{pmatrix}
+                    0\\
+                    \vdots\\
+                    0\\
+                    \frac{1}{k+1}\\
+                    \vdots
+            \end{pmatrix}} = \lim_{k \to \infty}\frac{1}{k+1} = 0.
+        \end{align*}
+        However, $\sum_{i=1}^{\infty}\frac{1}{i} = \infty$, and thus $\mathbf{x} \not\in \ell_{1}$. Therefore, we cannot say that $\mathbf{x}^{(k)} \to \mathbf{x}$ with the norm $\pnorm[\infty]{\cdot}$.
+    \end{eg}
+    \newpage
+    
+    With the definition of convergence, we can define the completeness of a vector space.
+    \begin{defn}
+        The sequence $\{\mathbf{x}^{(k)}\} \subset V$ is a Cauchy sequence if, for any $\varepsilon > 0$, there exists $N$ such that for any $n, m \geq N$, 
+        \begin{equation*}
+            \snorm{\mathbf{x}^{(n)} - \mathbf{x}^{(m)}} < \varepsilon.
+        \end{equation*}
+    \end{defn}
+    \begin{thm}
+        If $\mathbf{x}^{(k)} \to \mathbf{x}$ in $(V, \norm{\cdot})$, then $\{\mathbf{x}^{(k)}\}$ is a Cauchy sequence.
+    \end{thm}
+    \begin{proofing}
+        If $\mathbf{x}^{(k)} \to \mathbf{x}$, then for all $\varepsilon > 0$, there exists $N$ such that for all $n \geq N$,
+        \begin{equation*}
+            \snorm{\mathbf{x}^{(n)} - \mathbf{x}} < \frac{\varepsilon}{2}.
+        \end{equation*}
+        Therefore, for all $n, m \geq N$,
+        \begin{equation*}
+            \snorm{\mathbf{x}^{(n)} - \mathbf{x}^{(m)}} \leq \snorm{\mathbf{x}^{(n)} - \mathbf{x}} + \snorm{\mathbf{x}^{(m)} - \mathbf{x}} < \varepsilon.
+        \end{equation*}
+    \end{proofing}
+    \begin{rem}
+        The converse is not necessarily true.
+    \end{rem}
+    \begin{defn}
+        A normed vector space $(V, \norm{\cdot})$ is \textbf{complete} if the limit of all Cauchy sequences in $V$ is in $V$.
+    \end{defn}
+    \begin{defn}
+        A complete normed vector space is called a \textbf{Banach space}.
+    \end{defn}
+    \begin{eg}
+        $\mathbb{R}^{n}$, $\mathbb{R}^{m \times n}$, or $\mathbb{R}^{m \times n \times \ell}$ with any norm is a Banach space.
+    \end{eg}
+    \begin{eg}
+        $\mathcal{C}[a, b]$ with $\pnorm[\infty]{\cdot}$ is a Banach space.
+    \end{eg}
+    \begin{eg}
+        For $p \geq 1$, including $p = \infty$, $(\ell_{p}, \pnorm[p]{\cdot})$ is a Banach space.
+    \end{eg}
+    \begin{rem}
+    	We can always include all the limits of the Cauchy sequences to convert an incomplete normed vector space into a complete one.
+    \end{rem}
+    \begin{eg}
+        $(\ell_{1}, \pnorm[\infty]{\cdot})$ is an incomplete normed vector space. Its completion is $\ell_{\infty}$.
+    \end{eg}
+    \begin{eg}
+        For $p \geq 1$, $(\mathcal{C}[a, b], \pnorm[p]{\cdot})$ is an incomplete normed vector space. Its completion is $L^{p}[a, b]$.
+    \end{eg}
+    In practical cases, how do we check the convergence of a given sequence?
+    \begin{eg}
+        From an iterative algorithm, we generate a sequence of vectors $\{\mathbf{x}^{(k)}\}$. Our goal is to check if this sequence converges. Pick a threshold $\varepsilon > 0$. We can check computationally that for large $n, m$,
+        \begin{equation*}
+            \snorm{\mathbf{x}^{(n)} - \mathbf{x}^{(m)}} < \varepsilon.
+        \end{equation*}
+        Practically, to reduce computational cost, we usually only check for large $n$,
+        \begin{equation*}
+            \snorm{\mathbf{x}^{(k)} - \mathbf{x}^{(k-1)}} < \varepsilon.
+        \end{equation*}
+    \end{eg}
+    \newpage
+
+\section{Finite Dimensional Vector Spaces}
+    In most cases, we deal with finite-dimensional vector spaces.
+    \begin{rem}
+        Every finite-dimensional vector space with any norm is complete. That is, any finite-dimensional vector space is Banach.
+    \end{rem}
+    \begin{rem}
+        For a finite-dimensional vector space $V$, all norms are equivalent. For any two norms $\norm{\cdot}_{A}$ and $\norm{\cdot}_{B}$, there exist $c_{1}, c_{2} > 0$ such that:
+        \begin{equation*}
+            c_{1}\norm{\mathbf{x}}_{A} \leq \norm{\mathbf{x}}_{B} \leq c_{2}\norm{\mathbf{x}}_{A}, \qquad \text{for all } \mathbf{x} \in V.
+        \end{equation*}
+    \end{rem}
+    \begin{thm}
+        The limit of the same finite-dimensional sequence under any norm is the same. That means, given two finite-dimensional normed vector spaces $(V, \pnorm[A]{\cdot})$ and $(V, \pnorm[B]{\cdot})$, for any sequence $\{\mathbf{x}^{(k)}\}$ and $\mathbf{x} \in V$,
+        \begin{equation*}
+            \mathbf{x}^{(k)} \to \mathbf{x} \ \text{in} \ \pnorm[A]{\cdot} \Longleftrightarrow \mathbf{x}^{(k)} \to \mathbf{x} \ \text{in} \ \pnorm[B]{\cdot}.
+        \end{equation*}
+    \end{thm}
+    \begin{proofing}
+        Since $\mathbf{x}^{(k)} \to \mathbf{x}$ in $\pnorm[A]{\cdot}$,
+        \begin{equation*}
+            \lim_{k \to \infty}\spnorm[A]{\mathbf{x}^{(k)} - \mathbf{x}} = 0.
+        \end{equation*}
+        Therefore, there exist $c_{1}, c_{2} > 0$ such that:
+        \begin{equation*}
+            c_{1}\spnorm[A]{\mathbf{x}^{(k)} - \mathbf{x}} \leq \spnorm[B]{\mathbf{x}^{(k)} - \mathbf{x}} \leq c_{2}\spnorm[A]{\mathbf{x}^{(k)} - \mathbf{x}}.
+        \end{equation*}
+        Taking $k \to \infty$, we have:
+        \begin{equation*}
+            0 \leq c_{1}\lim_{k \to \infty}\spnorm[A]{\mathbf{x}^{(k)} - \mathbf{x}} \leq \lim_{k \to \infty}\spnorm[B]{\mathbf{x}^{(k)} - \mathbf{x}} \leq c_{2}\lim_{k \to \infty}\spnorm[A]{\mathbf{x}^{(k)} - \mathbf{x}} = 0.
+        \end{equation*}
+        By the Squeeze Theorem, we find that:
+        \begin{equation*}
+            \lim_{k \to \infty}\spnorm[B]{\mathbf{x}^{(k)} - \mathbf{x}} = 0.
+        \end{equation*}
+        To conclude, $\mathbf{x}^{(k)} \to \mathbf{x}$ in $\spnorm[B]{\cdot}$. The proof for the converse is similar.
+    \end{proofing}
+    \begin{eg}
+        Consider $V = \mathbb{R}^{n}$ with $\pnorm[1]{\cdot}$, $\pnorm[2]{\cdot}$, and $\pnorm[\infty]{\cdot}$.
+        \begin{enumerate}
+            \item $\pnorm[1]{\cdot}$ and $\pnorm[2]{\cdot}$ are equivalent because for $\mathbf{x} \in \mathbb{R}^{n}$,
+            \begin{equation*}
+                \pnorm[2]{\mathbf{x}} \leq \pnorm[1]{\mathbf{x}} \leq \sqrt{n}\pnorm[2]{\mathbf{x}}.
+            \end{equation*}
+            \item $\pnorm[2]{\cdot}$ and $\pnorm[\infty]{\cdot}$ are equivalent because for $\mathbf{x} \in \mathbb{R}^{n}$,
+            \begin{equation*}
+                \pnorm[\infty]{\mathbf{x}} \leq \pnorm[2]{\mathbf{x}} \leq \sqrt{n}\pnorm[\infty]{\mathbf{x}}.
+            \end{equation*}
+            \item $\pnorm[1]{\cdot}$ and $\pnorm[\infty]{\cdot}$ are equivalent because for $\mathbf{x} \in \mathbb{R}^{n}$,
+            \begin{equation*}
+                \pnorm[\infty]{\mathbf{x}} \leq \pnorm[1]{\mathbf{x}} \leq n\pnorm[\infty]{\mathbf{x}}.
+            \end{equation*}
+        \end{enumerate}
+    \end{eg}
+    \newpage
+    
+    \begin{rem}
+        Based on the theorem, the convergence speed depends on the norms used.
+    \end{rem}
+    \begin{eg}
+        Consider $V = \mathbb{R}^{2}$. Let:
+        \begin{equation*}
+            \mathbf{x}^{(k)} = \frac{1}{k}\begin{pmatrix}
+                \cos\left(\frac{(2k-1)\pi}{4}\right)\\
+                \sin\left(\frac{(2k-1)\pi}{4}\right)
+            \end{pmatrix} \in \mathbb{R}^{2}.
+        \end{equation*}
+        We can easily find that $\mathbf{x}^{(k)} \to \mathbf{0}$ with the norms $\pnorm[1]{\cdot}$ and $\pnorm[2]{\cdot}$. However,
+        \begin{align*}
+            \spnorm[1]{\mathbf{x}^{(k)} - \mathbf{0}} &= \frac{\sqrt{2}}{k}, & \spnorm[2]{\mathbf{x}^{(k)} - \mathbf{0}} &= \frac{1}{k}.
+        \end{align*}
+        To achieve $\varepsilon$-precision:
+        \begin{align*}
+            \spnorm[1]{\mathbf{x}^{(k)} - \mathbf{0}} < \varepsilon &\Longleftrightarrow \frac{\sqrt{2}}{k_{1}} < \varepsilon \Longrightarrow k_{1} > \frac{\sqrt{2}}{\varepsilon},\\
+            \spnorm[2]{\mathbf{x}^{(k)} - \mathbf{0}} < \varepsilon &\Longleftrightarrow \frac{1}{k_{2}} < \varepsilon \Longrightarrow k_{2} > \frac{1}{\varepsilon}.
+        \end{align*}
+        The norm $\pnorm[1]{\cdot}$ takes about $\sqrt{2}$ times as many iterations as the norm $\pnorm[2]{\cdot}$ to check convergence using $\varepsilon$ as the threshold.
+    \end{eg}
+    \begin{rem}
+        In the case of infinite-dimensional vector spaces, not all norms are equivalent.
+    \end{rem}
+    \begin{eg}
+        Consider $V = \ell_{1}$. Let:
+        \begin{equation*}
+            \mathbf{x}^{(k)} = \begin{pmatrix}
+                1\\
+                \vdots\\
+                1\\
+                0\\
+                \vdots
+            \end{pmatrix}~\begin{array}{@{} c @{}}
+	            \\
+	            k\text{-terms}\\[1.5ex]
+	            \\
+	            \\
+	            \mathstrut
+            \end{array}=\sum_{i=1}^{k}\mathbf{e}_{i} \in \ell_{1}.
+        \end{equation*}
+        Consider the norms $\pnorm[\infty]{\cdot}$ and $\pnorm[1]{\cdot}$. We find that:
+        \begin{align*}
+            \spnorm[\infty]{\mathbf{x}^{(k)}} &= 1, & \spnorm[1]{\mathbf{x}^{(k)}} &= k, & \lim_{k \to \infty}\frac{\spnorm[1]{\mathbf{x}^{(k)}}}{\spnorm[\infty]{\mathbf{x}^{(k)}}} &= \lim_{k \to \infty}k = \infty.
+        \end{align*}
+        Therefore, the two norms are not equivalent.
+    \end{eg}
+    
+    Read Appendix \ref{Case Study A: Clustering, K-means, K-medians} (Clustering, K-means, K-medians) to see the case study for Chapter \ref{Chapter 2: Vector spaces, metrics, limits, and convergence}.
+   
+\chapter{Inner products, Hilbert Spaces}
+	\label{Chapter 3: Inner products, Hilbert Spaces}
+\section{Inner product}
+    How do we describe whether two vectors are correlated? We cannot use norms to describe this because they are scaling-sensitive. As such, we define the inner product to quantify the relationship between two vectors.
+    \begin{defn}
+        Let $V$ be a vector space over $\mathbb{R}$. An \textbf{inner product} over $\mathbb{R}$ is a binary operator $\inprod{\cdot}{\cdot} : (V, V) \to \mathbb{R}$ such that for $\mathbf{x}, \mathbf{y}, \mathbf{z} \in V$:
+        \begin{enumerate}
+            \item $\inprod{\mathbf{x}}{\mathbf{x}} \geq 0$ and $\inprod{\mathbf{x}}{\mathbf{x}} = 0 \Longleftrightarrow \mathbf{x} = \mathbf{0}$.
+            \item $\inprod{\alpha\mathbf{x} + \beta\mathbf{y}}{\mathbf{z}} = \alpha\inprod{\mathbf{x}}{\mathbf{z}} + \beta\inprod{\mathbf{y}}{\mathbf{z}}$ for all $\alpha, \beta \in \mathbb{R}$.
+            \item $\inprod{\mathbf{x}}{\mathbf{y}} = \inprod{\mathbf{y}}{\mathbf{x}}$.
+        \end{enumerate}
+    \end{defn}
+    \begin{rem}
+        Property (2) and (3) are equivalent to the following: for $\mathbf{x}, \mathbf{y}, \mathbf{z} \in V$ and $\alpha, \beta \in \mathbb{R}$,
+        \begin{equation*}
+            \inprod{\mathbf{x}}{\alpha\mathbf{y} + \beta\mathbf{z}} = \alpha\inprod{\mathbf{x}}{\mathbf{y}} + \beta\inprod{\mathbf{x}}{\mathbf{z}}.
+        \end{equation*}
+    \end{rem}
+    \begin{rem}
+        Inner products can also be defined over $\mathbb{C}$, but property (3) would change to:
+        \begin{equation*}
+            \inprod{\mathbf{x}}{\mathbf{y}} = \overline{\inprod{\mathbf{y}}{\mathbf{x}}}.
+        \end{equation*}
+    \end{rem}
+    \begin{eg}
+        For $\mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}$, the \textbf{dot product} for $\mathbb{R}^{n}$ defined by:
+        \begin{equation*}
+            \inprod{\mathbf{x}}{\mathbf{y}} = \sum_{i=1}^{n}x_{i}y_{i} = \mathbf{x}^{T}\mathbf{y}
+        \end{equation*}
+        is the standard inner product in $\mathbb{R}^{n}$.
+    \end{eg}
+    \begin{eg}
+        For a symmetric positive definite matrix $\mathbf{A} \in \mathbb{R}^{n \times n}$ and $\mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}$, the "weighted" inner product defined by:
+        \begin{equation*}
+            \inprod{\mathbf{x}}{\mathbf{y}}_{\mathbf{A}} = \mathbf{x}^{T}\mathbf{A}\mathbf{y}
+        \end{equation*}
+        is an inner product on $\mathbb{R}^{n}$. The standard inner product is a special case of this inner product where $\mathbf{A} = \mathbf{I}$. However, if $\mathbf{A}$ is a symmetric positive semi-definite matrix, then the weighted inner product is not a true inner product. Instead, it is a \textbf{semi-inner-product}.
+    \end{eg}
+    \begin{proofing}
+        \begin{enumerate}
+            \item For $\mathbf{x} \in \mathbb{R}^{n}$:
+            \begin{equation*}
+                \inprod{\mathbf{x}}{\mathbf{x}}_{\mathbf{A}} = \mathbf{x}^{T}\mathbf{A}\mathbf{x} \geq 0.
+            \end{equation*}
+            Moreover:
+            \begin{equation*}
+                \inprod{\mathbf{x}}{\mathbf{x}}_{\mathbf{A}} = 0 \Longleftrightarrow \mathbf{x}^{T}\mathbf{A}\mathbf{x} = 0 \Longleftrightarrow \mathbf{x} = \mathbf{0}.
+            \end{equation*}
+            \item For any $\mathbf{x}, \mathbf{y}, \mathbf{z} \in \mathbb{R}^{n}$ and $\alpha, \beta \in \mathbb{R}$:
+            \begin{equation*}
+                \inprod{\alpha\mathbf{x} + \beta\mathbf{y}}{\mathbf{z}}_{\mathbf{A}} = (\alpha\mathbf{x} + \beta\mathbf{y})^{T}\mathbf{A}\mathbf{z} = \alpha\mathbf{x}^{T}\mathbf{A}\mathbf{z} + \beta\mathbf{y}^{T}\mathbf{A}\mathbf{z} = \alpha\inprod{\mathbf{x}}{\mathbf{z}}_{\mathbf{A}} + \beta\inprod{\mathbf{y}}{\mathbf{z}}_{\mathbf{A}}.
+            \end{equation*}
+            \item For any $\mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}$:
+            \begin{equation*}
+                \inprod{\mathbf{x}}{\mathbf{y}}_{\mathbf{A}} = \mathbf{x}^{T}\mathbf{A}\mathbf{y} = (\mathbf{x}^{T}\mathbf{A}\mathbf{y})^{T} = \mathbf{y}^{T}\mathbf{A}^{T}\mathbf{x} = \inprod{\mathbf{y}}{\mathbf{x}}_{\mathbf{A}}.
+            \end{equation*}
+        \end{enumerate}
+    \end{proofing}
+    \newpage
+    
+    \begin{eg}
+        For $\mathbf{A}, \mathbf{B} \in \mathbb{R}^{m \times n}$, the inner product defined by:
+        \begin{equation*}
+            \inprod{\mathbf{A}}{\mathbf{B}} = \sum_{i=1}^{m}\sum_{j=1}^{n}a_{ij}b_{ij} = \Tr(\mathbf{A}^{T}\mathbf{B}) = \Tr(\mathbf{B}^{T}\mathbf{A}) = \Tr(\mathbf{A}\mathbf{B}^{T}) = \Tr(\mathbf{B}\mathbf{A}^{T})
+        \end{equation*}
+        is the standard inner product in $\mathbb{R}^{m \times n}$.
+    \end{eg}
+    \begin{eg}
+        For $\mathbf{x}, \mathbf{y} \in \ell_{2}$, the inner product defined by:
+        \begin{equation*}
+            \inprod{\mathbf{x}}{\mathbf{y}} = \sum_{i=1}^{\infty}x_{i}y_{i}
+        \end{equation*}
+        is the standard inner product in $\ell_{2}$.
+    \end{eg}
+    \begin{eg}
+        For $f, g \in \mathcal{C}[a, b]$, the inner product defined by:
+        \begin{equation*}
+            \inprod{f}{g} = \int_{a}^{b}f(t)g(t)\,dt
+        \end{equation*}
+        is the standard inner product in $\mathcal{C}[a, b]$.
+    \end{eg}
+
+\section{Properties of inner products}
+    Let $V$ be a vector space over $\mathbb{R}$ with an inner product $\inprod{\cdot}{\cdot}$.
+
+    Using the definition of inner products, we can discuss some properties of inner products.
+    \begin{thm}
+        For any $\mathbf{x} \in V$, we have:
+        \begin{equation*}
+            \inprod{\mathbf{x}}{\mathbf{0}} = \inprod{\mathbf{0}}{\mathbf{x}} = 0.
+        \end{equation*}
+    \end{thm}
+    \begin{proofing}
+        \begin{equation*}
+            \inprod{\mathbf{x}}{\mathbf{0}} = \inprod{\mathbf{x}}{\mathbf{x} - \mathbf{x}} = \inprod{\mathbf{x}}{\mathbf{x}} - \inprod{\mathbf{x}}{\mathbf{x}} = 0.
+        \end{equation*}
+    \end{proofing}
+    In the previous chapter, we proved the Cauchy-Schwarz Inequality in $\mathbb{R}^{n}$ when verifying whether the $2$-norm in $\mathbb{R}^{n}$ is a norm. We can generalize this inequality to all inner products.
+    \begin{thm}\named{Cauchy-Schwarz Inequality}
+        For all $\mathbf{x}, \mathbf{y} \in V$:
+        \begin{equation*}
+            \abs{\inprod{\mathbf{x}}{\mathbf{y}}}^{2} \leq \inprod{\mathbf{x}}{\mathbf{x}}\inprod{\mathbf{y}}{\mathbf{y}}.
+        \end{equation*}
+        Equality holds if and only if $\mathbf{y} = \alpha\mathbf{x}$ for some $\alpha \in \mathbb{R}$.
+    \end{thm}
+    \begin{proofing}
+        For $\mathbf{x} \in V$, if $\mathbf{y} = \mathbf{0}$, then:
+        \begin{equation*}
+            \abs{\inprod{\mathbf{x}}{\mathbf{y}}}^{2} = \abs{\inprod{\mathbf{x}}{\mathbf{0}}}^{2} = 0 = \inprod{\mathbf{x}}{\mathbf{x}}\inprod{\mathbf{y}}{\mathbf{y}}.
+        \end{equation*}
+        If $\mathbf{y} \neq \mathbf{0}$, then for any $\lambda \in \mathbb{R}$:
+        \begin{equation*}
+            0 \leq \inprod{\mathbf{x} + \lambda\mathbf{y}}{\mathbf{x} + \lambda\mathbf{y}} = \inprod{\mathbf{x}}{\mathbf{x}} + \lambda\inprod{\mathbf{x}}{\mathbf{y}} + \lambda\inprod{\mathbf{y}}{\mathbf{x}} + \lambda^{2}\inprod{\mathbf{y}}{\mathbf{y}} = \inprod{\mathbf{x}}{\mathbf{x}} + \lambda(2\inprod{\mathbf{x}}{\mathbf{y}}) + \lambda^{2}\inprod{\mathbf{y}}{\mathbf{y}}.
+        \end{equation*}
+        Since $\inprod{\mathbf{y}}{\mathbf{y}} > 0$, $\inprod{\mathbf{x} + \lambda\mathbf{y}}{\mathbf{x} + \lambda\mathbf{y}}$ is a quadratic function with at most one real root. Using the discriminant, we have:
+        \begin{align*}
+            \Delta = (2\inprod{\mathbf{x}}{\mathbf{y}})^{2} - 4\inprod{\mathbf{x}}{\mathbf{x}}\inprod{\mathbf{y}}{\mathbf{y}} &\leq 0,\\
+            \abs{\inprod{\mathbf{x}}{\mathbf{y}}}^{2} &\leq \inprod{\mathbf{x}}{\mathbf{x}}\inprod{\mathbf{y}}{\mathbf{y}}.
+        \end{align*}
+        For the equality case, notice that $\Delta = 0$ if and only if:
+        \begin{equation*}
+            \inprod{\mathbf{x} + \lambda\mathbf{y}}{\mathbf{x} + \lambda\mathbf{y}} = \inprod{\mathbf{x}}{\mathbf{x}} + 2\lambda\inprod{\mathbf{x}}{\mathbf{y}} + \lambda^{2}\inprod{\mathbf{y}}{\mathbf{y}} = \left(\sqrt{\inprod{\mathbf{x}}{\mathbf{x}}} + \lambda\sqrt{\inprod{\mathbf{y}}{\mathbf{y}}}\right)^{2} - 2\lambda\sqrt{\inprod{\mathbf{x}}{\mathbf{x}}\inprod{\mathbf{y}}{\mathbf{y}}} + 2\lambda\inprod{\mathbf{x}}{\mathbf{y}} = 0.
+        \end{equation*}
+        Solving this equation gives $\lambda = -\sqrt{\frac{\inprod{\mathbf{x}}{\mathbf{x}}}{\inprod{\mathbf{y}}{\mathbf{y}}}}$, and we find $\mathbf{y} = \sqrt{\frac{\inprod{\mathbf{y}}{\mathbf{y}}}{\inprod{\mathbf{x}}{\mathbf{x}}}}\mathbf{x}$ by definition.
+
+        Substituting $\mathbf{y} = \alpha\mathbf{x}$ for any $\alpha \in \mathbb{R}$ shows that $\Delta = 0$ if and only if $\mathbf{y} = \alpha\mathbf{x}$.
+    \end{proofing}
+    \newpage
+    
+    With the Cauchy-Schwarz Inequality, we can construct a norm using an inner product.
+    \begin{thm}
+        The \textbf{norm induced by the inner product} is a norm defined by, for any $\mathbf{x} \in V$:
+        \begin{equation*}
+            \norm{\mathbf{x}} = \sqrt{\inprod{\mathbf{x}}{\mathbf{x}}}.
+        \end{equation*}
+    \end{thm}
+    \begin{proofing}
+        \begin{enumerate}
+            \item For any $\mathbf{x} \in V$:
+            \begin{equation*}
+                \norm{\mathbf{x}} = \sqrt{\inprod{\mathbf{x}}{\mathbf{x}}} \geq 0.
+            \end{equation*}
+            Moreover:
+            \begin{equation*}
+                \norm{\mathbf{x}} = 0 \Longleftrightarrow \inprod{\mathbf{x}}{\mathbf{x}} = 0 \Longleftrightarrow \mathbf{x} = \mathbf{0}.
+            \end{equation*}
+            \item For any $\mathbf{x} \in V$ and $\alpha \in \mathbb{R}$:
+            \begin{equation*}
+                \norm{\alpha\mathbf{x}} = \sqrt{\inprod{\alpha\mathbf{x}}{\alpha\mathbf{x}}} = \sqrt{\alpha^{2}}\sqrt{\inprod{\mathbf{x}}{\mathbf{x}}} = \abs{\alpha}\norm{\mathbf{x}}.
+            \end{equation*}
+            \item For any $\mathbf{x}, \mathbf{y} \in V$:
+            \begin{align*}
+                \norm{\mathbf{x} + \mathbf{y}}^{2} &= \inprod{\mathbf{x} + \mathbf{y}}{\mathbf{x} + \mathbf{y}}\\
+                &= \inprod{\mathbf{x}}{\mathbf{x}} + 2\inprod{\mathbf{x}}{\mathbf{y}} + \inprod{\mathbf{y}}{\mathbf{y}}\\
+                \tag{$c \leq \abs{c}$}
+                &\leq \norm{\mathbf{x}}^{2} + \norm{\mathbf{y}}^{2} + 2\abs{\inprod{\mathbf{x}}{\mathbf{y}}}\\
+                \tag{Cauchy-Schwarz Inequality}
+                &\leq \norm{\mathbf{x}}^{2} + \norm{\mathbf{y}}^{2} + 2\norm{\mathbf{x}}\norm{\mathbf{y}} = (\norm{\mathbf{x}} + \norm{\mathbf{y}})^{2},\\
+                \norm{\mathbf{x} + \mathbf{y}} &\leq \norm{\mathbf{x}} + \norm{\mathbf{y}}.
+            \end{align*}
+        \end{enumerate}
+    \end{proofing}
+    \begin{rem}
+        Inner product spaces are a subset of normed vector spaces. Not all normed vector spaces can define an inner product.
+    \end{rem}
+    \begin{rem}
+        The Cauchy-Schwarz Inequality can be rewritten as, for $\mathbf{x}, \mathbf{y} \in V$:
+        \begin{equation*}
+            \abs{\inprod{\mathbf{x}}{\mathbf{y}}} \leq \norm{\mathbf{x}}\norm{\mathbf{y}}.
+        \end{equation*}
+    \end{rem}
+    \begin{eg}
+        Consider $V = \mathbb{R}^{n}$ with the standard inner product:
+        \begin{equation*}
+            \inprod{\mathbf{x}}{\mathbf{y}} = \mathbf{x}^{T}\mathbf{y}, \qquad \text{for } \mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}.
+        \end{equation*}
+        The induced norm is:
+        \begin{equation*}
+            \norm{\mathbf{x}} = \sqrt{\inprod{\mathbf{x}}{\mathbf{x}}} = \sqrt{\mathbf{x}^{T}\mathbf{x}} = \sqrt{\sum_{i=1}^{n}x_{i}^{2}} = \pnorm[2]{\mathbf{x}}, \qquad \text{for } \mathbf{x} \in \mathbb{R}^{n}.
+        \end{equation*}
+    \end{eg}
+    \begin{rem}
+        For $V = \mathbb{R}^{n}$, among all $p$-norms, only the $2$-norm can be induced by an inner product.
+    \end{rem}
+    \newpage
+    
+    \begin{eg}
+    	For a symmetric positive definite matrix $\mathbf{A} \in \mathbb{R}^{n \times n}$, consider $V = \mathbb{R}^{n}$ with the weighted inner product:
+    	\begin{equation*}
+    		\inprod{\mathbf{x}}{\mathbf{y}}_{\mathbf{A}} = \mathbf{x}^{T}\mathbf{A}\mathbf{y}, \qquad \text{for } \mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}.
+    	\end{equation*}
+    	The induced norm is:
+    	\begin{equation*}
+    		\pnorm[\mathbf{A}]{\mathbf{x}} = \sqrt{\mathbf{x}^{T}\mathbf{A}\mathbf{x}} = \sqrt{\sum_{i=1}^{n}\sum_{j=1}^{n}a_{ij}x_{i}x_{j}}.
+    	\end{equation*}
+    	If $\mathbf{A}$ is symmetric positive semi-definite, then the induced norm is not a true norm. Instead, it is a semi-norm (discussed in Appendix \ref{Case Study C: Metric Learning}).
+    \end{eg}
+    \begin{eg}
+        Consider $V = \mathbb{R}^{m \times n}$ with the standard inner product:
+        \begin{equation*}
+            \inprod{\mathbf{A}}{\mathbf{B}} = \sum_{i=1}^{m}\sum_{j=1}^{n}a_{ij}b_{ij}, \qquad \text{for } \mathbf{A}, \mathbf{B} \in \mathbb{R}^{m \times n}.
+        \end{equation*}
+        The induced norm is:
+        \begin{equation*}
+            \norm{\mathbf{A}} = \sqrt{\inprod{\mathbf{A}}{\mathbf{A}}} = \sqrt{\sum_{i=1}^{m}\sum_{j=1}^{n}a_{ij}^{2}} = \pnorm[F]{\mathbf{A}} = \pnorm[2, \text{vec}]{\mathbf{A}}, \qquad \text{for } \mathbf{A} \in \mathbb{R}^{m \times n}.
+        \end{equation*}
+    \end{eg}
+    \begin{eg}
+        Consider $V = \ell_{2}$ with the standard inner product:
+        \begin{equation*}
+            \inprod{\mathbf{x}}{\mathbf{y}} = \sum_{i=1}^{\infty}x_{i}y_{i}, \qquad \text{for } \mathbf{x}, \mathbf{y} \in \ell_{2}.
+        \end{equation*}
+        The induced norm is:
+        \begin{equation*}
+            \norm{\mathbf{x}} = \sqrt{\sum_{i=1}^{\infty}x_{i}^{2}} = \pnorm[2]{\mathbf{x}}, \qquad \text{for } \mathbf{x} \in \ell_{2}.
+        \end{equation*}
+    \end{eg}
+    \begin{eg}
+        Consider $V = \mathcal{C}[a, b]$ with the standard inner product:
+        \begin{equation*}
+            \inprod{f}{g} = \int_{a}^{b}f(t)g(t)\,dt, \qquad \text{for } f, g \in \mathcal{C}[a, b].
+        \end{equation*}
+        The induced norm is:
+        \begin{equation*}
+            \norm{f} = \sqrt{\int_{a}^{b}(f(t))^{2}\,dt} = \pnorm[2]{f}, \qquad \text{for } f \in \mathcal{C}[a, b].
+        \end{equation*}
+    \end{eg}
+    \newpage
+
+    What conditions are required to define an inner product based on the normed vector space?
+    \begin{thm}
+        Let $(V,\norm{\cdot})$ be a normed vector space over $\mathbb{R}$. The norm $\norm{\cdot}$ is induced by an inner product if and only if the parallelogram law holds. This means that for all $\mathbf{x}, \mathbf{y} \in V$,
+        \begin{equation*}
+            \norm{\mathbf{x}+\mathbf{y}}^{2} + \norm{\mathbf{x}-\mathbf{y}}^{2} = 2\norm{\mathbf{x}}^{2} + 2\norm{\mathbf{y}}^{2}.
+        \end{equation*}
+    \end{thm}
+    \begin{proofing}
+        \begin{itemize}
+            \item[$\Longrightarrow$] Suppose that the norm is induced by an inner product $\inprod{\cdot}{\cdot}$. This means for any $\mathbf{x}, \mathbf{y} \in V$:
+            \begin{align*}
+                \norm{\mathbf{x}+\mathbf{y}}^{2} &= \inprod{\mathbf{x}+\mathbf{y}}{\mathbf{x}+\mathbf{y}} = \norm{\mathbf{x}}^{2} + 2\inprod{\mathbf{x}}{\mathbf{y}} + \norm{\mathbf{y}}^{2},\\
+                \norm{\mathbf{x}-\mathbf{y}}^{2} &= \inprod{\mathbf{x}-\mathbf{y}}{\mathbf{x}-\mathbf{y}} = \norm{\mathbf{x}}^{2} - 2\inprod{\mathbf{x}}{\mathbf{y}} + \norm{\mathbf{y}}^{2}.
+            \end{align*}
+            Therefore,
+            \begin{equation*}
+                \norm{\mathbf{x}+\mathbf{y}}^{2} + \norm{\mathbf{x}-\mathbf{y}}^{2} = 2\norm{\mathbf{x}}^{2} + 2\norm{\mathbf{y}}^{2}.
+            \end{equation*}
+            \item[$\Longleftarrow$] Suppose that the parallelogram law holds. We may define a binary operator as:
+            \begin{equation*}
+                \inprod{\mathbf{x}}{\mathbf{y}} = \frac{1}{4}(\norm{\mathbf{x}+\mathbf{y}}^{2} - \norm{\mathbf{x}-\mathbf{y}}^{2}), \qquad \text{for } \mathbf{x}, \mathbf{y} \in V.
+            \end{equation*}
+            We check whether this is an inner product.
+            \begin{enumerate}
+                \item For any $\mathbf{x} \in V$,
+                \begin{equation*}
+                    \inprod{\mathbf{x}}{\mathbf{x}} = \frac{1}{4}(\norm{2\mathbf{x}}^{2} + \norm{\mathbf{0}}^{2}) = \norm{\mathbf{x}}^{2} \geq 0.
+                \end{equation*}
+                Moreover,
+                \begin{equation*}
+                    \inprod{\mathbf{x}}{\mathbf{x}} = \norm{\mathbf{x}}^{2} = 0 \Longleftrightarrow \mathbf{x} = \mathbf{0}.
+                \end{equation*}
+                \item Since proving homogeneity extending to $\mathbb{R}$ is out of scope, we will only prove additivity here. 
+                
+                For any $\mathbf{x}, \mathbf{y}, \mathbf{z} \in V$, by the parallelogram law,
+                \begin{align*}
+                    \norm{\mathbf{x}+\mathbf{y}+\mathbf{z}}^{2} &= 2\norm{\mathbf{x}}^{2} + 2\norm{\mathbf{y}+\mathbf{z}}^{2} - \norm{\mathbf{x}-\mathbf{y}-\mathbf{z}}^{2},\\
+                    &= 2\norm{\mathbf{y}}^{2} + 2\norm{\mathbf{x}+\mathbf{z}}^{2} - \norm{-\mathbf{x}+\mathbf{y}-\mathbf{z}}^{2},\\
+                    \norm{\mathbf{x}+\mathbf{y}-\mathbf{z}}^{2} &= 2\norm{\mathbf{x}}^{2} + 2\norm{\mathbf{y}-\mathbf{z}}^{2} - \norm{\mathbf{x}-\mathbf{y}+\mathbf{z}}^{2},\\
+                    &= 2\norm{\mathbf{y}}^{2} + 2\norm{\mathbf{x}-\mathbf{z}}^{2} - \norm{-\mathbf{x}+\mathbf{y}+\mathbf{z}}^{2}.
+                \end{align*}
+                Combining the formulas, we have:
+                \begin{align*}
+                    \norm{\mathbf{x}+\mathbf{y}+\mathbf{z}}^{2} &= \norm{\mathbf{x}}^{2} + \norm{\mathbf{y}}^{2} + \norm{\mathbf{x}+\mathbf{z}}^{2} + \norm{\mathbf{y}+\mathbf{z}}^{2} - \frac{1}{2}\norm{\mathbf{x}-\mathbf{y}-\mathbf{z}}^{2} - \frac{1}{2}\norm{-\mathbf{x}+\mathbf{y}-\mathbf{z}}^{2},\\
+                    \norm{\mathbf{x}+\mathbf{y}-\mathbf{z}}^{2} &= \norm{\mathbf{x}}^{2} + \norm{\mathbf{y}}^{2} + \norm{\mathbf{x}-\mathbf{z}}^{2} + \norm{\mathbf{y}-\mathbf{z}}^{2} - \frac{1}{2}\norm{\mathbf{x}-\mathbf{y}+\mathbf{z}}^{2} - \frac{1}{2}\norm{-\mathbf{x}+\mathbf{y}+\mathbf{z}}^{2},\\
+                    &= \norm{\mathbf{x}}^{2} + \norm{\mathbf{y}}^{2} + \norm{\mathbf{x}-\mathbf{z}}^{2} + \norm{\mathbf{y}-\mathbf{z}}^{2} - \frac{1}{2}\norm{-\mathbf{x}+\mathbf{y}-\mathbf{z}}^{2} - \frac{1}{2}\norm{\mathbf{x}-\mathbf{y}-\mathbf{z}}^{2}.
+                \end{align*}
+                Therefore,
+                \begin{equation*}
+                    \inprod{\mathbf{x}+\mathbf{y}}{\mathbf{z}} = \frac{1}{4}(\norm{\mathbf{x}+\mathbf{y}+\mathbf{z}}^{2} - \norm{\mathbf{x}+\mathbf{y}-\mathbf{z}}^{2}) = \frac{1}{4}(\norm{\mathbf{x}+\mathbf{z}}^{2} - \norm{\mathbf{x}-\mathbf{z}}^{2} + \norm{\mathbf{y}+\mathbf{z}}^{2} - \norm{\mathbf{y}-\mathbf{z}}^{2}) = \inprod{\mathbf{x}}{\mathbf{z}} + \inprod{\mathbf{y}}{\mathbf{z}}.
+                \end{equation*}
+                \item For any $\mathbf{x}, \mathbf{y} \in V$,
+                \begin{equation*}
+                    \inprod{\mathbf{y}}{\mathbf{x}} = \frac{1}{4}(\norm{\mathbf{y}+\mathbf{x}}^{2} - \norm{\mathbf{y}-\mathbf{x}}^{2}) = \frac{1}{4}(\norm{\mathbf{x}+\mathbf{y}}^{2} - \norm{\mathbf{x}-\mathbf{y}}^{2}) = \inprod{\mathbf{x}}{\mathbf{y}}.
+                \end{equation*}
+            \end{enumerate}
+            Therefore, since additionally $\sqrt{\inprod{\mathbf{x}}{\mathbf{x}}} = \norm{\mathbf{x}}$, the binary operator is an inner product that induces the norm.
+        \end{itemize}
+    \end{proofing}
+    \newpage
+
+    Similar to normed vector spaces, we can define the completeness of a vector space with an inner product.
+    \begin{defn}
+        A complete inner product space is called a \textbf{Hilbert space}.
+    \end{defn}
+    \begin{eg}
+        $\mathbb{R}^{n}$ with the standard inner product or the weighted inner product for any symmetric positive definite $\mathbf{A} \in \mathbb{R}^{n \times n}$:
+        \begin{equation*}
+            \inprod{\mathbf{x}}{\mathbf{y}} = \mathbf{x}^{T}\mathbf{y}, \qquad \inprod{\mathbf{x}}{\mathbf{y}}_{\mathbf{A}} = \mathbf{x}^{T}\mathbf{A}\mathbf{y}, \qquad \text{for } \mathbf{x}, \mathbf{y} \in \mathbb{R}^{n},
+        \end{equation*}
+        are Hilbert spaces.
+    \end{eg}
+    \begin{eg}
+        $\mathbb{R}^{m \times n}$ with the standard inner product:
+        \begin{equation*}
+            \inprod{\mathbf{A}}{\mathbf{B}} = \Tr(\mathbf{A}^{T}\mathbf{B}), \qquad \mathbf{A}, \mathbf{B} \in \mathbb{R}^{m \times n},
+        \end{equation*}
+        is a Hilbert space.
+    \end{eg}
+    \begin{eg}
+        $\ell_{2}$ with the standard inner product:
+        \begin{equation*}
+            \inprod{\mathbf{x}}{\mathbf{y}} = \sum_{i=1}^{\infty}x_{i}y_{i}, \qquad \mathbf{x}, \mathbf{y} \in \ell_{2},
+        \end{equation*}
+        is a Hilbert space.
+    \end{eg}
+    \begin{eg}
+        $\mathcal{C}[a, b]$ with the standard inner product:
+        \begin{equation*}
+            \inprod{f}{g} = \int_{a}^{b}f(t)g(t)\,dt, \qquad f, g \in \mathcal{C}[a, b],
+        \end{equation*}
+        is not a Hilbert space. Its completion is $L^{2}(a, b)$.
+    \end{eg}
+    \newpage
+    
+\section{Orthogonality}
+    By the Cauchy-Schwarz Inequality, for all non-zero $\mathbf{x}, \mathbf{y} \in V$:
+    \begin{equation*}
+        -\norm{\mathbf{x}}\norm{\mathbf{y}} \leq \inprod{\mathbf{x}}{\mathbf{y}} \leq \norm{\mathbf{x}}\norm{\mathbf{y}} \Longleftrightarrow -1 \leq \frac{\inprod{\mathbf{x}}{\mathbf{y}}}{\norm{\mathbf{x}}\norm{\mathbf{y}}} \leq 1.
+    \end{equation*}
+    Considering when the Cauchy-Schwarz Inequality achieves equality:
+    \begin{enumerate}
+        \item If $\frac{\inprod{\mathbf{x}}{\mathbf{y}}}{\norm{\mathbf{x}}\norm{\mathbf{y}}} = 1$, then $\mathbf{y} = \alpha\mathbf{x}$ with $\alpha > 0$. (If $\alpha \leq 0$, then $\inprod{\mathbf{x}}{\mathbf{y}} = \alpha\inprod{\mathbf{x}}{\mathbf{x}} = \alpha\norm{\mathbf{x}}^{2} \leq 0$.)
+        \begin{figure}[h]
+            \centering
+            \begin{tikzpicture}
+                \draw[thick, ->]		(0,0) -- (1,0.5) node[above, midway] {$\mathbf{x}$};
+                \draw[thick, red, ->]	(0.5,0) -- (2.5,1) node[below, midway] {$\mathbf{y}$};
+            \end{tikzpicture}
+            \caption{$\mathbf{y} = 2\mathbf{x}$}
+        \end{figure}
+        \item If $\frac{\inprod{\mathbf{x}}{\mathbf{y}}}{\norm{\mathbf{x}}\norm{\mathbf{y}}} = -1$, then $\mathbf{y} = \alpha\mathbf{x}$ with $\alpha < 0$. (If $\alpha \geq 0$, then $\inprod{\mathbf{x}}{\mathbf{y}} = \alpha\inprod{\mathbf{x}}{\mathbf{x}} = \alpha\norm{\mathbf{x}}^{2} \geq 0$.)
+        \begin{figure}[h]
+            \centering
+            \begin{tikzpicture}
+                \draw[thick, ->]		(0,0) -- (1,0.5) node[above, midway] {$\mathbf{x}$};
+                \draw[thick, red, ->]	(0,0) -- (-2,-1) node[below, midway] {$\mathbf{y}$};
+            \end{tikzpicture}
+            \caption{$\mathbf{y} = -2\mathbf{x}$}
+        \end{figure}
+    \end{enumerate}
+    \begin{defn}
+        The \textbf{angle} between nonzero $\mathbf{x}, \mathbf{y} \in V$ is defined by:
+        \begin{equation*}
+            \angle(\mathbf{x}, \mathbf{y}) = \arccos\left(\frac{\inprod{\mathbf{x}}{\mathbf{y}}}{\norm{\mathbf{x}}\norm{\mathbf{y}}}\right).
+        \end{equation*}
+    \end{defn}
+    With angles defined, we can define orthogonality.
+    \begin{defn}
+        For $\mathbf{x}, \mathbf{y} \in V$:
+        \begin{enumerate}
+            \item If $\abs{\frac{\inprod{\mathbf{x}}{\mathbf{y}}}{\norm{\mathbf{x}}\norm{\mathbf{y}}}} = 1$, then $\mathbf{x}$ and $\mathbf{y}$ are the \textbf{most correlated}.
+            \item If $\abs{\frac{\inprod{\mathbf{x}}{\mathbf{y}}}{\norm{\mathbf{x}}\norm{\mathbf{y}}}} = 0$ ($\inprod{\mathbf{x}}{\mathbf{y}} = 0$), then $\mathbf{x}$ and $\mathbf{y}$ are the \textbf{least correlated}. We say $\mathbf{x}$ and $\mathbf{y}$ are \textbf{orthogonal}.
+        \end{enumerate}
+    \end{defn}
+    \begin{figure}[h]
+        \centering
+        \begin{subfigure}{0.3\textwidth}
+            \centering
+            \begin{tikzpicture}
+                \draw[thick, ->]	(0,0) -- (0,1) node[above] {$\mathbf{x}$};
+                \draw[thick, ->]	(0,0) -- (1,0) node[right] {$\mathbf{y}$};
+                \draw[] (0,0) rectangle ++(0.2, 0.2);
+            \end{tikzpicture}
+            
+            $\angle(\mathbf{x}, \mathbf{y}) = \frac{\pi}{2}$
+            \caption{The least correlated}
+        \end{subfigure}
+        \begin{subfigure}{0.6\textwidth}
+            \centering
+            \begin{subfigure}{0.4\textwidth}
+                \centering
+                \begin{tikzpicture}
+                    \draw[thick, ->]		(0,0) -- (1,0.5) node[above, midway] {$\mathbf{x}$};
+                    \draw[thick, red, ->]	(0.5,0) -- (2.5,1) node[below, midway] {$\mathbf{y}$};
+                \end{tikzpicture}
+                
+                $\angle(\mathbf{x}, \mathbf{y}) = 0$
+            \end{subfigure}
+            \begin{subfigure}{0.4\textwidth}
+                \centering
+                \begin{tikzpicture}
+                    \draw[thick, ->]		(0,0) -- (1,0.5) node[above, midway] {$\mathbf{x}$};
+                    \draw[thick, red, ->]	(0,0) -- (-2,-1) node[below, midway] {$\mathbf{y}$};
+                \end{tikzpicture}
+                
+                $\angle(\mathbf{x}, \mathbf{y}) = \pi$
+            \end{subfigure}
+            \caption{The most correlated}
+        \end{subfigure}
+    \end{figure}
+    Based on orthogonality, we have the following theorem.
+    \begin{thm}\named{Pythagorean Theorem}
+        For $\mathbf{x}, \mathbf{y} \in V$, $\mathbf{x}$ and $\mathbf{y}$ are orthogonal if and only if:
+        \begin{equation*}
+            \norm{\mathbf{x} + \mathbf{y}}^{2} = \norm{\mathbf{x}}^{2} + \norm{\mathbf{y}}^{2}.
+        \end{equation*}
+    \end{thm}
+    \begin{proofing}
+        If $\mathbf{x}$ and $\mathbf{y}$ are orthogonal, then $\inprod{\mathbf{x}}{\mathbf{y}} = 0$. Therefore:
+        \begin{equation*}
+            \norm{\mathbf{x} + \mathbf{y}}^{2} = \inprod{\mathbf{x} + \mathbf{y}}{\mathbf{x} + \mathbf{y}} = \inprod{\mathbf{x}}{\mathbf{x}} + 2\inprod{\mathbf{x}}{\mathbf{y}} + \inprod{\mathbf{y}}{\mathbf{y}} = \inprod{\mathbf{x}}{\mathbf{x}} + \inprod{\mathbf{y}}{\mathbf{y}} = \norm{\mathbf{x}}^{2} + \norm{\mathbf{y}}^{2}.
+        \end{equation*}
+        If $\norm{\mathbf{x} + \mathbf{y}}^{2} = \norm{\mathbf{x}}^{2} + \norm{\mathbf{y}}^{2}$, then:
+        \begin{equation*}
+            0 = \norm{\mathbf{x} + \mathbf{y}}^{2} - \norm{\mathbf{x}}^{2} - \norm{\mathbf{y}}^{2} = \inprod{\mathbf{x} + \mathbf{y}}{\mathbf{x} + \mathbf{y}} - \inprod{\mathbf{x}}{\mathbf{x}} - \inprod{\mathbf{y}}{\mathbf{y}} = 2\inprod{\mathbf{x}}{\mathbf{y}}.
+        \end{equation*}
+        Therefore, $\inprod{\mathbf{x}}{\mathbf{y}} = 0$, and thus $\mathbf{x}$ and $\mathbf{y}$ are orthogonal.
+    \end{proofing}
+    Read Appendix \ref{Case Study B: Kernel K-means/Kernel Trick} (Kernel K-means/Kernel Trick) and \ref{Case Study C: Metric Learning} (Metric Learning) to see the case studies for Chapter \ref{Chapter 3: Inner products, Hilbert Spaces}.
+    
+\chapter{Linear Functions and Differentiation}
+    \label{Chapter 4: Linear Functions and Differentiation}
+    In Chapter \ref{Chapter 2: Vector spaces, metrics, limits, and convergence}, we observed that the norm does not preserve vector addition but does preserve scalar multiplication. In Chapter \ref{Chapter 3: Inner products, Hilbert Spaces}, by fixing one of the vectors, we demonstrated linearity. Here, we aim to investigate the behavior of linear functions in vector spaces.
+\section{Linear Functions}
+    \begin{defn}
+        Let $V$ be a vector space over $\mathbb{R}$. A function $f:V\to\mathbb{R}$ is \textbf{linear} if, for all $\mathbf{x},\mathbf{y}\in V$ and $\alpha,\beta\in\mathbb{R}$,
+        \begin{equation*}
+            f(\alpha\mathbf{x}+\beta\mathbf{y})=\alpha f(\mathbf{x})+\beta f(\mathbf{y}).
+        \end{equation*}
+    \end{defn}
+    \begin{eg}
+        The mean of a vector (not to be confused with mean vectors): for all $\mathbf{x}\in\mathbb{R}^{n}$,
+        \begin{equation*}
+            f(\mathbf{x})=\frac{1}{n}\sum_{i=1}^{n}x_{i}
+        \end{equation*}
+        is a linear function.
+    \end{eg}
+    \begin{proofing}
+        For all $\mathbf{x},\mathbf{y}\in\mathbb{R}^{n}$ and $\alpha,\beta\in\mathbb{R}$,
+        \begin{equation*}
+            f(\alpha\mathbf{x}+\beta\mathbf{y})=\frac{1}{n}\sum_{i=1}^{n}(\alpha x_{i}+\beta y_{i})=\frac{\alpha}{n}\sum_{i=1}^{n}x_{i}+\frac{\beta}{n}\sum_{i=1}^{n}y_{i}=\alpha f(\mathbf{x})+\beta f(\mathbf{y}).
+        \end{equation*}
+    \end{proofing}
+    \begin{eg}
+        The maximum entry of a vector: for all $\mathbf{x}\in\mathbb{R}^{n}$,
+        \begin{equation*}
+            f(\mathbf{x})=\max_{1\leq i\leq n}x_{i}
+        \end{equation*}
+        is not a linear function.
+    \end{eg}
+    \begin{proofing}
+        Assume that $\mathbf{x}=\begin{pmatrix}1\\0\end{pmatrix}$, $\mathbf{y}=\begin{pmatrix}0\\1\end{pmatrix}$, $\alpha=1$, $\beta=1$. We have:
+        \begin{align*}
+            f(\alpha\mathbf{x}+\beta\mathbf{y})&=f\left(\begin{pmatrix}1\\1\end{pmatrix}\right)=1, & \alpha f(\mathbf{x})+\beta f(\mathbf{y})&=f\left(\begin{pmatrix}1\\0\end{pmatrix}\right)+f\left(\begin{pmatrix}0\\1\end{pmatrix}\right)=2\neq f(\alpha\mathbf{x}+\beta\mathbf{y}),
+        \end{align*}
+        which violates the definition of a linear function.
+    \end{proofing}
+    \begin{eg}
+        \label{Chapter 4 (Example) Inner product with fixed vector is a linear function}
+        Let $V$ be a normed vector space with an inner product $\inprod{\cdot}{\cdot}$ and let $\mathbf{a}\in V$. The function $f:V\to\mathbb{R}$ defined by:
+        \begin{equation*}
+            f(\mathbf{x})=\inprod{\mathbf{a}}{\mathbf{x}} \qquad \text{for } \mathbf{x}\in V
+        \end{equation*} 
+        is a linear function.
+    \end{eg}
+    \begin{proofing}
+        For all $\mathbf{x},\mathbf{y}\in V$ and $\alpha,\beta\in\mathbb{R}$,
+        \begin{equation*}
+            f(\alpha\mathbf{x}+\beta\mathbf{y})=\inprod{\mathbf{a}}{\alpha\mathbf{x}+\beta\mathbf{y}}=\alpha\inprod{\mathbf{a}}{\mathbf{x}}+\beta\inprod{\mathbf{a}}{\mathbf{y}}=\alpha f(\mathbf{x})+\beta f(\mathbf{y}).
+        \end{equation*}
+    \end{proofing}
+    \newpage
+
+    \begin{eg}
+        A functional $F:\mathcal{C}[-1,1]\to\mathbb{R}$ defined by:
+        \begin{equation*}
+            F(f)=f(0) \qquad \text{for } f\in\mathcal{C}[-1,1]
+        \end{equation*}
+        is a linear function.
+    \end{eg}
+    \begin{proofing}
+        For all $f,g\in\mathcal{C}[-1,1]$ and $\alpha,\beta\in\mathbb{R}$,
+        \begin{equation*}
+            F(\alpha f+\beta g)=(\alpha f+\beta g)(0)=\alpha f(0)+\beta g(0)=\alpha F(f)+\beta F(g).
+        \end{equation*}
+    \end{proofing}
+    \begin{eg}
+        A functional $F:\mathcal{C}[a,b]\to\mathbb{R}$ defined by:
+        \begin{equation*}
+            F(f)=\int_{a}^{b}f(t)\,dt \qquad \text{for } f\in\mathcal{C}[a,b]
+        \end{equation*}
+        is a linear function.
+    \end{eg}
+    \begin{proofing}
+        For all $f,g\in\mathcal{C}[a,b]$ and $\alpha,\beta\in\mathbb{R}$,
+        \begin{equation*}
+            F(\alpha f+\beta g)=\int_{a}^{b}(\alpha f+\beta g)(t)\,dt=\int_{a}^{b}(\alpha f(t)+\beta g(t))\,dt=\alpha\int_{a}^{b}f(t)\,dt+\beta\int_{a}^{b}g(t)\,dt=\alpha F(f)+\beta F(g).
+        \end{equation*}
+    \end{proofing}
+    \begin{thm}
+        For any vector space $V$, any norm function $\norm{\cdot}$ on $V$ is not a linear function.
+    \end{thm}
+    \begin{proofing}
+        By the absolute homogeneity property of the norm, for all $\mathbf{x}\in V$,
+        \begin{equation*}
+            \norm{-\mathbf{x}}=\norm{\mathbf{x}}.
+        \end{equation*}
+        Assume that the norm function is linear. Then:
+        \begin{equation*}
+            \norm{-\mathbf{x}}=\norm{-\mathbf{x}+0\mathbf{x}}=-\norm{\mathbf{x}}+0\norm{\mathbf{x}}=-\norm{\mathbf{x}},
+        \end{equation*}
+        which results in a contradiction. Therefore, any norm function is not a linear function.
+    \end{proofing}
+    The following properties can be easily derived from the definition.
+    \begin{thm}
+        A linear function $f$ has the following properties:
+        \begin{enumerate}
+            \item Homogeneity: For all $\mathbf{x}\in V$ and $\alpha\in\mathbb{R}$,
+            \begin{equation*}
+                f(\alpha\mathbf{x})=\alpha f(\mathbf{x}).
+            \end{equation*}
+            \item Additivity: For any $\mathbf{x},\mathbf{y}\in V$,
+            \begin{equation*}
+                f(\mathbf{x}+\mathbf{y})=f(\mathbf{x})+f(\mathbf{y}).
+            \end{equation*}
+        \end{enumerate}
+    \end{thm}
+    \begin{proofing}
+        \begin{enumerate}
+            \item Setting $\beta=0$, for any $\mathbf{x}\in V$ and $\alpha\in\mathbb{R}$,
+            \begin{equation*}
+                f(\alpha\mathbf{x})=f(\alpha\mathbf{x}+0\mathbf{y})=\alpha f(\mathbf{x})+0f(\mathbf{y})=\alpha f(\mathbf{x}), \qquad \text{for } \mathbf{y}\in V.
+            \end{equation*}
+            \item Setting $\alpha=\beta=1$, for any $\mathbf{x},\mathbf{y}\in V$,
+            \begin{equation*}
+                f(\mathbf{x}+\mathbf{y})=f(1\mathbf{x}+1\mathbf{y})=1f(\mathbf{x})+1f(\mathbf{y})=f(\mathbf{x})+f(\mathbf{y}).
+            \end{equation*}
+        \end{enumerate}
+    \end{proofing}
+    \begin{rem}
+        By induction, for $\mathbf{x}_{1},\cdots,\mathbf{x}_{k}\in V$ and $\alpha_{1},\cdots,\alpha_{k}\in \mathbb{R}$,
+        \begin{equation*}
+            f(\alpha_{1}\mathbf{x}_{1}+\cdots+\alpha_{k}\mathbf{x}_{k})=\alpha_{1}f(\mathbf{x}_{1})+\cdots+\alpha_{k}f(\mathbf{x}_{k}).
+        \end{equation*}
+    \end{rem}
+    \newpage
+
+    Let $H$ be a Hilbert space. From Example \ref{Chapter 4 (Example) Inner product with fixed vector is a linear function}, we have shown that for all $\mathbf{a}\in H$, the function:
+    \begin{equation*}
+        f(\mathbf{x})=\inprod{\mathbf{a}}{\mathbf{x}} \qquad \text{for } \mathbf{x}\in H
+    \end{equation*}
+    is a linear function. Is it true that for all linear functions $f:H\to\mathbb{R}$, there exists a fixed vector $\mathbf{a}\in H$ such that the function can be written in inner product form? The answer is yes!
+    \begin{thm}\named{Riesz Representation Theorem}
+        Let $H$ be a Hilbert space with an inner product $\inprod{\cdot}{\cdot}$. The function $f:H\to\mathbb{R}$ is linear and bounded if and only if:
+        \begin{equation*}
+            f(\mathbf{x})=\inprod{\mathbf{a}}{\mathbf{x}}, \qquad \text{for } \mathbf{x}\in H
+        \end{equation*}
+        for some unique $\mathbf{a}\in H$, called the \textbf{Riesz representation} of $f$.
+    \end{thm}
+    \begin{proofing}[Proof (When $H=\mathbb{R}^{n}$)]
+        For all $\mathbf{x}\in\mathbb{R}^{n}$, we have:
+        \begin{equation*}
+            \mathbf{x}=x_{1}\mathbf{e}_{1}+\cdots+x_{n}\mathbf{e}_{n}.
+        \end{equation*}
+        Therefore, we have:
+        \begin{equation*}
+            f(\mathbf{x})=f(x_{1}\mathbf{e}_{1}+\cdots+x_{n}\mathbf{e}_{n})=x_{1}f(\mathbf{e}_{1})+\cdots+x_{n}f(\mathbf{e}_{n})=\inprod{\begin{pmatrix}
+                f(\mathbf{e}_{1})\\\vdots\\f(\mathbf{e}_{n})
+            \end{pmatrix}}{\mathbf{x}} \Longrightarrow \mathbf{a}=\begin{pmatrix}
+                f(\mathbf{e}_{1})\\\vdots\\f(\mathbf{e}_{n})
+            \end{pmatrix}.
+        \end{equation*}
+        Suppose that $\mathbf{a}$ is not unique. This means there exist $\mathbf{a},\mathbf{b}\in\mathbb{R}^{n}$ such that:
+        \begin{equation*}
+            f(\mathbf{x})=\inprod{\mathbf{a}}{\mathbf{x}}=\inprod{\mathbf{b}}{\mathbf{x}} \qquad \text{for } \mathbf{x}\in\mathbb{R}^{n}.
+        \end{equation*}
+        If we choose $\mathbf{x}=\mathbf{e}_{i}$ for $i=1,\cdots,n$,
+        \begin{align*}
+            f(\mathbf{e}_{i})=\inprod{\mathbf{a}}{\mathbf{e}_{i}}=\inprod{\mathbf{b}}{\mathbf{e}_{i}} &\Longrightarrow a_{i}=b_{i}, \qquad \text{for } i=1,\cdots,n,\\
+            &\Longrightarrow \mathbf{a}=\mathbf{b}.
+        \end{align*}
+        This results in a contradiction. Therefore, $\mathbf{a}$ is unique.
+    \end{proofing}
+    \begin{rem}
+        The "boundedness" implied in this theorem does not mean the codomain of the function is a bounded set. Given a function $f:X\to Y$ that maps between two normed vector spaces, if $X$ has a norm $\pnorm[X]{\cdot}$ and $Y$ has a norm $\pnorm[Y]{\cdot}$, then there exists some $M>0$ such that:
+        \begin{equation*}
+            \pnorm[Y]{f(\mathbf{x})}\leq M\pnorm[X]{\mathbf{x}}, \qquad \text{for } \mathbf{x}\in X.
+        \end{equation*}
+        In this theorem, if $H$ induces a norm $\pnorm[H]{\cdot}$, then there exists some $M>0$ such that:
+        \begin{equation*}
+            \abs{f(\mathbf{x})}\leq M\pnorm[H]{\mathbf{x}}, \qquad \text{for } \mathbf{x}\in H.
+        \end{equation*}
+    \end{rem}
+    \begin{rem}
+        The smallest value $M$ is often called the \textbf{operator norm}. Recall Example \ref{Chapter 2 (Example) Matrix 2-norm}. It can be generalized to:
+        \begin{equation*}
+            M=\pnorm[op]{f}=\sup\{\pnorm[Y]{f(\mathbf{x})}:\mathbf{x}\in X \text{ with } \pnorm[X]{\mathbf{x}}\leq 1\},
+        \end{equation*}
+        which depends on the choice of norms.
+    \end{rem}
+    \begin{rem}
+        Any linear function defined on a finite-dimensional normed vector space is always bounded.
+    \end{rem}
+    \begin{eg}
+        The mean of a vector $\mathbf{x}\in\mathbb{R}^{n}$ can be represented by:
+        \begin{equation*}
+            f(\mathbf{x})=\frac{1}{n}\sum_{i=1}^{n}x_{i}=\inprod{\frac{1}{n}\begin{pmatrix}
+                    1\\
+                    \vdots\\
+                    1
+                \end{pmatrix}}{\mathbf{x}}.
+        \end{equation*}
+    \end{eg}
+    \begin{eg}
+        The trace of a matrix $\mathbf{A}\in\mathbb{R}^{n\times n}$ can be represented by:
+        \begin{equation*}
+            \Tr(\mathbf{A})=\sum_{i=1}^{n}a_{ii}=\inprod{\mathbf{I}}{\mathbf{A}}.
+        \end{equation*}
+    \end{eg}
+    \newpage
+
+    \begin{rem}
+        In infinite-dimensional Hilbert spaces, there exist linear but unbounded functions.
+    \end{rem}
+    \begin{eg}
+        We consider $L^{2}(-1,1)$, which is the completion of $\mathcal{C}[-1,1]$ under:
+        \begin{align*}
+            \inprod{f}{g}&=\int_{-1}^{1}f(t)g(t)\,dt, & \pnorm[2]{f}&=\sqrt{\inprod{f}{f}}.
+        \end{align*}
+        Let $F(f)=f(0)$ for all $f\in L^{2}(-1,1)$. Consider that:
+        \begin{equation*}
+            f(t)=\begin{cases}
+                1, &t\neq 0,\\
+                +\infty, &t=0
+            \end{cases}, \qquad \text{for } t\in(-1,1).
+        \end{equation*}
+        Therefore, $F(f)=f(0)=+\infty$. There is, in fact, no inner product representation for $F(f)=f(0)$.
+    \end{eg}
+    \begin{eg}
+        We consider $G:L^{2}(-1,1)\to\mathbb{R}$ defined by:
+        \begin{equation*}
+            G(f)=\int_{-1}^{1}f(t)\,dt, \qquad \text{for } f\in L^{2}(-1,1).
+        \end{equation*} 
+        For any $f,g\in L^{2}(-1,1)$ and $\alpha,\beta\in\mathbb{R}$,
+        \begin{equation*}
+            G(\alpha f+\beta g)=\int_{-1}^{1}(\alpha f+\beta g)(t)\,dt=\alpha\int_{-1}^{1}f(t)\,dt+\beta\int_{-1}^{1}g(t)\,dt=\alpha G(f)+\beta G(g).
+        \end{equation*}
+        Therefore, we can find that $G$ is linear. We can also see that for any $f\in L^{2}(-1,1)$,
+        \begin{equation*}
+            G(f)=\int_{-1}^{1}f(t)\,dt=\int_{-1}^{1}1\cdot f(t)\,dt=\inprod{1}{f}\leq\pnorm[2]{f}\sqrt{\int_{-1}^{1}1^{2}\,dt}=\sqrt{2}\pnorm[2]{f}.
+        \end{equation*}
+        Therefore, $G$ is also bounded. In fact, we have found that:
+        \begin{equation*}
+            G(f)=\inprod{1}{f}.
+        \end{equation*}
+    \end{eg}
+    \begin{eg}
+        We consider $\ell_{2}$, which is the completion of the space of all finite sequences under:
+        \begin{align*}
+            \inprod{\mathbf{x}}{\mathbf{y}}&=\sum_{i=1}^{\infty}x_{i}y_{i}, & \pnorm[2]{\mathbf{x}}&=\sqrt{\inprod{\mathbf{x}}{\mathbf{x}}}.
+        \end{align*}
+        Let $H:\ell_{2}\to\mathbb{R}$ be defined by:
+        \begin{equation*}
+            H(\mathbf{x})=x_{1}, \qquad \text{for } \mathbf{x}\in\ell_{2}.
+        \end{equation*}
+        For any $\mathbf{x},\mathbf{y}\in\ell_{2}$ and $\alpha,\beta\in\mathbb{R}$,
+        \begin{equation*}
+            H(\alpha\mathbf{x}+\beta\mathbf{y})=\alpha x_{1}+\beta y_{1}=\alpha H(\mathbf{x})+\beta H(\mathbf{y}).
+        \end{equation*}
+        Therefore, we can find that $H$ is linear. We can also see that for any $\mathbf{x}\in\ell_{2}$,
+        \begin{equation*}
+            H(\mathbf{x})=x_{1}\leq\sqrt{\sum_{i=1}^{\infty}x_{i}^{2}}=\pnorm[2]{\mathbf{x}}.
+        \end{equation*}
+        Therefore, $H$ is also bounded. In fact, we have found that:
+        \begin{equation*}
+            H(\mathbf{x})=\inprod{\begin{pmatrix}
+                    1\\
+                    0\\
+                    0\\
+                    \vdots
+                \end{pmatrix}}{\mathbf{x}}.
+        \end{equation*}
+    \end{eg}
+    \newpage
+
+    Additionally, we have a function that is similar to a linear function but shifted in the output space.
+    \begin{defn}
+        Let $V$ be a vector space over $\mathbb{R}$. A function $f:V\to\mathbb{R}$ is \textbf{affine} if it can be written as:
+        \begin{equation*}
+            f(\mathbf{x})=g(\mathbf{x})+b, \qquad \text{for } \mathbf{x}\in V,
+        \end{equation*}
+        where $g:V\to\mathbb{R}$ is linear and $b\in\mathbb{R}$.
+    \end{defn}
+    We can also derive the following properties from the definition.
+    \begin{thm}
+        An affine function $f$ has the following properties:
+        \begin{enumerate}
+            \item For any $\alpha,\beta\in\mathbb{R}$ such that $\alpha+\beta=1$,
+            \begin{equation*}
+                f(\alpha\mathbf{x}+\beta\mathbf{y})=\alpha f(\mathbf{x})+\beta f(\mathbf{y}).
+            \end{equation*}
+            \item If $H$ is a Hilbert space and $f$ is bounded, then $f$ is affine if and only if:
+            \begin{equation*}
+                f(\mathbf{x}) = \inprod{\mathbf{a}}{\mathbf{x}}+b,
+            \end{equation*}
+            for some $\mathbf{a}\in H$ and $b\in\mathbb{R}$.
+        \end{enumerate}
+    \end{thm}
+    \begin{proofing}
+        \begin{enumerate}
+            \item There exists a linear function $g$ such that:
+            \begin{equation*}
+                f(\mathbf{x})=g(\mathbf{x})+b, \qquad \text{for } \mathbf{x}\in V,
+            \end{equation*}
+            where $b\in\mathbb{R}$. If $\alpha+\beta=1$,
+            \begin{align*}
+                f(\alpha\mathbf{x}+\beta\mathbf{y})&=g(\alpha\mathbf{x}+\beta\mathbf{y})+b,\\
+                \tag{$\alpha+\beta=1$}
+                &=\alpha g(\mathbf{x})+\beta g(\mathbf{y})+(\alpha+\beta)b,\\
+                &=\alpha(g(\mathbf{x})+b)+\beta(g(\mathbf{y})+b),\\
+                &=\alpha f(\mathbf{x})+\beta f(\mathbf{y}).
+            \end{align*}
+            \item \begin{itemize}
+            	\item[$\Longrightarrow$] If $f$ is affine, then there exists a linear function $g$ such that:
+            	\begin{align*}
+            		f(\mathbf{x})&=g(\mathbf{x})+b, & g(\mathbf{x})&=f(\mathbf{x})-b, \qquad \text{for } \mathbf{x}\in V,
+            	\end{align*}
+            	where $b\in\mathbb{R}$. Since $f$ is bounded, there exists some $M_{f}>0$ such that:
+            	\begin{align*}
+            		\abs{f(\mathbf{x})}&\leq M_{f}\pnorm[H]{\mathbf{x}}, & b=\abs{f(\mathbf{0})}&\leq M_{f}\pnorm[H]{\mathbf{0}}=0.
+            	\end{align*}
+            	By the Riesz Representation Theorem, there exists some $\mathbf{a}\in H$ such that:
+            	\begin{equation*}
+            		g(\mathbf{x})=\inprod{\mathbf{a}}{\mathbf{x}}, \qquad \text{for } \mathbf{x}\in H.
+            	\end{equation*}
+            	Therefore,
+            	\begin{equation*}
+            		f(\mathbf{x})=\inprod{\mathbf{a}}{\mathbf{x}}+b, \qquad \text{for } \mathbf{x}\in H.
+            	\end{equation*}
+            	\item[$\Longleftarrow$] If there exists some $\mathbf{a}\in H$ and $b\in\mathbb{R}$ such that:
+            	\begin{equation*}
+            		f(\mathbf{x})=\inprod{\mathbf{a}}{\mathbf{x}}+b, \qquad \text{for } \mathbf{x}\in H,
+            	\end{equation*}
+            	then, by Example \ref{Chapter 4 (Example) Inner product with fixed vector is a linear function}, $\inprod{\mathbf{a}}{\mathbf{x}}$ is a linear function. Therefore, $f$ is affine.
+            \end{itemize}
+        \end{enumerate}
+    \end{proofing}
+    \newpage
+
+\section{Hyperplane}
+    \begin{defn}
+        Let $V$ be a vector space over $\mathbb{R}$. A subset $U \subset V$ is a \textbf{(linear) subspace} of $V$ if, for any $\mathbf{u},\mathbf{v}\in U$ and $\alpha, \beta \in \mathbb{R}$,
+        \begin{equation*}
+            \alpha\mathbf{u} + \beta\mathbf{v} \in U.
+        \end{equation*}
+    \end{defn}
+    \begin{defn}
+        Let $V$ be a vector space over $\mathbb{R}$. A set $W$ is an \textbf{affine subspace} if:
+        \begin{equation*}
+            W = \mathbf{a}+U = \{\mathbf{a}+\mathbf{u}:\mathbf{u}\in U\},
+        \end{equation*}
+        where $\mathbf{a} \in V$ and $U$ is a linear subspace of $V$.
+    \end{defn}
+    Let $H$ be a Hilbert space and $\mathbf{a}\in H$. We denote:
+    \begin{equation*}
+        S_{\mathbf{a},b} = \{\mathbf{x} \in H:\inprod{\mathbf{a}}{\mathbf{x}}=b\} \subset H.
+    \end{equation*}
+    Consider $b = 0$. For all $\mathbf{x}, \mathbf{y} \in S_{\mathbf{a},0}$ and $\alpha, \beta \in \mathbb{R}$,
+    \begin{equation*}
+        \inprod{\mathbf{a}}{\alpha\mathbf{x} + \beta\mathbf{y}} = \alpha\inprod{\mathbf{a}}{\mathbf{x}} + \beta\inprod{\mathbf{a}}{\mathbf{y}} = 0.
+    \end{equation*}
+    This means that $\alpha\mathbf{x} + \beta\mathbf{y} \in S_{\mathbf{a},0}$. Therefore, $S_{\mathbf{a},0}$ is a linear subspace of $H$.
+
+    For a general $b$, let $\mathbf{x}_{0}\in S_{\mathbf{a},b}$. Then we have:
+    \begin{equation*}
+        \inprod{\mathbf{a}}{\mathbf{x}_{0}}=b.
+    \end{equation*}
+    For all $\mathbf{x} \in S_{\mathbf{a},b}$,
+    \begin{align*}
+        \inprod{\mathbf{a}}{\mathbf{x} - \mathbf{x}_{0}} = \inprod{\mathbf{a}}{\mathbf{x}} - \inprod{\mathbf{a}}{\mathbf{x}_{0}} = b-b = 0 &\Longrightarrow \mathbf{x}-\mathbf{x}_{0}\in S_{\mathbf{a},0},\\
+        &\Longrightarrow \mathbf{x} \in \mathbf{x}_{0} + S_{\mathbf{a},0},\\
+        &\Longrightarrow S_{\mathbf{a},b} \subset \mathbf{x}_{0} + S_{\mathbf{a},0}.
+    \end{align*}
+    For all $\mathbf{x} \in S_{\mathbf{a},0}$,
+    \begin{align*}
+        \inprod{\mathbf{a}}{\mathbf{x} + \mathbf{x}_{0}} = \inprod{\mathbf{a}}{\mathbf{x}} + \inprod{\mathbf{a}}{\mathbf{x}_{0}} = 0 + b = b &\Longrightarrow \mathbf{x} + \mathbf{x}_{0} \in S_{\mathbf{a},b},\\
+        &\Longrightarrow S_{\mathbf{a},0} + \mathbf{x}_{0} \subset S_{\mathbf{a},b}.
+    \end{align*}
+    Therefore, we have $S_{\mathbf{a},b} = \mathbf{x}_{0} + S_{\mathbf{a},0}$, and thus $S_{\mathbf{a},b}$ is an affine subspace. We can define such a set as a hyperplane.
+    \begin{defn}
+        A \textbf{hyperplane} $S$ in the Hilbert space $H$ is defined by:
+        \begin{equation*}
+            S = \{\mathbf{x} \in H:\inprod{\mathbf{a}}{\mathbf{x}} = b\} \subset H,
+        \end{equation*}
+        where $\mathbf{a} \in H$ and $b \in \mathbb{R}$. 
+    \end{defn}
+    \begin{rem}
+        If $H$ has a dimension of $n$, then the hyperplane $S$ has a dimension of $n-1$ or a codimension of $1$.
+    \end{rem}
+    \begin{figure}[h!]
+        \centering
+        \begin{tikzpicture}
+            \draw[blue] (-2, 2) node {$H$};
+            \draw[thick] (-2,-0.5) -- (1,-0.5) -- (2,0.5) node[below right, midway] {$S_{\mathbf{a},0}$} -- (-1,0.5) -- (-2,-0.5);
+            \draw[thick, red] (-0.5,1) -- (2.5,1) -- (3.5,2) node[below right, midway] {$S_{\mathbf{a},b}$} -- (0.5,2) -- (-0.5,1);
+            \draw[thick, blue, ->] (0,0) node[left] {$O$} -- (1.5,1.5) node[right] {$\mathbf{x}_{0}$};
+        \end{tikzpicture}
+        \caption{Hyperplanes}
+    \end{figure}
+    \newpage
+
+    For any vectors that do not lie on the hyperplane, we can project those vectors onto the hyperplane.
+    \begin{defn}
+        Consider a hyperplane $S \subset H$. For any $\mathbf{y} \in H$, the vector on $S$ that is closest to $\mathbf{y}$ is called the \textbf{projection} of $\mathbf{y}$ onto $S$, denoted by $P_{S}\mathbf{y}$. Equivalently:
+        \begin{equation*}
+            P_{S}\mathbf{y} = \argmin_{\mathbf{x} \in S}\norm{\mathbf{y} - \mathbf{x}}.
+        \end{equation*} 
+    \end{defn}
+    How do we find the explicit form of such an equation?
+    \begin{thm}
+        \label{Chapter 4 (Theorem) Criteria for Projection Vector}
+        Given a hyperplane $S \subset H$, the vector $\mathbf{z} \in H$ is a solution of:
+        \begin{equation*}
+            \min_{\mathbf{x} \in S}\norm{\mathbf{y}-\mathbf{x}}
+        \end{equation*}
+        if and only if $\mathbf{z} \in S$ and $\inprod{\mathbf{z}-\mathbf{y}}{\mathbf{x}-\mathbf{z}}=0$ for all $\mathbf{x} \in S$.
+    \end{thm}
+    \begin{proofing}
+        \begin{itemize}
+            \item[$\Longrightarrow$] Assume that $\mathbf{z}$ is a solution of the minimization equation. Then $\mathbf{z} \in S$. For all $\mathbf{x} \in S$ and $t \in \mathbb{R}$,
+            \begin{align*}
+                \inprod{\mathbf{a}}{\mathbf{z}+t(\mathbf{x}-\mathbf{z})} &= \inprod{\mathbf{a}}{\mathbf{z}} + t(\inprod{\mathbf{a}}{\mathbf{x}} - \inprod{\mathbf{a}}{\mathbf{z}}),\\
+                &= b + t(b-b),\\
+                &= b.
+            \end{align*}
+            Therefore, $\mathbf{z} + t(\mathbf{x}-\mathbf{z}) \in S$. We have:
+            \begin{align*}
+                \norm{\mathbf{z}-\mathbf{y}}^{2} &\leq \norm{\mathbf{z}+t(\mathbf{x}-\mathbf{z})-\mathbf{y}}^{2} = \norm{\mathbf{z}-\mathbf{y}}^{2} + 2t\inprod{\mathbf{z}-\mathbf{y}}{\mathbf{x}-\mathbf{z}} + t^{2}\norm{\mathbf{x}-\mathbf{z}}^{2},\\
+                -t^{2}\norm{\mathbf{x}-\mathbf{z}}^{2} &\leq 2t\inprod{\mathbf{z}-\mathbf{y}}{\mathbf{x}-\mathbf{z}}.
+            \end{align*}
+            Assume that $t>0$. As $t \to 0^{+}$,
+            \begin{equation*}
+                \inprod{\mathbf{z}-\mathbf{y}}{\mathbf{x}-\mathbf{z}} \geq -\lim_{t \to 0^{+}}\frac{t}{2}\norm{\mathbf{x}-\mathbf{z}}^{2} = 0.
+            \end{equation*}
+            Assume that $t<0$. As $t \to 0^{-}$,
+            \begin{equation*}
+                \inprod{\mathbf{z}-\mathbf{y}}{\mathbf{x}-\mathbf{z}} \leq -\lim_{t \to 0^{-}}\frac{t}{2}\norm{\mathbf{x}-\mathbf{z}}^{2} = 0.
+            \end{equation*}
+            Therefore, $\inprod{\mathbf{z}-\mathbf{y}}{\mathbf{x}-\mathbf{z}} = 0$ for all $\mathbf{x} \in S$.
+            \item[$\Longleftarrow$] Assume that $\mathbf{z} \in S$ and $\inprod{\mathbf{z}-\mathbf{y}}{\mathbf{x}-\mathbf{z}} = 0$ for all $\mathbf{x} \in S$. This means that:
+            \begin{align*}
+                \norm{\mathbf{x}-\mathbf{y}}^{2} &= \norm{(\mathbf{x}-\mathbf{z}) + (\mathbf{z}-\mathbf{y})}^{2},\\
+                &= \norm{\mathbf{x}-\mathbf{z}}^{2} + 2\inprod{\mathbf{x}-\mathbf{z}}{\mathbf{z}-\mathbf{y}} + \norm{\mathbf{z}-\mathbf{y}}^{2},\\
+                &= \norm{\mathbf{x}-\mathbf{z}}^{2} + \norm{\mathbf{z}-\mathbf{y}}^{2},\\
+                &\geq \norm{\mathbf{z}-\mathbf{y}}^{2}.
+            \end{align*}
+            Therefore, we can find that:
+            \begin{equation*}
+                \mathbf{z} = \argmin_{\mathbf{x} \in S}\norm{\mathbf{x}-\mathbf{y}}^{2}.
+            \end{equation*}
+        \end{itemize}
+    \end{proofing}
+    \newpage
+
+    Using the last theorem, we can obtain the explicit form of the projection.
+    \begin{thm}
+        Let $H$ be a Hilbert space and $S$ be the hyperplane defined by:
+        \begin{equation*}
+            S = \{\mathbf{x}\in H:\inprod{\mathbf{a}}{\mathbf{x}} = b\},
+        \end{equation*}
+        where $\mathbf{a} \in H$ and $b \in \mathbb{R}$. Given $\mathbf{y} \in H$, we have a unique solution:
+        \begin{equation*}
+            P_{S}\mathbf{y} = \argmin_{\mathbf{x} \in S}\norm{\mathbf{y}-\mathbf{x}} = \mathbf{y} - \left(\frac{\inprod{\mathbf{a}}{\mathbf{y}}-b}{\norm{\mathbf{a}}^{2}}\right)\mathbf{a}.
+        \end{equation*}
+    \end{thm}
+    \begin{proofing}
+        Let $\mathbf{z} = \mathbf{y} - \left(\frac{\inprod{\mathbf{a}}{\mathbf{y}}-b}{\norm{\mathbf{a}}^{2}}\right)\mathbf{a}$.
+        \begin{align*}
+            \inprod{\mathbf{a}}{\mathbf{z}} &= \inprod{\mathbf{a}}{\mathbf{y}} - \frac{\inprod{\mathbf{a}}{\mathbf{y}}-b}{\norm{\mathbf{a}}^{2}}\inprod{\mathbf{a}}{\mathbf{a}},\\
+            &= \inprod{\mathbf{a}}{\mathbf{y}} - (\inprod{\mathbf{a}}{\mathbf{y}} - b),\\
+            &= b.
+        \end{align*}
+        Therefore, $\mathbf{z} \in S$. For any $\mathbf{x} \in S$,
+        \begin{align*}
+            \inprod{\mathbf{z}-\mathbf{y}}{\mathbf{x}-\mathbf{z}} &= \inprod{-\frac{\inprod{\mathbf{a}}{\mathbf{y}}-b}{\norm{\mathbf{a}}^{2}}\mathbf{a}}{\mathbf{x}-\mathbf{z}},\\
+            &= -\frac{\inprod{\mathbf{a}}{\mathbf{y}}-b}{\norm{\mathbf{a}}^{2}}(\inprod{\mathbf{a}}{\mathbf{x}} - \inprod{\mathbf{a}}{\mathbf{z}}),\\
+            &= -\frac{\inprod{\mathbf{a}}{\mathbf{y}}-b}{\norm{\mathbf{a}}^{2}}(b-b),\\
+            &= 0.
+        \end{align*}
+        Therefore, by Theorem \ref{Chapter 4 (Theorem) Criteria for Projection Vector}, $\mathbf{z}$ is a solution to:
+        \begin{equation*}
+            \min_{\mathbf{x} \in S}\norm{\mathbf{y}-\mathbf{x}}.
+        \end{equation*}
+        We prove that this solution is unique.
+        
+        Suppose that it has two distinct solutions $\mathbf{z}_{1}$ and $\mathbf{z}_{2}$. Then it implies that $\mathbf{z}_{1}, \mathbf{z}_{2} \in S$. By Theorem \ref{Chapter 4 (Theorem) Criteria for Projection Vector},
+        \begin{align*}
+            \inprod{\mathbf{z}_{1}-\mathbf{y}}{\mathbf{z}_{2}-\mathbf{z}_{1}} &= 0, & \inprod{\mathbf{z}_{2}-\mathbf{y}}{\mathbf{z}_{1}-\mathbf{z}_{2}} &= \inprod{\mathbf{y}-\mathbf{z}_{2}}{\mathbf{z}_{2}-\mathbf{z}_{1}} = 0.
+        \end{align*}
+        Adding the two identities, we have:
+        \begin{align*}
+            \inprod{\mathbf{z}_{1}-\mathbf{y}}{\mathbf{z}_{2}-\mathbf{z}_{1}} + \inprod{\mathbf{y}-\mathbf{z}_{2}}{\mathbf{z}_{2}-\mathbf{z}_{1}} = \inprod{\mathbf{z}_{1}-\mathbf{z}_{2}}{\mathbf{z}_{2}-\mathbf{z}_{1}} = 0 &\Longleftrightarrow -\norm{\mathbf{z}_{1}-\mathbf{z}_{2}}^{2} = 0,\\
+            &\Longleftrightarrow \mathbf{z}_{1} = \mathbf{z}_{2}.
+        \end{align*}
+        This results in a contradiction. Therefore, the solution $\mathbf{z}$ is unique.
+    \end{proofing}
+
+\appendix
+\renewcommand{\thechapter}{\Alph{chapter}}
+\chapter{Clustering, K-means, K-medians}
+	\label{Case Study A: Clustering, K-means, K-medians}
+	This case study assumes that you have already read Chapter \ref{Chapter 2: Vector spaces, metrics, limits, and convergence}.
+	
+    Suppose we are given $N$ vectors in $\mathbb{R}^{n}$:
+    \begin{equation*}
+        \mathbf{x}_{1}, \cdots, \mathbf{x}_{N} \in \mathbb{R}^{n}.
+    \end{equation*}
+    We want to group them into $K$ different clusters.
+    \begin{rem}
+        $\mathbb{R}^{n}$ is used for simplicity. In fact, it can be replaced by any vector space.
+    \end{rem}
+    Before performing clustering on any vector space, we must formulate the problem mathematically.
+    \begin{enumerate}
+        \item Representation: Starting with $N$ vectors $\{\mathbf{x}_{i}\}_{i=1}^{N}$ and $K$ clusters $\{G_{j}\}_{j=1}^{K}$, we define the following variables:
+        \begin{enumerate}
+            \item $\mathbf{x}_{i}\in\mathbb{R}^{n}$: the vectors to be grouped,
+            \item $c_{i}\in\{1,\cdots,K\}$: the cluster to which $\mathbf{x}_{i}$ belongs,
+            \item $G_{j} = \{i : c_{i} = j\}$: the clusters, which are sets of indices representing the vectors in the group,
+            \item $\mathbf{z}_{j}\in\mathbb{R}^{n}$: the representative vector in $G_{j}$, not necessarily one of the vectors in $\{\mathbf{x}_{1}, \cdots, \mathbf{x}_{N}\}$.
+        \end{enumerate}
+        \item Evaluation: What problem do we want to solve? The vectors in each cluster should be close to each other.
+        \begin{enumerate}
+            \item The distance between the vectors in a cluster and the corresponding representative vector should be minimized. Therefore, we define an optimization function:
+            \begin{equation*}
+                d_{j} = \sum_{i \in G_{j}}\norm{\mathbf{x}_{i} - \mathbf{z}_{j}}^{2}.
+            \end{equation*}
+            Our objective for this cluster is to minimize this optimization function.
+            \item Altogether, we get the overall optimization function:
+            \begin{equation*}
+                d = \sum_{j=1}^{K}d_{j}.
+            \end{equation*}
+            Then, we solve:
+            \begin{equation*}
+                \min_{\substack{G_{1}, \cdots, G_{K}\\\mathbf{z}_{1}, \cdots, \mathbf{z}_{K}}}d \Longleftrightarrow \min_{\substack{G_{1}, \cdots, G_{K}\\\mathbf{z}_{1}, \cdots, \mathbf{z}_{K}}}\sum_{j=1}^{K}\sum_{i \in G_{j}}\norm{\mathbf{x}_{i} - \mathbf{z}_{j}}^{2}.
+            \end{equation*}
+        \end{enumerate}
+        \item Optimization: We now have two sets of unknowns $\{G_{1}, \cdots, G_{K}\}$ and $\{\mathbf{z}_{1}, \cdots, \mathbf{z}_{K}\}$. However, both influence each other. How do we tackle this issue? We use alternating minimization.
+        \begin{itemize}
+            \item[Step 0:] Initialize $\mathbf{z}_{1}, \cdots, \mathbf{z}_{K}$.
+            \item[Step 1:] Fix $\mathbf{z}_{1}, \cdots, \mathbf{z}_{K}$ and solve the function with respect to $G_{1}, \cdots, G_{K}$:
+            \begin{equation*}
+                \min_{G_{1}, \cdots, G_{K}}\sum_{j=1}^{K}\sum_{i \in G_{j}}\norm{\mathbf{x}_{i} - \mathbf{z}_{j}}^{2}.
+            \end{equation*}
+            \item[Step 2:] Fix $G_{1}, \cdots, G_{K}$ and solve the function with respect to $\mathbf{z}_{1}, \cdots, \mathbf{z}_{K}$:
+            \begin{equation*}
+                \min_{\mathbf{z}_{1}, \cdots, \mathbf{z}_{K}}\sum_{j=1}^{K}\sum_{i \in G_{j}}\norm{\mathbf{x}_{i} - \mathbf{z}_{j}}^{2}.
+            \end{equation*}
+            \item[] Repeat Steps 1 and 2 until convergence is achieved.
+        \end{itemize}
+    \end{enumerate}
+    \newpage
+
+    How do we solve the functions in the alternating minimization algorithm? To obtain the clusters, we solve the following function:
+    \begin{align*}
+        \min_{G_{1}, \cdots, G_{K}}\sum_{j=1}^{K}\sum_{i \in G_{j}}\norm{\mathbf{x}_{i} - \mathbf{z}_{j}}^{2} &\Longleftrightarrow \min_{c_{1}, \cdots, c_{N}}\sum_{i=1}^{N}\norm{\mathbf{x}_{i} - \mathbf{z}_{c_{i}}}^{2}\\
+        &\Longleftrightarrow \min_{c_{i} \in \{1, \cdots, K\}}\norm{\mathbf{x}_{i} - \mathbf{z}_{c_{i}}}^{2}\\
+        &\Longleftrightarrow c_{i} = \argmin_{j \in \{1, \cdots, K\}}\norm{\mathbf{x}_{i} - \mathbf{z}_{j}}, \qquad \text{for } i = 1, \cdots, N.
+    \end{align*}
+    In simpler terms, finding clusters that minimize the distance between the vectors and the representatives is the same as assigning each vector to the cluster that minimizes the distance to its representative.
+
+    Therefore, $\mathbf{x}_{i}$ is assigned to the cluster whose representative is closest to $\mathbf{x}_{i}$. The new $G_{j}$ is then created by:
+    \begin{equation*}
+        G_{j} = \{i : c_{i} = j\}.
+    \end{equation*}
+    To obtain the representative vectors, we solve the following function:
+    \begin{align*}
+        \min_{\mathbf{z}_{1}, \cdots, \mathbf{z}_{K}}\sum_{j=1}^{K}\sum_{i \in G_{j}}\norm{\mathbf{x}_{i} - \mathbf{z}_{j}}^{2} &\Longleftrightarrow \min_{\mathbf{z}_{j}}\sum_{i \in G_{j}}\norm{\mathbf{x}_{i} - \mathbf{z}_{j}}^{2}, \qquad \text{for } j = 1, \cdots, K.
+    \end{align*}
+    We only need to consider each cluster separately to find the corresponding representative vector.
+
+    At this point, we haven't defined which norms we use to construct the clusters. In $\mathbb{R}^{n}$, one of the most commonly used norms for clustering is the $2$-norm. For $j = 1, \cdots, K$:
+    \begin{align*}
+        \min_{\mathbf{z}_{j}}\sum_{i \in G_{j}}\pnorm[2]{\mathbf{x}_{i} - \mathbf{z}_{j}}^{2} &\Longleftrightarrow \min_{z_{j1}, \cdots, z_{jn}}\sum_{i \in G_{j}}\sum_{k=1}^{n}(x_{ik} - z_{jk})^{2}\\
+        &\Longleftrightarrow 2\sum_{i \in G_{j}}(z_{jk} - x_{ik}) = 0 \Longleftrightarrow z_{jk} = \frac{1}{\abs{G_{j}}}\sum_{i \in G_{j}}x_{ik}, \qquad \text{for } k = 1, \cdots, n,\\
+        &\Longleftrightarrow \mathbf{z}_{j} = \frac{1}{\abs{G_{j}}}\sum_{i \in G_{j}}\mathbf{x}_{i}.
+    \end{align*}
+    This is called the K-means algorithm.
+    \begin{defn}
+        The \textbf{K-means algorithm} is a method that assigns $N$ vectors into $K$ clusters, where each vector belongs to the cluster with the nearest mean. The steps of the algorithm are as follows:
+        \begin{itemize}
+            \item[0:] Initialize $\mathbf{z}_{1}, \cdots, \mathbf{z}_{K}$.
+            \item[1:] Fix $\mathbf{z}_{1}, \cdots, \mathbf{z}_{K}$. For each $\mathbf{x}_{i}$, assign it to the cluster whose representative is closest in Euclidean distance:
+            \begin{align*}
+                c_{i} &= \argmin_{j \in \{1, \cdots, K\}}\pnorm[2]{\mathbf{x}_{i} - \mathbf{z}_{j}}^{2}, \qquad \text{for } i = 1, \cdots, N, & G_{j} &= \{i : c_{i} = j\}, \qquad \text{for } j = 1, \cdots, K.
+            \end{align*}
+            \item[2:] For each cluster $G_{j}$, calculate the new $\mathbf{z}_{j}$ as the mean of vectors in $G_{j}$:
+            \begin{equation*}
+                \mathbf{z}_{j} = \frac{1}{\abs{G_{j}}}\sum_{i \in G_{j}}\mathbf{x}_{i}, \qquad \text{for } j = 1, \cdots, K.
+            \end{equation*}
+            \item[] Repeat until convergence is achieved.
+        \end{itemize}
+    \end{defn}
+    \newpage
+
+    What happens if we switch from the $2$-norm to the $1$-norm? Derivations are omitted, but we find that it turns into the K-medians algorithm.
+    \begin{defn}
+        The \textbf{K-medians algorithm} is a method that assigns $N$ vectors into $K$ clusters, where each vector belongs to the cluster with the nearest median. The steps of the algorithm are as follows:
+        \begin{itemize}
+            \item[0:] Initialize $\mathbf{z}_{1}, \cdots, \mathbf{z}_{K}$.
+            \item[1:] Fix $\mathbf{z}_{1}, \cdots, \mathbf{z}_{K}$. For each $\mathbf{x}_{i}$, assign it to the cluster whose representative is closest in Manhattan distance:
+            \begin{align*}
+                c_{i} &= \argmin_{j \in \{1, \cdots, K\}}\pnorm[1]{\mathbf{x}_{i} - \mathbf{z}_{j}}^{2}, \qquad \text{for } i = 1, \cdots, N, & G_{j} &= \{i : c_{i} = j\}, \qquad \text{for } j = 1, \cdots, K.
+            \end{align*}
+            \item[2:] For each cluster $G_{j}$, calculate the new $\mathbf{z}_{j}$ as the median of vectors in $G_{j}$:
+            \begin{equation*}
+                \mathbf{z}_{j} = \median\{\mathbf{x}_{i} : i \in G_{j}\}, \qquad \text{for } j = 1, \cdots, K.
+            \end{equation*}
+            \item[] Repeat until convergence is achieved.
+        \end{itemize}
+    \end{defn}
+    \begin{rem}
+        The K-means algorithm is more sensitive to outliers, while the K-medians algorithm is more robust to outliers.
+    \end{rem}
+
+\chapter{Kernel K-means/Kernel Trick}
+    \label{Case Study B: Kernel K-means/Kernel Trick}
+    This case study assumes that you have already read Chapter \ref{Chapter 3: Inner products, Hilbert Spaces} and Appendix \ref{Case Study A: Clustering, K-means, K-medians}.
+
+    In the regular K-means algorithm, we assume that the vectors can be separated linearly. However, it fails when the boundary is curved. How do we modify the K-means algorithm to deal with curved data? We can transform the data to a new domain and then apply the K-means algorithm in that transformed domain.
+    \begin{enumerate}
+        \item Representation: Starting with $N$ vectors $\{\mathbf{x}_{i}\}_{i=1}^{N}$ and $K$ clusters $\{G_{j}\}_{j=1}^{K}$, we define the following variables:
+        \begin{enumerate}
+            \item $\mathbf{x}_{i}\in\mathbb{R}^{n}$: the vectors to be grouped.
+            \item $c_{i}\in\{1,\cdots,K\}$: the cluster to which $\mathbf{x}_{i}$ belongs.
+            \item $G_{j}=\{i:c_{i}=j\}$: the clusters, which are sets of indices representing the vectors in the group.
+            \item $H$: the feature space that contains the transformed vectors.
+            \item $\phi: \mathbb{R}^{n}\to H$: the feature map that transforms the vectors.
+            \item $\mathbf{z}_{j}\in H$: the representative vector in $G_{j}$, not necessarily one of the vectors in $\{\phi(\mathbf{x}_{1}),\cdots,\phi(\mathbf{x}_{N})\}$.
+        \end{enumerate}
+        \item Evaluation: With the feature map, our objective becomes finding: 
+        \begin{equation*}
+            \min_{\substack{G_{1},\cdots,G_{K}\\\mathbf{z}_{1},\cdots,\mathbf{z}_{K}}}\sum_{j=1}^{K}\sum_{i\in G_{j}}\norm{\phi(\mathbf{x}_{i})-\mathbf{z}_{j}}^{2}
+        \end{equation*}
+        In this algorithm, we also need to find a good $\phi$ that can transform the data well. If we assume that the norm we use has an inner product, our goal is to ensure that:
+        \begin{enumerate}
+            \item If $\mathbf{x}_{i_{1}}$ and $\mathbf{x}_{i_{2}}$ are close ($\pnorm[2]{\mathbf{x}_{i_{1}}-\mathbf{x}_{i_{2}}}$ is small), then $\pnorm[2]{\phi(\mathbf{x}_{i_{1}})-\phi(\mathbf{x}_{i_{2}})}$ is small.
+            \item If $\mathbf{x}_{i_{1}}$ and $\mathbf{x}_{i_{2}}$ are far apart ($\pnorm[2]{\mathbf{x}_{i_{1}}-\mathbf{x}_{i_{2}}}$ is large), then $\pnorm[2]{\phi(\mathbf{x}_{i_{1}})-\phi(\mathbf{x}_{i_{2}})}$ is large.
+        \end{enumerate}
+        \item Optimization: Since $\phi$ depends on the shape of $\mathbf{x}_{1},\cdots,\mathbf{x}_{N}$, it is not easy to find a good $\phi$ and $H$ explicitly. 
+        
+        Therefore, we can utilize the \textbf{Kernel trick} -- define $\phi$ and $H$ implicitly.
+        
+        Moreover, if we only need to know $G_{1},\cdots,G_{K}$, we can eliminate $\mathbf{z}_{1},\cdots,\mathbf{z}_{K}$ in our algorithm.
+    \end{enumerate}
+
+    The K-means algorithm can be modified as follows:
+    \begin{itemize}
+        \item[0:] Initialize $G_{1}, \cdots, G_{K}$.
+        \item[1:] For each $\mathbf{x}_{i}$, assign it to the cluster whose representative is closest in Euclidean distance:
+        \begin{align*}
+            c_{i} &= \argmin_{j \in \{1, \cdots, K\}}\pnorm[2]{\phi(\mathbf{x}_{i}) - \frac{1}{\abs{G_{j}}}\sum_{k\in G_{j}}\phi(\mathbf{x}_{k})}^{2}, \qquad \text{for } i = 1, \cdots, N, & G_{j} &= \{i : c_{i} = j\}, \qquad \text{for } j = 1, \cdots, K.
+        \end{align*}
+        \item[] Repeat until convergence is achieved.
+    \end{itemize}
+    \newpage
+    
+    We can rearrange the equation in the algorithm:
+    \begin{align*}
+        \pnorm[2]{\phi(\mathbf{x}_{i}) - \frac{1}{\abs{G_{j}}}\sum_{i\in G_{j}}\phi(\mathbf{x}_{i})}^{2} &= \inprod{\phi(\mathbf{x}_{i}) - \frac{1}{\abs{G_{j}}}\sum_{i\in G_{j}}\phi(\mathbf{x}_{i})}{\phi(\mathbf{x}_{i}) - \frac{1}{\abs{G_{j}}}\sum_{i\in G_{j}}\phi(\mathbf{x}_{i})}\\
+        &=\inprod{\phi(\mathbf{x}_{i})}{\phi(\mathbf{x}_{i})}-\frac{2}{\abs{G_{j}}}\inprod{\phi(\mathbf{x}_{i})}{\sum_{i\in G_{j}}\phi(\mathbf{x}_{i})}+\frac{1}{\abs{G_{j}}^{2}}\inprod{\sum_{i\in G_{j}}\phi(\mathbf{x}_{i})}{\sum_{i\in G_{j}}\phi(\mathbf{x}_{i})}\\
+        &=\inprod{\phi(\mathbf{x}_{i})}{\phi(\mathbf{x}_{i})}-\frac{2}{\abs{G_{j}}}\sum_{k\in G_{j}}\inprod{\phi(\mathbf{x}_{i})}{\phi(\mathbf{x}_{k})}+\frac{1}{\abs{G_{j}}^{2}}\sum_{k\in G_{j}}\sum_{\ell\in G_{j}}\inprod{\phi(\mathbf{x}_{k})}{\phi(\mathbf{x}_{\ell})}.
+    \end{align*}
+    We can see that all the inner products are usually in the form of:
+    \begin{equation*}
+        \inprod{\phi(\cdot)}{\phi(\cdot)}.
+    \end{equation*}
+    By using the Kernel trick, we can define $\phi$ and $H$ implicitly by defining the kernel function.
+    \begin{defn}
+        For some $\phi$, the \textbf{kernel function} is a binary operator $\kappa: (\mathbb{R}^{n},\mathbb{R}^{n})\to\mathbb{R}$ such that for $\mathbf{x},\mathbf{y}\in\mathbb{R}^{n}$,
+        \begin{equation*}
+            \kappa(\mathbf{x},\mathbf{y})=\inprod{\phi(\mathbf{x})}{\phi(\mathbf{y})}.
+        \end{equation*}
+    \end{defn}
+    We can then form a generalized K-means algorithm.
+    \begin{defn}
+        The \textbf{Kernel K-means algorithm} is a method that assigns $N$ vectors into $K$ clusters, where each vector is transformed and classified into the cluster with the nearest mean. The steps of the algorithm are as follows:
+        \begin{itemize}
+            \item[0:] Initialize $G_{1},\cdots,G_{K}$ and define a kernel function $\kappa$.
+            \item[1:] For each $\mathbf{x}_{i}$, assign it to the cluster whose mean is the closest in Euclidean distance after transformation.
+            \begin{align*}
+                c_{i}&=\argmin_{j \in \{1, \cdots, K\}} \left(\kappa(\mathbf{x}_{i},\mathbf{x}_{i})-\frac{2}{\abs{G_{j}}}\sum_{k\in G_{j}}\kappa(\mathbf{x}_{i},\mathbf{x}_{k})+\frac{1}{\abs{G_{j}}^{2}}\sum_{k\in G_{j}}\sum_{\ell\in G_{j}}\kappa(\mathbf{x}_{k},\mathbf{x}_{\ell})\right), & &\text{for }i=1,\cdots,N\\
+                G_{j}&=\{i:c_{i}=j\}, & &\text{for }j=1,\cdots,K.
+            \end{align*}
+            \item[] Repeat until convergence is achieved.
+        \end{itemize}
+    \end{defn}
+    Now the problem switches to determining which kernel function we can choose. We have some necessary conditions.
+    \begin{defn}
+        The kernel function $\kappa$ is a \textbf{symmetric kernel} if for all $\mathbf{x},\mathbf{y}\in\mathbb{R}^{n}$,
+        \begin{equation*}
+            \kappa(\mathbf{x},\mathbf{y})=\kappa(\mathbf{y},\mathbf{x}).
+        \end{equation*}
+    \end{defn}
+    With a set of vectors $\mathbf{y}_{1},\cdots,\mathbf{y}_{m}\in\mathbb{R}^{n}$, we can define a matrix by:
+    \begin{equation*}
+        \boldsymbol{\kappa}=[\kappa(\mathbf{y}_{i},\mathbf{y}_{j})]_{i,j}.
+    \end{equation*}
+    Assume that we have a new vector that is the linear combination of the $m$ transformed vectors. For any $\mathbf{z}\in\mathbb{R}^{m}$,
+    \begin{equation*}
+        0\leq\inprod{\sum_{i=1}^{m}z_{i}\phi(\mathbf{y}_{i})}{\sum_{i=1}^{m}z_{i}\phi(\mathbf{y}_{i})}=\sum_{i=1}^{m}\sum_{j=1}^{m}z_{i}z_{j}\inprod{\phi(\mathbf{y}_{i})}{\phi(\mathbf{y}_{j})}=\sum_{i=1}^{m}\sum_{j=1}^{m}z_{i}z_{j}\kappa(\mathbf{y}_{i},\mathbf{y}_{j})=\mathbf{z}^{T}\boldsymbol{\kappa}\mathbf{z}.
+    \end{equation*}
+    \begin{defn}
+        The kernel function $\kappa$ is symmetric positive semi-definite (SPSD) if:
+        \begin{enumerate}
+            \item $\kappa(\mathbf{x},\mathbf{y})=\kappa(\mathbf{y},\mathbf{x})$ for all $\mathbf{x},\mathbf{y}\in\mathbb{R}^{n}$.
+            \item For any $m>0$ and $\mathbf{y}_{1},\cdots,\mathbf{y}_{m}\in\mathbb{R}^{n}$, the matrix:
+            \begin{equation*}
+                \boldsymbol{\kappa}=[\kappa(\mathbf{y}_{i},\mathbf{y}_{j})]_{i,j}
+            \end{equation*}
+            is symmetric positive semi-definite.
+        \end{enumerate}
+    \end{defn}
+    \newpage
+
+    Therefore, by the following theorem, we have a way to determine which mapping can be used as a kernel function.
+    \begin{thm}\named{Mercer's Theorem}
+        If the kernel function $\kappa$ is continuous, symmetric, and positive semi-definite, then there exists a Hilbert space $H$ and a mapping such that for $\mathbf{x},\mathbf{y}\in\mathbb{R}^{n}$:
+        \begin{equation*}
+            \kappa(\mathbf{x},\mathbf{y})=\inprod{\phi(\mathbf{x})}{\phi(\mathbf{y})}.
+        \end{equation*}
+    \end{thm}
+    \begin{eg}
+        The traditional kernel, which involves no transformation, is defined by:
+        \begin{align*}
+            \kappa(\mathbf{x},\mathbf{y})&=\mathbf{x}^{T}\mathbf{y}, & \phi(\mathbf{x})&=\mathbf{x}, & &\text{for } \mathbf{x},\mathbf{y}\in\mathbb{R}^{n}.
+        \end{align*}
+        Applying this kernel function gives the normal K-means algorithm.
+    \end{eg}
+    \begin{rem}
+        Most of the time, finding the feature map $\phi$ is extremely difficult.
+    \end{rem}
+    \begin{eg}
+        The \textbf{polynomial kernel} for $\alpha\in\mathbb{Z}$ and $c\in\mathbb{R}$ is defined by:
+        \begin{equation*}
+            \kappa(\mathbf{x},\mathbf{y})=(\mathbf{x}^{T}\mathbf{y}+c)^{\alpha}, \qquad \text{for }\mathbf{x},\mathbf{y}\in \mathbb{R}^{n}.
+        \end{equation*}
+        If $\alpha = 2$, then the feature map is an extremely large vector defined by:
+        \begin{equation*}
+            \phi(\mathbf{x})=\begin{pmatrix}
+                x_{1}^{2}\\
+                \vdots\\
+                x_{n}^{2}\\
+                \sqrt{2}x_{1}x_{2}\\
+                \vdots\\
+                \sqrt{2}x_{n-1}x_{n}\\
+                \sqrt{2}cx_{1}\\
+                \vdots\\
+                \sqrt{2}cx_{n}\\
+                c
+            \end{pmatrix}, \qquad \text{for }\mathbf{x}\in\mathbb{R}^{n}.
+        \end{equation*}
+        A more general term would require the multinomial theorem.
+    \end{eg}
+    \begin{eg}
+        The \textbf{Gaussian kernel} for $\sigma>0$ is defined by:
+        \begin{equation*}
+            \kappa(\mathbf{x},\mathbf{y})=e^{-\frac{1}{\sigma^{2}}\pnorm[2]{\mathbf{x}-\mathbf{y}}^{2}}=\exp\left(-\frac{1}{\sigma^{2}}\pnorm[2]{\mathbf{x}-\mathbf{y}}^{2}\right), \qquad \text{for }\mathbf{x},\mathbf{y}\in \mathbb{R}^{n}.
+        \end{equation*}
+        Obtaining its feature map would require using the Taylor expansion.
+    \end{eg}
+    \begin{eg}
+        Consider that we use the Gaussian kernel to perform the Kernel K-means algorithm. For the same vectors:
+        \begin{equation*}
+            \kappa(\mathbf{x}_{i},\mathbf{x}_{i})=\exp\left(-\frac{1}{\sigma^{2}}\pnorm[2]{\mathbf{x}_{i}-\mathbf{x}_{i}}^{2}\right)=e^{0}=1, \qquad \text{for }i=1,\cdots,N.
+        \end{equation*}
+        For different vectors, we can normalize the distances between two vectors to lie between $0$ and $1$ via the transformation:
+        \begin{equation*}
+            \kappa(\mathbf{x}_{i},\mathbf{x}_{j})\begin{cases}
+                \approx 1, &\text{if }\pnorm[2]{\mathbf{x}_{i}-\mathbf{x}_{j}}\text{ is small}\\
+                \approx 0, &\text{if }\pnorm[2]{\mathbf{x}_{i}-\mathbf{x}_{j}}\text{ is large}.
+            \end{cases}
+        \end{equation*}
+        Does the kernel fulfill the goal for what we aimed for with the feature map?
+        \begin{align*}
+            \pnorm[2]{\phi(\mathbf{x}_{i_{1}})-\phi(\mathbf{x}_{i_{2}})}^{2}&=\pnorm[2]{\phi(\mathbf{x}_{i_{1}})}^{2}-2\inprod{\phi(\mathbf{x}_{i_{1}})}{\phi(\mathbf{x}_{i_{2}})}+\pnorm[2]{\phi(\mathbf{x}_{i_{2}})}^{2}\\
+            &=\kappa(\mathbf{x}_{i_{1}},\mathbf{x}_{i_{1}})-2\kappa(\mathbf{x}_{i_{1}},\mathbf{x}_{i_{2}})+\kappa(\mathbf{x}_{i_{2}},\mathbf{x}_{i_{2}}).
+        \end{align*}
+        Therefore, the distance in transformed data is given by:
+        \begin{equation*}
+            \pnorm[2]{\phi(\mathbf{x}_{i_{1}})-\phi(\mathbf{x}_{i_{2}})}^{2}\begin{cases}
+                \approx 0, &\text{if }\pnorm[2]{\mathbf{x}_{i}-\mathbf{x}_{j}}\text{ is small}\\
+                \approx 2, &\text{if }\pnorm[2]{\mathbf{x}_{i}-\mathbf{x}_{j}}\text{ is large}.
+            \end{cases}
+        \end{equation*}
+    \end{eg}
+
+\chapter{Metric Learning}
+    \label{Case Study C: Metric Learning}
+    This case study assumes that you have already read Chapter \ref{Chapter 3: Inner products, Hilbert Spaces}.
+
+    Suppose we are given $N$ vectors in $\mathbb{R}^{n}$:
+    \begin{equation*}
+        \mathbf{x}_{1},\cdots,\mathbf{x}_{N}\in\mathbb{R}^{n},
+    \end{equation*}
+    and a set of vector pairs $S$ and $D$ such that:
+    \begin{equation*}
+        (\mathbf{x}_{i},\mathbf{x}_{j})\in\begin{cases}
+            S, &\text{if }\mathbf{x}_{i}\text{ and }\mathbf{x}_{j}\text{ are similar},\\
+            D, &\text{if }\mathbf{x}_{i}\text{ and }\mathbf{x}_{j}\text{ are dissimilar (different)}.
+        \end{cases}
+    \end{equation*}
+    How do we find a metric $\norm{\cdot}$ such that:
+    \begin{align*}
+        \norm{\mathbf{x}_{i}-\mathbf{x}_{j}}&\text{ is small}, & \text{for }&(\mathbf{x}_{i},\mathbf{x}_{j})\in S,\\
+        \norm{\mathbf{x}_{i}-\mathbf{x}_{j}}&\text{ is large}, & \text{for }&(\mathbf{x}_{i},\mathbf{x}_{j})\in D.
+    \end{align*} 
+    \begin{enumerate}
+        \item Representation: How do we represent the norm? We can try using the $p$-norms with $p\geq 1$:
+        \begin{equation*}
+            \pnorm[p]{\mathbf{x}}=\left(\sum_{i=1}^{n}\abs{x_{i}}^{p}\right)^{\frac{1}{p}}.
+        \end{equation*}
+        However, the norm set is too small for us to explore. We can use the more generalized norm induced by the weighted inner product with a symmetric positive definite matrix $\mathbf{A}\in\mathbb{R}^{n\times n}$: 
+        \begin{equation*}
+            \pnorm[\mathbf{A}]{\mathbf{x}}=\sqrt{\mathbf{x}^{T}\mathbf{A}\mathbf{x}}.
+        \end{equation*}
+        The set of all SPD matrices is large enough, though it is not closed. Its closure is the set of all SPSD matrices. However, for any SPSD matrices $\mathbf{A}$ that are not SPD matrices:
+        \begin{align*}
+            \pnorm[\mathbf{A}]{\mathbf{x}}&=\sqrt{\mathbf{x}^{T}\mathbf{A}\mathbf{x}}=0, & 
+            \mathbf{x}^{T}\mathbf{Ax}&\centernot{\Longrightarrow}\mathbf{x}=\mathbf{0}.
+        \end{align*}
+        This violates the positive-definiteness property of a norm. It is still a semi-norm.
+        \begin{defn}
+            Let $V$ be a vector space. A \textbf{semi-norm} on $V$ is a function $\norm{\cdot}:V\to\mathbb{R}$ such that for $\mathbf{x},\mathbf{y}\in V$:
+            \begin{itemize}
+                \item[1.] $\norm{\mathbf{x}}\geq 0$,
+                \item[2.] $\norm{\alpha\mathbf{x}}=\abs{\alpha}\norm{\mathbf{x}}$ for $\alpha\in\mathbb{R}$,
+                \item[3.] $\norm{\mathbf{x}+\mathbf{y}}\leq\norm{\mathbf{x}}+\norm{\mathbf{y}}$.
+            \end{itemize}
+        \end{defn}
+        Since we only want to identify similarity, non-negativity is sufficient for our task.
+        \item Evaluation: Which SPSD matrices are the best?
+        
+        Distance should be small for pairs in $S$, while distance should be large for pairs in $D$. Since the distance can only approach $0$, but extends to $\infty$, we can start large and minimize the distance for the pairs in $S$.
+        \begin{equation*}
+            \min_{\mathbf{A}\in\mathbb{R}^{n\times n}\text{ is SPSD}}\sum_{(\mathbf{x}_{i},\mathbf{x}_{j})\in S}\pnorm[\mathbf{A}]{\mathbf{x}_{i}-\mathbf{x}_{j}}^{2}\text{ such that }\sum_{(\mathbf{x}_{i},\mathbf{x}_{j})\in D}\pnorm[\mathbf{A}]{\mathbf{x}_{i}-\mathbf{x}_{j}}^{2}\geq 1.
+        \end{equation*}
+        \item Optimization: We do not perform it here.
+    \end{enumerate}
+\end{document}
