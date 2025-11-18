@@ -922,5 +922,121 @@
     \end{eg}
     
     Read Appendix \ref{Case Study A: Clustering, K-means, K-medians} (Clustering, K-means, K-medians) to see the case study for Chapter \ref{Chapter 2: Vector spaces, metrics, limits, and convergence}.
-   
+
+\appendix
+\renewcommand{\thechapter}{\Alph{chapter}}
+\chapter{Clustering, K-means, K-medians}
+	\label{Case Study A: Clustering, K-means, K-medians}
+	This case study assumes that you have already read Chapter \ref{Chapter 2: Vector spaces, metrics, limits, and convergence}.
+	
+    Suppose we are given $N$ vectors in $\mathbb{R}^{n}$:
+    \begin{equation*}
+        \mathbf{x}_{1}, \cdots, \mathbf{x}_{N} \in \mathbb{R}^{n}.
+    \end{equation*}
+    We want to group them into $K$ different clusters.
+    \begin{rem}
+        $\mathbb{R}^{n}$ is used for simplicity. In fact, it can be replaced by any vector space.
+    \end{rem}
+    Before performing clustering on any vector space, we must formulate the problem mathematically.
+    \begin{enumerate}
+        \item Representation: Starting with $N$ vectors $\{\mathbf{x}_{i}\}_{i=1}^{N}$ and $K$ clusters $\{G_{j}\}_{j=1}^{K}$, we define the following variables:
+        \begin{enumerate}
+            \item $\mathbf{x}_{i}\in\mathbb{R}^{n}$: the vectors to be grouped,
+            \item $c_{i}\in\{1,\cdots,K\}$: the cluster to which $\mathbf{x}_{i}$ belongs,
+            \item $G_{j} = \{i : c_{i} = j\}$: the clusters, which are sets of indices representing the vectors in the group,
+            \item $\mathbf{z}_{j}\in\mathbb{R}^{n}$: the representative vector in $G_{j}$, not necessarily one of the vectors in $\{\mathbf{x}_{1}, \cdots, \mathbf{x}_{N}\}$.
+        \end{enumerate}
+        \item Evaluation: What problem do we want to solve? The vectors in each cluster should be close to each other.
+        \begin{enumerate}
+            \item The distance between the vectors in a cluster and the corresponding representative vector should be minimized. Therefore, we define an optimization function:
+            \begin{equation*}
+                d_{j} = \sum_{i \in G_{j}}\norm{\mathbf{x}_{i} - \mathbf{z}_{j}}^{2}.
+            \end{equation*}
+            Our objective for this cluster is to minimize this optimization function.
+            \item Altogether, we get the overall optimization function:
+            \begin{equation*}
+                d = \sum_{j=1}^{K}d_{j}.
+            \end{equation*}
+            Then, we solve:
+            \begin{equation*}
+                \min_{\substack{G_{1}, \cdots, G_{K}\\\mathbf{z}_{1}, \cdots, \mathbf{z}_{K}}}d \Longleftrightarrow \min_{\substack{G_{1}, \cdots, G_{K}\\\mathbf{z}_{1}, \cdots, \mathbf{z}_{K}}}\sum_{j=1}^{K}\sum_{i \in G_{j}}\norm{\mathbf{x}_{i} - \mathbf{z}_{j}}^{2}.
+            \end{equation*}
+        \end{enumerate}
+        \item Optimization: We now have two sets of unknowns $\{G_{1}, \cdots, G_{K}\}$ and $\{\mathbf{z}_{1}, \cdots, \mathbf{z}_{K}\}$. However, both influence each other. How do we tackle this issue? We use alternating minimization.
+        \begin{itemize}
+            \item[Step 0:] Initialize $\mathbf{z}_{1}, \cdots, \mathbf{z}_{K}$.
+            \item[Step 1:] Fix $\mathbf{z}_{1}, \cdots, \mathbf{z}_{K}$ and solve the function with respect to $G_{1}, \cdots, G_{K}$:
+            \begin{equation*}
+                \min_{G_{1}, \cdots, G_{K}}\sum_{j=1}^{K}\sum_{i \in G_{j}}\norm{\mathbf{x}_{i} - \mathbf{z}_{j}}^{2}.
+            \end{equation*}
+            \item[Step 2:] Fix $G_{1}, \cdots, G_{K}$ and solve the function with respect to $\mathbf{z}_{1}, \cdots, \mathbf{z}_{K}$:
+            \begin{equation*}
+                \min_{\mathbf{z}_{1}, \cdots, \mathbf{z}_{K}}\sum_{j=1}^{K}\sum_{i \in G_{j}}\norm{\mathbf{x}_{i} - \mathbf{z}_{j}}^{2}.
+            \end{equation*}
+            \item[] Repeat Steps 1 and 2 until convergence is achieved.
+        \end{itemize}
+    \end{enumerate}
+    \newpage
+
+    How do we solve the functions in the alternating minimization algorithm? To obtain the clusters, we solve the following function:
+    \begin{align*}
+        \min_{G_{1}, \cdots, G_{K}}\sum_{j=1}^{K}\sum_{i \in G_{j}}\norm{\mathbf{x}_{i} - \mathbf{z}_{j}}^{2} &\Longleftrightarrow \min_{c_{1}, \cdots, c_{N}}\sum_{i=1}^{N}\norm{\mathbf{x}_{i} - \mathbf{z}_{c_{i}}}^{2}\\
+        &\Longleftrightarrow \min_{c_{i} \in \{1, \cdots, K\}}\norm{\mathbf{x}_{i} - \mathbf{z}_{c_{i}}}^{2}\\
+        &\Longleftrightarrow c_{i} = \argmin_{j \in \{1, \cdots, K\}}\norm{\mathbf{x}_{i} - \mathbf{z}_{j}}, \qquad \text{for } i = 1, \cdots, N.
+    \end{align*}
+    In simpler terms, finding clusters that minimize the distance between the vectors and the representatives is the same as assigning each vector to the cluster that minimizes the distance to its representative.
+
+    Therefore, $\mathbf{x}_{i}$ is assigned to the cluster whose representative is closest to $\mathbf{x}_{i}$. The new $G_{j}$ is then created by:
+    \begin{equation*}
+        G_{j} = \{i : c_{i} = j\}.
+    \end{equation*}
+    To obtain the representative vectors, we solve the following function:
+    \begin{align*}
+        \min_{\mathbf{z}_{1}, \cdots, \mathbf{z}_{K}}\sum_{j=1}^{K}\sum_{i \in G_{j}}\norm{\mathbf{x}_{i} - \mathbf{z}_{j}}^{2} &\Longleftrightarrow \min_{\mathbf{z}_{j}}\sum_{i \in G_{j}}\norm{\mathbf{x}_{i} - \mathbf{z}_{j}}^{2}, \qquad \text{for } j = 1, \cdots, K.
+    \end{align*}
+    We only need to consider each cluster separately to find the corresponding representative vector.
+
+    At this point, we haven't defined which norms we use to construct the clusters. In $\mathbb{R}^{n}$, one of the most commonly used norms for clustering is the $2$-norm. For $j = 1, \cdots, K$:
+    \begin{align*}
+        \min_{\mathbf{z}_{j}}\sum_{i \in G_{j}}\pnorm[2]{\mathbf{x}_{i} - \mathbf{z}_{j}}^{2} &\Longleftrightarrow \min_{z_{j1}, \cdots, z_{jn}}\sum_{i \in G_{j}}\sum_{k=1}^{n}(x_{ik} - z_{jk})^{2}\\
+        &\Longleftrightarrow 2\sum_{i \in G_{j}}(z_{jk} - x_{ik}) = 0 \Longleftrightarrow z_{jk} = \frac{1}{\abs{G_{j}}}\sum_{i \in G_{j}}x_{ik}, \qquad \text{for } k = 1, \cdots, n,\\
+        &\Longleftrightarrow \mathbf{z}_{j} = \frac{1}{\abs{G_{j}}}\sum_{i \in G_{j}}\mathbf{x}_{i}.
+    \end{align*}
+    This is called the K-means algorithm.
+    \begin{defn}
+        The \textbf{K-means algorithm} is a method that assigns $N$ vectors into $K$ clusters, where each vector belongs to the cluster with the nearest mean. The steps of the algorithm are as follows:
+        \begin{itemize}
+            \item[0:] Initialize $\mathbf{z}_{1}, \cdots, \mathbf{z}_{K}$.
+            \item[1:] Fix $\mathbf{z}_{1}, \cdots, \mathbf{z}_{K}$. For each $\mathbf{x}_{i}$, assign it to the cluster whose representative is closest in Euclidean distance:
+            \begin{align*}
+                c_{i} &= \argmin_{j \in \{1, \cdots, K\}}\pnorm[2]{\mathbf{x}_{i} - \mathbf{z}_{j}}^{2}, \qquad \text{for } i = 1, \cdots, N, & G_{j} &= \{i : c_{i} = j\}, \qquad \text{for } j = 1, \cdots, K.
+            \end{align*}
+            \item[2:] For each cluster $G_{j}$, calculate the new $\mathbf{z}_{j}$ as the mean of vectors in $G_{j}$:
+            \begin{equation*}
+                \mathbf{z}_{j} = \frac{1}{\abs{G_{j}}}\sum_{i \in G_{j}}\mathbf{x}_{i}, \qquad \text{for } j = 1, \cdots, K.
+            \end{equation*}
+            \item[] Repeat until convergence is achieved.
+        \end{itemize}
+    \end{defn}
+    \newpage
+
+    What happens if we switch from the $2$-norm to the $1$-norm? Derivations are omitted, but we find that it turns into the K-medians algorithm.
+    \begin{defn}
+        The \textbf{K-medians algorithm} is a method that assigns $N$ vectors into $K$ clusters, where each vector belongs to the cluster with the nearest median. The steps of the algorithm are as follows:
+        \begin{itemize}
+            \item[0:] Initialize $\mathbf{z}_{1}, \cdots, \mathbf{z}_{K}$.
+            \item[1:] Fix $\mathbf{z}_{1}, \cdots, \mathbf{z}_{K}$. For each $\mathbf{x}_{i}$, assign it to the cluster whose representative is closest in Manhattan distance:
+            \begin{align*}
+                c_{i} &= \argmin_{j \in \{1, \cdots, K\}}\pnorm[1]{\mathbf{x}_{i} - \mathbf{z}_{j}}^{2}, \qquad \text{for } i = 1, \cdots, N, & G_{j} &= \{i : c_{i} = j\}, \qquad \text{for } j = 1, \cdots, K.
+            \end{align*}
+            \item[2:] For each cluster $G_{j}$, calculate the new $\mathbf{z}_{j}$ as the median of vectors in $G_{j}$:
+            \begin{equation*}
+                \mathbf{z}_{j} = \median\{\mathbf{x}_{i} : i \in G_{j}\}, \qquad \text{for } j = 1, \cdots, K.
+            \end{equation*}
+            \item[] Repeat until convergence is achieved.
+        \end{itemize}
+    \end{defn}
+    \begin{rem}
+        The K-means algorithm is more sensitive to outliers, while the K-medians algorithm is more robust to outliers.
+    \end{rem}
 \end{document}
