@@ -1631,4 +1631,57 @@
             \end{cases}
         \end{equation*}
     \end{eg}
+
+\chapter{Metric Learning}
+    \label{Case Study C: Metric Learning}
+    This case study assumes that you have already read Chapter \ref{Chapter 3: Inner products, Hilbert Spaces}.
+
+    Suppose we are given $N$ vectors in $\mathbb{R}^{n}$:
+    \begin{equation*}
+        \mathbf{x}_{1},\cdots,\mathbf{x}_{N}\in\mathbb{R}^{n},
+    \end{equation*}
+    and a set of vector pairs $S$ and $D$ such that:
+    \begin{equation*}
+        (\mathbf{x}_{i},\mathbf{x}_{j})\in\begin{cases}
+            S, &\text{if }\mathbf{x}_{i}\text{ and }\mathbf{x}_{j}\text{ are similar},\\
+            D, &\text{if }\mathbf{x}_{i}\text{ and }\mathbf{x}_{j}\text{ are dissimilar (different)}.
+        \end{cases}
+    \end{equation*}
+    How do we find a metric $\norm{\cdot}$ such that:
+    \begin{align*}
+        \norm{\mathbf{x}_{i}-\mathbf{x}_{j}}&\text{ is small}, & \text{for }&(\mathbf{x}_{i},\mathbf{x}_{j})\in S,\\
+        \norm{\mathbf{x}_{i}-\mathbf{x}_{j}}&\text{ is large}, & \text{for }&(\mathbf{x}_{i},\mathbf{x}_{j})\in D.
+    \end{align*} 
+    \begin{enumerate}
+        \item Representation: How do we represent the norm? We can try using the $p$-norms with $p\geq 1$:
+        \begin{equation*}
+            \pnorm[p]{\mathbf{x}}=\left(\sum_{i=1}^{n}\abs{x_{i}}^{p}\right)^{\frac{1}{p}}.
+        \end{equation*}
+        However, the norm set is too small for us to explore. We can use the more generalized norm induced by the weighted inner product with a symmetric positive definite matrix $\mathbf{A}\in\mathbb{R}^{n\times n}$: 
+        \begin{equation*}
+            \pnorm[\mathbf{A}]{\mathbf{x}}=\sqrt{\mathbf{x}^{T}\mathbf{A}\mathbf{x}}.
+        \end{equation*}
+        The set of all SPD matrices is large enough, though it is not closed. Its closure is the set of all SPSD matrices. However, for any SPSD matrices $\mathbf{A}$ that are not SPD matrices:
+        \begin{align*}
+            \pnorm[\mathbf{A}]{\mathbf{x}}&=\sqrt{\mathbf{x}^{T}\mathbf{A}\mathbf{x}}=0, & 
+            \mathbf{x}^{T}\mathbf{Ax}&\centernot{\Longrightarrow}\mathbf{x}=\mathbf{0}.
+        \end{align*}
+        This violates the positive-definiteness property of a norm. It is still a semi-norm.
+        \begin{defn}
+            Let $V$ be a vector space. A \textbf{semi-norm} on $V$ is a function $\norm{\cdot}:V\to\mathbb{R}$ such that for $\mathbf{x},\mathbf{y}\in V$:
+            \begin{itemize}
+                \item[1.] $\norm{\mathbf{x}}\geq 0$,
+                \item[2.] $\norm{\alpha\mathbf{x}}=\abs{\alpha}\norm{\mathbf{x}}$ for $\alpha\in\mathbb{R}$,
+                \item[3.] $\norm{\mathbf{x}+\mathbf{y}}\leq\norm{\mathbf{x}}+\norm{\mathbf{y}}$.
+            \end{itemize}
+        \end{defn}
+        Since we only want to identify similarity, non-negativity is sufficient for our task.
+        \item Evaluation: Which SPSD matrices are the best?
+        
+        Distance should be small for pairs in $S$, while distance should be large for pairs in $D$. Since the distance can only approach $0$, but extends to $\infty$, we can start large and minimize the distance for the pairs in $S$.
+        \begin{equation*}
+            \min_{\mathbf{A}\in\mathbb{R}^{n\times n}\text{ is SPSD}}\sum_{(\mathbf{x}_{i},\mathbf{x}_{j})\in S}\pnorm[\mathbf{A}]{\mathbf{x}_{i}-\mathbf{x}_{j}}^{2}\text{ such that }\sum_{(\mathbf{x}_{i},\mathbf{x}_{j})\in D}\pnorm[\mathbf{A}]{\mathbf{x}_{i}-\mathbf{x}_{j}}^{2}\geq 1.
+        \end{equation*}
+        \item Optimization: We do not perform it here.
+    \end{enumerate}
 \end{document}
