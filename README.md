@@ -42,6 +42,8 @@ The following notes are available in this repository:
   - `Constraint Satisfaction Problem.pdf`
   - **Images Used**: `Constraint Satisfaction Problem Images.zip`
 - **HKUST MATH 3332 (Working in Progress)**
+  - `MATH 3332.tex`
+  - `MATH 3332.pdf`
 
 #### Templates
 The following LaTeX template classes are included:
