@@ -923,6 +923,426 @@
     
     Read Appendix \ref{Case Study A: Clustering, K-means, K-medians} (Clustering, K-means, K-medians) to see the case study for Chapter \ref{Chapter 2: Vector spaces, metrics, limits, and convergence}.
 
+\chapter{Inner products, Hilbert Spaces}
+	\label{Chapter 3: Inner products, Hilbert Spaces}
+\section{Inner product}
+    How do we describe whether two vectors are correlated? We cannot use norms to describe this because they are scaling-sensitive. As such, we define the inner product to quantify the relationship between two vectors.
+    \begin{defn}
+        Let $V$ be a vector space over $\mathbb{R}$. An \textbf{inner product} over $\mathbb{R}$ is a binary operator $\inprod{\cdot}{\cdot} : (V, V) \to \mathbb{R}$ such that for $\mathbf{x}, \mathbf{y}, \mathbf{z} \in V$:
+        \begin{enumerate}
+            \item $\inprod{\mathbf{x}}{\mathbf{x}} \geq 0$ and $\inprod{\mathbf{x}}{\mathbf{x}} = 0 \Longleftrightarrow \mathbf{x} = \mathbf{0}$.
+            \item $\inprod{\alpha\mathbf{x} + \beta\mathbf{y}}{\mathbf{z}} = \alpha\inprod{\mathbf{x}}{\mathbf{z}} + \beta\inprod{\mathbf{y}}{\mathbf{z}}$ for all $\alpha, \beta \in \mathbb{R}$.
+            \item $\inprod{\mathbf{x}}{\mathbf{y}} = \inprod{\mathbf{y}}{\mathbf{x}}$.
+        \end{enumerate}
+    \end{defn}
+    \begin{rem}
+        Property (2) and (3) are equivalent to the following: for $\mathbf{x}, \mathbf{y}, \mathbf{z} \in V$ and $\alpha, \beta \in \mathbb{R}$,
+        \begin{equation*}
+            \inprod{\mathbf{x}}{\alpha\mathbf{y} + \beta\mathbf{z}} = \alpha\inprod{\mathbf{x}}{\mathbf{y}} + \beta\inprod{\mathbf{x}}{\mathbf{z}}.
+        \end{equation*}
+    \end{rem}
+    \begin{rem}
+        Inner products can also be defined over $\mathbb{C}$, but property (3) would change to:
+        \begin{equation*}
+            \inprod{\mathbf{x}}{\mathbf{y}} = \overline{\inprod{\mathbf{y}}{\mathbf{x}}}.
+        \end{equation*}
+    \end{rem}
+    \begin{eg}
+        For $\mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}$, the \textbf{dot product} for $\mathbb{R}^{n}$ defined by:
+        \begin{equation*}
+            \inprod{\mathbf{x}}{\mathbf{y}} = \sum_{i=1}^{n}x_{i}y_{i} = \mathbf{x}^{T}\mathbf{y}
+        \end{equation*}
+        is the standard inner product in $\mathbb{R}^{n}$.
+    \end{eg}
+    \begin{eg}
+        For a symmetric positive definite matrix $\mathbf{A} \in \mathbb{R}^{n \times n}$ and $\mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}$, the "weighted" inner product defined by:
+        \begin{equation*}
+            \inprod{\mathbf{x}}{\mathbf{y}}_{\mathbf{A}} = \mathbf{x}^{T}\mathbf{A}\mathbf{y}
+        \end{equation*}
+        is an inner product on $\mathbb{R}^{n}$. The standard inner product is a special case of this inner product where $\mathbf{A} = \mathbf{I}$. However, if $\mathbf{A}$ is a symmetric positive semi-definite matrix, then the weighted inner product is not a true inner product. Instead, it is a \textbf{semi-inner-product}.
+    \end{eg}
+    \begin{proofing}
+        \begin{enumerate}
+            \item For $\mathbf{x} \in \mathbb{R}^{n}$:
+            \begin{equation*}
+                \inprod{\mathbf{x}}{\mathbf{x}}_{\mathbf{A}} = \mathbf{x}^{T}\mathbf{A}\mathbf{x} \geq 0.
+            \end{equation*}
+            Moreover:
+            \begin{equation*}
+                \inprod{\mathbf{x}}{\mathbf{x}}_{\mathbf{A}} = 0 \Longleftrightarrow \mathbf{x}^{T}\mathbf{A}\mathbf{x} = 0 \Longleftrightarrow \mathbf{x} = \mathbf{0}.
+            \end{equation*}
+            \item For any $\mathbf{x}, \mathbf{y}, \mathbf{z} \in \mathbb{R}^{n}$ and $\alpha, \beta \in \mathbb{R}$:
+            \begin{equation*}
+                \inprod{\alpha\mathbf{x} + \beta\mathbf{y}}{\mathbf{z}}_{\mathbf{A}} = (\alpha\mathbf{x} + \beta\mathbf{y})^{T}\mathbf{A}\mathbf{z} = \alpha\mathbf{x}^{T}\mathbf{A}\mathbf{z} + \beta\mathbf{y}^{T}\mathbf{A}\mathbf{z} = \alpha\inprod{\mathbf{x}}{\mathbf{z}}_{\mathbf{A}} + \beta\inprod{\mathbf{y}}{\mathbf{z}}_{\mathbf{A}}.
+            \end{equation*}
+            \item For any $\mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}$:
+            \begin{equation*}
+                \inprod{\mathbf{x}}{\mathbf{y}}_{\mathbf{A}} = \mathbf{x}^{T}\mathbf{A}\mathbf{y} = (\mathbf{x}^{T}\mathbf{A}\mathbf{y})^{T} = \mathbf{y}^{T}\mathbf{A}^{T}\mathbf{x} = \inprod{\mathbf{y}}{\mathbf{x}}_{\mathbf{A}}.
+            \end{equation*}
+        \end{enumerate}
+    \end{proofing}
+    \newpage
+    
+    \begin{eg}
+        For $\mathbf{A}, \mathbf{B} \in \mathbb{R}^{m \times n}$, the inner product defined by:
+        \begin{equation*}
+            \inprod{\mathbf{A}}{\mathbf{B}} = \sum_{i=1}^{m}\sum_{j=1}^{n}a_{ij}b_{ij} = \Tr(\mathbf{A}^{T}\mathbf{B}) = \Tr(\mathbf{B}^{T}\mathbf{A}) = \Tr(\mathbf{A}\mathbf{B}^{T}) = \Tr(\mathbf{B}\mathbf{A}^{T})
+        \end{equation*}
+        is the standard inner product in $\mathbb{R}^{m \times n}$.
+    \end{eg}
+    \begin{eg}
+        For $\mathbf{x}, \mathbf{y} \in \ell_{2}$, the inner product defined by:
+        \begin{equation*}
+            \inprod{\mathbf{x}}{\mathbf{y}} = \sum_{i=1}^{\infty}x_{i}y_{i}
+        \end{equation*}
+        is the standard inner product in $\ell_{2}$.
+    \end{eg}
+    \begin{eg}
+        For $f, g \in \mathcal{C}[a, b]$, the inner product defined by:
+        \begin{equation*}
+            \inprod{f}{g} = \int_{a}^{b}f(t)g(t)\,dt
+        \end{equation*}
+        is the standard inner product in $\mathcal{C}[a, b]$.
+    \end{eg}
+
+\section{Properties of inner products}
+    Let $V$ be a vector space over $\mathbb{R}$ with an inner product $\inprod{\cdot}{\cdot}$.
+
+    Using the definition of inner products, we can discuss some properties of inner products.
+    \begin{thm}
+        For any $\mathbf{x} \in V$, we have:
+        \begin{equation*}
+            \inprod{\mathbf{x}}{\mathbf{0}} = \inprod{\mathbf{0}}{\mathbf{x}} = 0.
+        \end{equation*}
+    \end{thm}
+    \begin{proofing}
+        \begin{equation*}
+            \inprod{\mathbf{x}}{\mathbf{0}} = \inprod{\mathbf{x}}{\mathbf{x} - \mathbf{x}} = \inprod{\mathbf{x}}{\mathbf{x}} - \inprod{\mathbf{x}}{\mathbf{x}} = 0.
+        \end{equation*}
+    \end{proofing}
+    In the previous chapter, we proved the Cauchy-Schwarz Inequality in $\mathbb{R}^{n}$ when verifying whether the $2$-norm in $\mathbb{R}^{n}$ is a norm. We can generalize this inequality to all inner products.
+    \begin{thm}\named{Cauchy-Schwarz Inequality}
+        For all $\mathbf{x}, \mathbf{y} \in V$:
+        \begin{equation*}
+            \abs{\inprod{\mathbf{x}}{\mathbf{y}}}^{2} \leq \inprod{\mathbf{x}}{\mathbf{x}}\inprod{\mathbf{y}}{\mathbf{y}}.
+        \end{equation*}
+        Equality holds if and only if $\mathbf{y} = \alpha\mathbf{x}$ for some $\alpha \in \mathbb{R}$.
+    \end{thm}
+    \begin{proofing}
+        For $\mathbf{x} \in V$, if $\mathbf{y} = \mathbf{0}$, then:
+        \begin{equation*}
+            \abs{\inprod{\mathbf{x}}{\mathbf{y}}}^{2} = \abs{\inprod{\mathbf{x}}{\mathbf{0}}}^{2} = 0 = \inprod{\mathbf{x}}{\mathbf{x}}\inprod{\mathbf{y}}{\mathbf{y}}.
+        \end{equation*}
+        If $\mathbf{y} \neq \mathbf{0}$, then for any $\lambda \in \mathbb{R}$:
+        \begin{equation*}
+            0 \leq \inprod{\mathbf{x} + \lambda\mathbf{y}}{\mathbf{x} + \lambda\mathbf{y}} = \inprod{\mathbf{x}}{\mathbf{x}} + \lambda\inprod{\mathbf{x}}{\mathbf{y}} + \lambda\inprod{\mathbf{y}}{\mathbf{x}} + \lambda^{2}\inprod{\mathbf{y}}{\mathbf{y}} = \inprod{\mathbf{x}}{\mathbf{x}} + \lambda(2\inprod{\mathbf{x}}{\mathbf{y}}) + \lambda^{2}\inprod{\mathbf{y}}{\mathbf{y}}.
+        \end{equation*}
+        Since $\inprod{\mathbf{y}}{\mathbf{y}} > 0$, $\inprod{\mathbf{x} + \lambda\mathbf{y}}{\mathbf{x} + \lambda\mathbf{y}}$ is a quadratic function with at most one real root. Using the discriminant, we have:
+        \begin{align*}
+            \Delta = (2\inprod{\mathbf{x}}{\mathbf{y}})^{2} - 4\inprod{\mathbf{x}}{\mathbf{x}}\inprod{\mathbf{y}}{\mathbf{y}} &\leq 0,\\
+            \abs{\inprod{\mathbf{x}}{\mathbf{y}}}^{2} &\leq \inprod{\mathbf{x}}{\mathbf{x}}\inprod{\mathbf{y}}{\mathbf{y}}.
+        \end{align*}
+        For the equality case, notice that $\Delta = 0$ if and only if:
+        \begin{equation*}
+            \inprod{\mathbf{x} + \lambda\mathbf{y}}{\mathbf{x} + \lambda\mathbf{y}} = \inprod{\mathbf{x}}{\mathbf{x}} + 2\lambda\inprod{\mathbf{x}}{\mathbf{y}} + \lambda^{2}\inprod{\mathbf{y}}{\mathbf{y}} = \left(\sqrt{\inprod{\mathbf{x}}{\mathbf{x}}} + \lambda\sqrt{\inprod{\mathbf{y}}{\mathbf{y}}}\right)^{2} - 2\lambda\sqrt{\inprod{\mathbf{x}}{\mathbf{x}}\inprod{\mathbf{y}}{\mathbf{y}}} + 2\lambda\inprod{\mathbf{x}}{\mathbf{y}} = 0.
+        \end{equation*}
+        Solving this equation gives $\lambda = -\sqrt{\frac{\inprod{\mathbf{x}}{\mathbf{x}}}{\inprod{\mathbf{y}}{\mathbf{y}}}}$, and we find $\mathbf{y} = \sqrt{\frac{\inprod{\mathbf{y}}{\mathbf{y}}}{\inprod{\mathbf{x}}{\mathbf{x}}}}\mathbf{x}$ by definition.
+
+        Substituting $\mathbf{y} = \alpha\mathbf{x}$ for any $\alpha \in \mathbb{R}$ shows that $\Delta = 0$ if and only if $\mathbf{y} = \alpha\mathbf{x}$.
+    \end{proofing}
+    \newpage
+    
+    With the Cauchy-Schwarz Inequality, we can construct a norm using an inner product.
+    \begin{thm}
+        The \textbf{norm induced by the inner product} is a norm defined by, for any $\mathbf{x} \in V$:
+        \begin{equation*}
+            \norm{\mathbf{x}} = \sqrt{\inprod{\mathbf{x}}{\mathbf{x}}}.
+        \end{equation*}
+    \end{thm}
+    \begin{proofing}
+        \begin{enumerate}
+            \item For any $\mathbf{x} \in V$:
+            \begin{equation*}
+                \norm{\mathbf{x}} = \sqrt{\inprod{\mathbf{x}}{\mathbf{x}}} \geq 0.
+            \end{equation*}
+            Moreover:
+            \begin{equation*}
+                \norm{\mathbf{x}} = 0 \Longleftrightarrow \inprod{\mathbf{x}}{\mathbf{x}} = 0 \Longleftrightarrow \mathbf{x} = \mathbf{0}.
+            \end{equation*}
+            \item For any $\mathbf{x} \in V$ and $\alpha \in \mathbb{R}$:
+            \begin{equation*}
+                \norm{\alpha\mathbf{x}} = \sqrt{\inprod{\alpha\mathbf{x}}{\alpha\mathbf{x}}} = \sqrt{\alpha^{2}}\sqrt{\inprod{\mathbf{x}}{\mathbf{x}}} = \abs{\alpha}\norm{\mathbf{x}}.
+            \end{equation*}
+            \item For any $\mathbf{x}, \mathbf{y} \in V$:
+            \begin{align*}
+                \norm{\mathbf{x} + \mathbf{y}}^{2} &= \inprod{\mathbf{x} + \mathbf{y}}{\mathbf{x} + \mathbf{y}}\\
+                &= \inprod{\mathbf{x}}{\mathbf{x}} + 2\inprod{\mathbf{x}}{\mathbf{y}} + \inprod{\mathbf{y}}{\mathbf{y}}\\
+                \tag{$c \leq \abs{c}$}
+                &\leq \norm{\mathbf{x}}^{2} + \norm{\mathbf{y}}^{2} + 2\abs{\inprod{\mathbf{x}}{\mathbf{y}}}\\
+                \tag{Cauchy-Schwarz Inequality}
+                &\leq \norm{\mathbf{x}}^{2} + \norm{\mathbf{y}}^{2} + 2\norm{\mathbf{x}}\norm{\mathbf{y}} = (\norm{\mathbf{x}} + \norm{\mathbf{y}})^{2},\\
+                \norm{\mathbf{x} + \mathbf{y}} &\leq \norm{\mathbf{x}} + \norm{\mathbf{y}}.
+            \end{align*}
+        \end{enumerate}
+    \end{proofing}
+    \begin{rem}
+        Inner product spaces are a subset of normed vector spaces. Not all normed vector spaces can define an inner product.
+    \end{rem}
+    \begin{rem}
+        The Cauchy-Schwarz Inequality can be rewritten as, for $\mathbf{x}, \mathbf{y} \in V$:
+        \begin{equation*}
+            \abs{\inprod{\mathbf{x}}{\mathbf{y}}} \leq \norm{\mathbf{x}}\norm{\mathbf{y}}.
+        \end{equation*}
+    \end{rem}
+    \begin{eg}
+        Consider $V = \mathbb{R}^{n}$ with the standard inner product:
+        \begin{equation*}
+            \inprod{\mathbf{x}}{\mathbf{y}} = \mathbf{x}^{T}\mathbf{y}, \qquad \text{for } \mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}.
+        \end{equation*}
+        The induced norm is:
+        \begin{equation*}
+            \norm{\mathbf{x}} = \sqrt{\inprod{\mathbf{x}}{\mathbf{x}}} = \sqrt{\mathbf{x}^{T}\mathbf{x}} = \sqrt{\sum_{i=1}^{n}x_{i}^{2}} = \pnorm[2]{\mathbf{x}}, \qquad \text{for } \mathbf{x} \in \mathbb{R}^{n}.
+        \end{equation*}
+    \end{eg}
+    \begin{rem}
+        For $V = \mathbb{R}^{n}$, among all $p$-norms, only the $2$-norm can be induced by an inner product.
+    \end{rem}
+    \newpage
+    
+    \begin{eg}
+    	For a symmetric positive definite matrix $\mathbf{A} \in \mathbb{R}^{n \times n}$, consider $V = \mathbb{R}^{n}$ with the weighted inner product:
+    	\begin{equation*}
+    		\inprod{\mathbf{x}}{\mathbf{y}}_{\mathbf{A}} = \mathbf{x}^{T}\mathbf{A}\mathbf{y}, \qquad \text{for } \mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}.
+    	\end{equation*}
+    	The induced norm is:
+    	\begin{equation*}
+    		\pnorm[\mathbf{A}]{\mathbf{x}} = \sqrt{\mathbf{x}^{T}\mathbf{A}\mathbf{x}} = \sqrt{\sum_{i=1}^{n}\sum_{j=1}^{n}a_{ij}x_{i}x_{j}}.
+    	\end{equation*}
+    	If $\mathbf{A}$ is symmetric positive semi-definite, then the induced norm is not a true norm. Instead, it is a semi-norm (discussed in Appendix \ref{Case Study C: Metric Learning}).
+    \end{eg}
+    \begin{eg}
+        Consider $V = \mathbb{R}^{m \times n}$ with the standard inner product:
+        \begin{equation*}
+            \inprod{\mathbf{A}}{\mathbf{B}} = \sum_{i=1}^{m}\sum_{j=1}^{n}a_{ij}b_{ij}, \qquad \text{for } \mathbf{A}, \mathbf{B} \in \mathbb{R}^{m \times n}.
+        \end{equation*}
+        The induced norm is:
+        \begin{equation*}
+            \norm{\mathbf{A}} = \sqrt{\inprod{\mathbf{A}}{\mathbf{A}}} = \sqrt{\sum_{i=1}^{m}\sum_{j=1}^{n}a_{ij}^{2}} = \pnorm[F]{\mathbf{A}} = \pnorm[2, \text{vec}]{\mathbf{A}}, \qquad \text{for } \mathbf{A} \in \mathbb{R}^{m \times n}.
+        \end{equation*}
+    \end{eg}
+    \begin{eg}
+        Consider $V = \ell_{2}$ with the standard inner product:
+        \begin{equation*}
+            \inprod{\mathbf{x}}{\mathbf{y}} = \sum_{i=1}^{\infty}x_{i}y_{i}, \qquad \text{for } \mathbf{x}, \mathbf{y} \in \ell_{2}.
+        \end{equation*}
+        The induced norm is:
+        \begin{equation*}
+            \norm{\mathbf{x}} = \sqrt{\sum_{i=1}^{\infty}x_{i}^{2}} = \pnorm[2]{\mathbf{x}}, \qquad \text{for } \mathbf{x} \in \ell_{2}.
+        \end{equation*}
+    \end{eg}
+    \begin{eg}
+        Consider $V = \mathcal{C}[a, b]$ with the standard inner product:
+        \begin{equation*}
+            \inprod{f}{g} = \int_{a}^{b}f(t)g(t)\,dt, \qquad \text{for } f, g \in \mathcal{C}[a, b].
+        \end{equation*}
+        The induced norm is:
+        \begin{equation*}
+            \norm{f} = \sqrt{\int_{a}^{b}(f(t))^{2}\,dt} = \pnorm[2]{f}, \qquad \text{for } f \in \mathcal{C}[a, b].
+        \end{equation*}
+    \end{eg}
+    \newpage
+
+    What conditions are required to define an inner product based on the normed vector space?
+    \begin{thm}
+        Let $(V,\norm{\cdot})$ be a normed vector space over $\mathbb{R}$. The norm $\norm{\cdot}$ is induced by an inner product if and only if the parallelogram law holds. This means that for all $\mathbf{x}, \mathbf{y} \in V$,
+        \begin{equation*}
+            \norm{\mathbf{x}+\mathbf{y}}^{2} + \norm{\mathbf{x}-\mathbf{y}}^{2} = 2\norm{\mathbf{x}}^{2} + 2\norm{\mathbf{y}}^{2}.
+        \end{equation*}
+    \end{thm}
+    \begin{proofing}
+        \begin{itemize}
+            \item[$\Longrightarrow$] Suppose that the norm is induced by an inner product $\inprod{\cdot}{\cdot}$. This means for any $\mathbf{x}, \mathbf{y} \in V$:
+            \begin{align*}
+                \norm{\mathbf{x}+\mathbf{y}}^{2} &= \inprod{\mathbf{x}+\mathbf{y}}{\mathbf{x}+\mathbf{y}} = \norm{\mathbf{x}}^{2} + 2\inprod{\mathbf{x}}{\mathbf{y}} + \norm{\mathbf{y}}^{2},\\
+                \norm{\mathbf{x}-\mathbf{y}}^{2} &= \inprod{\mathbf{x}-\mathbf{y}}{\mathbf{x}-\mathbf{y}} = \norm{\mathbf{x}}^{2} - 2\inprod{\mathbf{x}}{\mathbf{y}} + \norm{\mathbf{y}}^{2}.
+            \end{align*}
+            Therefore,
+            \begin{equation*}
+                \norm{\mathbf{x}+\mathbf{y}}^{2} + \norm{\mathbf{x}-\mathbf{y}}^{2} = 2\norm{\mathbf{x}}^{2} + 2\norm{\mathbf{y}}^{2}.
+            \end{equation*}
+            \item[$\Longleftarrow$] Suppose that the parallelogram law holds. We may define a binary operator as:
+            \begin{equation*}
+                \inprod{\mathbf{x}}{\mathbf{y}} = \frac{1}{4}(\norm{\mathbf{x}+\mathbf{y}}^{2} - \norm{\mathbf{x}-\mathbf{y}}^{2}), \qquad \text{for } \mathbf{x}, \mathbf{y} \in V.
+            \end{equation*}
+            We check whether this is an inner product.
+            \begin{enumerate}
+                \item For any $\mathbf{x} \in V$,
+                \begin{equation*}
+                    \inprod{\mathbf{x}}{\mathbf{x}} = \frac{1}{4}(\norm{2\mathbf{x}}^{2} + \norm{\mathbf{0}}^{2}) = \norm{\mathbf{x}}^{2} \geq 0.
+                \end{equation*}
+                Moreover,
+                \begin{equation*}
+                    \inprod{\mathbf{x}}{\mathbf{x}} = \norm{\mathbf{x}}^{2} = 0 \Longleftrightarrow \mathbf{x} = \mathbf{0}.
+                \end{equation*}
+                \item Since proving homogeneity extending to $\mathbb{R}$ is out of scope, we will only prove additivity here. 
+                
+                For any $\mathbf{x}, \mathbf{y}, \mathbf{z} \in V$, by the parallelogram law,
+                \begin{align*}
+                    \norm{\mathbf{x}+\mathbf{y}+\mathbf{z}}^{2} &= 2\norm{\mathbf{x}}^{2} + 2\norm{\mathbf{y}+\mathbf{z}}^{2} - \norm{\mathbf{x}-\mathbf{y}-\mathbf{z}}^{2},\\
+                    &= 2\norm{\mathbf{y}}^{2} + 2\norm{\mathbf{x}+\mathbf{z}}^{2} - \norm{-\mathbf{x}+\mathbf{y}-\mathbf{z}}^{2},\\
+                    \norm{\mathbf{x}+\mathbf{y}-\mathbf{z}}^{2} &= 2\norm{\mathbf{x}}^{2} + 2\norm{\mathbf{y}-\mathbf{z}}^{2} - \norm{\mathbf{x}-\mathbf{y}+\mathbf{z}}^{2},\\
+                    &= 2\norm{\mathbf{y}}^{2} + 2\norm{\mathbf{x}-\mathbf{z}}^{2} - \norm{-\mathbf{x}+\mathbf{y}+\mathbf{z}}^{2}.
+                \end{align*}
+                Combining the formulas, we have:
+                \begin{align*}
+                    \norm{\mathbf{x}+\mathbf{y}+\mathbf{z}}^{2} &= \norm{\mathbf{x}}^{2} + \norm{\mathbf{y}}^{2} + \norm{\mathbf{x}+\mathbf{z}}^{2} + \norm{\mathbf{y}+\mathbf{z}}^{2} - \frac{1}{2}\norm{\mathbf{x}-\mathbf{y}-\mathbf{z}}^{2} - \frac{1}{2}\norm{-\mathbf{x}+\mathbf{y}-\mathbf{z}}^{2},\\
+                    \norm{\mathbf{x}+\mathbf{y}-\mathbf{z}}^{2} &= \norm{\mathbf{x}}^{2} + \norm{\mathbf{y}}^{2} + \norm{\mathbf{x}-\mathbf{z}}^{2} + \norm{\mathbf{y}-\mathbf{z}}^{2} - \frac{1}{2}\norm{\mathbf{x}-\mathbf{y}+\mathbf{z}}^{2} - \frac{1}{2}\norm{-\mathbf{x}+\mathbf{y}+\mathbf{z}}^{2},\\
+                    &= \norm{\mathbf{x}}^{2} + \norm{\mathbf{y}}^{2} + \norm{\mathbf{x}-\mathbf{z}}^{2} + \norm{\mathbf{y}-\mathbf{z}}^{2} - \frac{1}{2}\norm{-\mathbf{x}+\mathbf{y}-\mathbf{z}}^{2} - \frac{1}{2}\norm{\mathbf{x}-\mathbf{y}-\mathbf{z}}^{2}.
+                \end{align*}
+                Therefore,
+                \begin{equation*}
+                    \inprod{\mathbf{x}+\mathbf{y}}{\mathbf{z}} = \frac{1}{4}(\norm{\mathbf{x}+\mathbf{y}+\mathbf{z}}^{2} - \norm{\mathbf{x}+\mathbf{y}-\mathbf{z}}^{2}) = \frac{1}{4}(\norm{\mathbf{x}+\mathbf{z}}^{2} - \norm{\mathbf{x}-\mathbf{z}}^{2} + \norm{\mathbf{y}+\mathbf{z}}^{2} - \norm{\mathbf{y}-\mathbf{z}}^{2}) = \inprod{\mathbf{x}}{\mathbf{z}} + \inprod{\mathbf{y}}{\mathbf{z}}.
+                \end{equation*}
+                \item For any $\mathbf{x}, \mathbf{y} \in V$,
+                \begin{equation*}
+                    \inprod{\mathbf{y}}{\mathbf{x}} = \frac{1}{4}(\norm{\mathbf{y}+\mathbf{x}}^{2} - \norm{\mathbf{y}-\mathbf{x}}^{2}) = \frac{1}{4}(\norm{\mathbf{x}+\mathbf{y}}^{2} - \norm{\mathbf{x}-\mathbf{y}}^{2}) = \inprod{\mathbf{x}}{\mathbf{y}}.
+                \end{equation*}
+            \end{enumerate}
+            Therefore, since additionally $\sqrt{\inprod{\mathbf{x}}{\mathbf{x}}} = \norm{\mathbf{x}}$, the binary operator is an inner product that induces the norm.
+        \end{itemize}
+    \end{proofing}
+    \newpage
+
+    Similar to normed vector spaces, we can define the completeness of a vector space with an inner product.
+    \begin{defn}
+        A complete inner product space is called a \textbf{Hilbert space}.
+    \end{defn}
+    \begin{eg}
+        $\mathbb{R}^{n}$ with the standard inner product or the weighted inner product for any symmetric positive definite $\mathbf{A} \in \mathbb{R}^{n \times n}$:
+        \begin{equation*}
+            \inprod{\mathbf{x}}{\mathbf{y}} = \mathbf{x}^{T}\mathbf{y}, \qquad \inprod{\mathbf{x}}{\mathbf{y}}_{\mathbf{A}} = \mathbf{x}^{T}\mathbf{A}\mathbf{y}, \qquad \text{for } \mathbf{x}, \mathbf{y} \in \mathbb{R}^{n},
+        \end{equation*}
+        are Hilbert spaces.
+    \end{eg}
+    \begin{eg}
+        $\mathbb{R}^{m \times n}$ with the standard inner product:
+        \begin{equation*}
+            \inprod{\mathbf{A}}{\mathbf{B}} = \Tr(\mathbf{A}^{T}\mathbf{B}), \qquad \mathbf{A}, \mathbf{B} \in \mathbb{R}^{m \times n},
+        \end{equation*}
+        is a Hilbert space.
+    \end{eg}
+    \begin{eg}
+        $\ell_{2}$ with the standard inner product:
+        \begin{equation*}
+            \inprod{\mathbf{x}}{\mathbf{y}} = \sum_{i=1}^{\infty}x_{i}y_{i}, \qquad \mathbf{x}, \mathbf{y} \in \ell_{2},
+        \end{equation*}
+        is a Hilbert space.
+    \end{eg}
+    \begin{eg}
+        $\mathcal{C}[a, b]$ with the standard inner product:
+        \begin{equation*}
+            \inprod{f}{g} = \int_{a}^{b}f(t)g(t)\,dt, \qquad f, g \in \mathcal{C}[a, b],
+        \end{equation*}
+        is not a Hilbert space. Its completion is $L^{2}(a, b)$.
+    \end{eg}
+    \newpage
+    
+\section{Orthogonality}
+    By the Cauchy-Schwarz Inequality, for all non-zero $\mathbf{x}, \mathbf{y} \in V$:
+    \begin{equation*}
+        -\norm{\mathbf{x}}\norm{\mathbf{y}} \leq \inprod{\mathbf{x}}{\mathbf{y}} \leq \norm{\mathbf{x}}\norm{\mathbf{y}} \Longleftrightarrow -1 \leq \frac{\inprod{\mathbf{x}}{\mathbf{y}}}{\norm{\mathbf{x}}\norm{\mathbf{y}}} \leq 1.
+    \end{equation*}
+    Considering when the Cauchy-Schwarz Inequality achieves equality:
+    \begin{enumerate}
+        \item If $\frac{\inprod{\mathbf{x}}{\mathbf{y}}}{\norm{\mathbf{x}}\norm{\mathbf{y}}} = 1$, then $\mathbf{y} = \alpha\mathbf{x}$ with $\alpha > 0$. (If $\alpha \leq 0$, then $\inprod{\mathbf{x}}{\mathbf{y}} = \alpha\inprod{\mathbf{x}}{\mathbf{x}} = \alpha\norm{\mathbf{x}}^{2} \leq 0$.)
+        \begin{figure}[h]
+            \centering
+            \begin{tikzpicture}
+                \draw[thick, ->]		(0,0) -- (1,0.5) node[above, midway] {$\mathbf{x}$};
+                \draw[thick, red, ->]	(0.5,0) -- (2.5,1) node[below, midway] {$\mathbf{y}$};
+            \end{tikzpicture}
+            \caption{$\mathbf{y} = 2\mathbf{x}$}
+        \end{figure}
+        \item If $\frac{\inprod{\mathbf{x}}{\mathbf{y}}}{\norm{\mathbf{x}}\norm{\mathbf{y}}} = -1$, then $\mathbf{y} = \alpha\mathbf{x}$ with $\alpha < 0$. (If $\alpha \geq 0$, then $\inprod{\mathbf{x}}{\mathbf{y}} = \alpha\inprod{\mathbf{x}}{\mathbf{x}} = \alpha\norm{\mathbf{x}}^{2} \geq 0$.)
+        \begin{figure}[h]
+            \centering
+            \begin{tikzpicture}
+                \draw[thick, ->]		(0,0) -- (1,0.5) node[above, midway] {$\mathbf{x}$};
+                \draw[thick, red, ->]	(0,0) -- (-2,-1) node[below, midway] {$\mathbf{y}$};
+            \end{tikzpicture}
+            \caption{$\mathbf{y} = -2\mathbf{x}$}
+        \end{figure}
+    \end{enumerate}
+    \begin{defn}
+        The \textbf{angle} between nonzero $\mathbf{x}, \mathbf{y} \in V$ is defined by:
+        \begin{equation*}
+            \angle(\mathbf{x}, \mathbf{y}) = \arccos\left(\frac{\inprod{\mathbf{x}}{\mathbf{y}}}{\norm{\mathbf{x}}\norm{\mathbf{y}}}\right).
+        \end{equation*}
+    \end{defn}
+    With angles defined, we can define orthogonality.
+    \begin{defn}
+        For $\mathbf{x}, \mathbf{y} \in V$:
+        \begin{enumerate}
+            \item If $\abs{\frac{\inprod{\mathbf{x}}{\mathbf{y}}}{\norm{\mathbf{x}}\norm{\mathbf{y}}}} = 1$, then $\mathbf{x}$ and $\mathbf{y}$ are the \textbf{most correlated}.
+            \item If $\abs{\frac{\inprod{\mathbf{x}}{\mathbf{y}}}{\norm{\mathbf{x}}\norm{\mathbf{y}}}} = 0$ ($\inprod{\mathbf{x}}{\mathbf{y}} = 0$), then $\mathbf{x}$ and $\mathbf{y}$ are the \textbf{least correlated}. We say $\mathbf{x}$ and $\mathbf{y}$ are \textbf{orthogonal}.
+        \end{enumerate}
+    \end{defn}
+    \begin{figure}[h]
+        \centering
+        \begin{subfigure}{0.3\textwidth}
+            \centering
+            \begin{tikzpicture}
+                \draw[thick, ->]	(0,0) -- (0,1) node[above] {$\mathbf{x}$};
+                \draw[thick, ->]	(0,0) -- (1,0) node[right] {$\mathbf{y}$};
+                \draw[] (0,0) rectangle ++(0.2, 0.2);
+            \end{tikzpicture}
+            
+            $\angle(\mathbf{x}, \mathbf{y}) = \frac{\pi}{2}$
+            \caption{The least correlated}
+        \end{subfigure}
+        \begin{subfigure}{0.6\textwidth}
+            \centering
+            \begin{subfigure}{0.4\textwidth}
+                \centering
+                \begin{tikzpicture}
+                    \draw[thick, ->]		(0,0) -- (1,0.5) node[above, midway] {$\mathbf{x}$};
+                    \draw[thick, red, ->]	(0.5,0) -- (2.5,1) node[below, midway] {$\mathbf{y}$};
+                \end{tikzpicture}
+                
+                $\angle(\mathbf{x}, \mathbf{y}) = 0$
+            \end{subfigure}
+            \begin{subfigure}{0.4\textwidth}
+                \centering
+                \begin{tikzpicture}
+                    \draw[thick, ->]		(0,0) -- (1,0.5) node[above, midway] {$\mathbf{x}$};
+                    \draw[thick, red, ->]	(0,0) -- (-2,-1) node[below, midway] {$\mathbf{y}$};
+                \end{tikzpicture}
+                
+                $\angle(\mathbf{x}, \mathbf{y}) = \pi$
+            \end{subfigure}
+            \caption{The most correlated}
+        \end{subfigure}
+    \end{figure}
+    Based on orthogonality, we have the following theorem.
+    \begin{thm}\named{Pythagorean Theorem}
+        For $\mathbf{x}, \mathbf{y} \in V$, $\mathbf{x}$ and $\mathbf{y}$ are orthogonal if and only if:
+        \begin{equation*}
+            \norm{\mathbf{x} + \mathbf{y}}^{2} = \norm{\mathbf{x}}^{2} + \norm{\mathbf{y}}^{2}.
+        \end{equation*}
+    \end{thm}
+    \begin{proofing}
+        If $\mathbf{x}$ and $\mathbf{y}$ are orthogonal, then $\inprod{\mathbf{x}}{\mathbf{y}} = 0$. Therefore:
+        \begin{equation*}
+            \norm{\mathbf{x} + \mathbf{y}}^{2} = \inprod{\mathbf{x} + \mathbf{y}}{\mathbf{x} + \mathbf{y}} = \inprod{\mathbf{x}}{\mathbf{x}} + 2\inprod{\mathbf{x}}{\mathbf{y}} + \inprod{\mathbf{y}}{\mathbf{y}} = \inprod{\mathbf{x}}{\mathbf{x}} + \inprod{\mathbf{y}}{\mathbf{y}} = \norm{\mathbf{x}}^{2} + \norm{\mathbf{y}}^{2}.
+        \end{equation*}
+        If $\norm{\mathbf{x} + \mathbf{y}}^{2} = \norm{\mathbf{x}}^{2} + \norm{\mathbf{y}}^{2}$, then:
+        \begin{equation*}
+            0 = \norm{\mathbf{x} + \mathbf{y}}^{2} - \norm{\mathbf{x}}^{2} - \norm{\mathbf{y}}^{2} = \inprod{\mathbf{x} + \mathbf{y}}{\mathbf{x} + \mathbf{y}} - \inprod{\mathbf{x}}{\mathbf{x}} - \inprod{\mathbf{y}}{\mathbf{y}} = 2\inprod{\mathbf{x}}{\mathbf{y}}.
+        \end{equation*}
+        Therefore, $\inprod{\mathbf{x}}{\mathbf{y}} = 0$, and thus $\mathbf{x}$ and $\mathbf{y}$ are orthogonal.
+    \end{proofing}
+    Read Appendix \ref{Case Study B: Kernel K-means/Kernel Trick} (Kernel K-means/Kernel Trick) and \ref{Case Study C: Metric Learning} (Metric Learning) to see the case studies for Chapter \ref{Chapter 3: Inner products, Hilbert Spaces}.
+
 \appendix
 \renewcommand{\thechapter}{\Alph{chapter}}
 \chapter{Clustering, K-means, K-medians}
