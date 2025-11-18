@@ -73,5 +73,854 @@
         \end{enumerate}
     \end{enumerate}
 
+\chapter{Vector spaces, metrics, limits, and convergence}
+    \label{Chapter 2: Vector spaces, metrics, limits, and convergence}
+\section{Vector spaces (linear space)}
+    \begin{defn}
+        A \textbf{vector space} over $\mathbb{R}$ is a set $V$ together with two operations:
+        \begin{enumerate}
+            \item Addition: For all $\mathbf{u}, \mathbf{v} \in V$, $\mathbf{u} + \mathbf{v} \in V$.
+            \item Scalar multiplication: For all $\alpha \in \mathbb{R}$ and $\mathbf{v} \in V$, $\alpha \mathbf{v} \in V$.
+        \end{enumerate}
+        These two operations satisfy the following eight properties for all $\mathbf{u}, \mathbf{v}, \mathbf{w} \in V$ and $\alpha, \beta \in \mathbb{R}$:
+        \begin{align*}
+            \tag{Addition Commutativity}
+            &(+1) & &\mathbf{u} + \mathbf{v} = \mathbf{v} + \mathbf{u},\\
+            \tag{Addition Associativity}
+            &(+2) & &(\mathbf{u} + \mathbf{v}) + \mathbf{w} = \mathbf{u} + (\mathbf{v} + \mathbf{w}),\\
+            \tag{Zero Exists}
+            &(+3) & &\text{There exists } \mathbf{0} \in V \text{ such that } \mathbf{u} + \mathbf{0} = \mathbf{u},\\
+            \tag{Additive Inverse Exists}
+            &(+4) & &\text{For every } \mathbf{u} \in V, \text{ there exists } \mathbf{u}' \in V \text{ such that } \mathbf{u} + \mathbf{u}' = \mathbf{0} \quad (\mathbf{u}' = -\mathbf{u}),\\
+            \tag{Multiplication Associativity}
+            &(\cdot 1) & &(\alpha \beta)\mathbf{u} = \alpha(\beta \mathbf{u}),\\
+            \tag{Unity}
+            &(\cdot 2) & & 1 \cdot \mathbf{u} = \mathbf{u},\\
+            \tag{Distributivity 1}
+            &(\cdot 3) & & \alpha(\mathbf{u} + \mathbf{v}) = \alpha \mathbf{u} + \alpha \mathbf{v},\\
+            \tag{Distributivity 2}
+            &(\cdot 4) & & (\alpha + \beta)\mathbf{u} = \alpha \mathbf{u} + \beta \mathbf{u}.
+        \end{align*}
+    \end{defn}
+    \begin{rem}
+        A vector space over the complex domain $\mathbb{C}$ can be defined in a similar way.
+    \end{rem}
+    \begin{eg}
+        The set of real numbers $\mathbb{R}$, with the standard addition and multiplication of real numbers, forms a vector space.
+    \end{eg}
+    \begin{eg}
+        The $n$-dimensional Euclidean space $\mathbb{R}^{n}$, with the following operations, forms a vector space over $\mathbb{R}$:
+        \begin{align*}
+            +&: & &\text{For all } \mathbf{x} = \begin{pmatrix}x_{1}\\\vdots\\x_{n}\end{pmatrix}, \mathbf{y} = \begin{pmatrix}y_{1}\\\vdots\\y_{n}\end{pmatrix} \in \mathbb{R}^{n},\ \mathbf{x} + \mathbf{y} = \begin{pmatrix}x_{1} + y_{1}\\\vdots\\x_{n} + y_{n}\end{pmatrix} \in \mathbb{R}^{n},\\
+            \bullet&: & &\text{For all } \mathbf{x} = \begin{pmatrix}x_{1}\\\vdots\\x_{n}\end{pmatrix} \in \mathbb{R}^{n} \text{ and } \alpha \in \mathbb{R},\ \alpha \cdot \mathbf{x} = \begin{pmatrix}\alpha x_{1}\\\vdots\\\alpha x_{n}\end{pmatrix} \in \mathbb{R}^{n}.
+        \end{align*}
+    \end{eg}
+    \begin{rem}
+        Many types of input data can be modeled as vectors in $\mathbb{R}^{n}$, such as:
+        \begin{enumerate}
+            \item Digital signals of length $n$,
+            \item Stock prices over $n$ time intervals,
+            \item $n$ different features or attributes of a single object.
+        \end{enumerate}
+    \end{rem}
+    \newpage
+    
+    \begin{eg}
+        All real $m \times n$ matrices $\mathbb{R}^{m \times n}$ with
+        \begin{align*}
+            +&: & &\text{For all } \mathbf{A} = \begin{pmatrix}
+                a_{11} & \hdots & a_{1n}\\
+                \vdots & \ddots & \vdots\\
+                a_{m1} & \hdots & a_{mn}
+            \end{pmatrix}, \mathbf{B} = \begin{pmatrix}
+                b_{11} & \hdots & b_{1n}\\
+                \vdots & \ddots & \vdots\\
+                b_{m1} & \hdots & b_{mn}
+            \end{pmatrix} \in \mathbb{R}^{m \times n},\\
+            & & &\text{we have } \mathbf{A} + \mathbf{B} = \begin{pmatrix}
+                a_{11} + b_{11} & \hdots & a_{1n} + b_{1n}\\
+                \vdots & \ddots & \vdots\\
+                a_{m1} + b_{m1} & \hdots & a_{mn} + b_{mn}
+            \end{pmatrix} \in \mathbb{R}^{m \times n},\\
+            \bullet&: & &\text{For all } \mathbf{B} = \begin{pmatrix}
+                b_{11} & \hdots & b_{1n}\\
+                \vdots & \ddots & \vdots\\
+                b_{m1} & \hdots & b_{mn}
+            \end{pmatrix} \in \mathbb{R}^{m \times n} \text{ and } \alpha \in \mathbb{R}, \text{ we have } \alpha \cdot \mathbf{B} = \begin{pmatrix}
+                \alpha b_{11} & \hdots & \alpha b_{1n}\\
+                \vdots & \ddots & \vdots\\
+                \alpha b_{m1} & \hdots & \alpha b_{mn}
+            \end{pmatrix} \in \mathbb{R}^{m \times n}
+        \end{align*}
+        is a vector space over $\mathbb{R}$.
+    \end{eg}
+    \begin{rem}
+        This vector space is equivalent to $\mathbb{R}^{mn}$:
+        \begin{equation*}
+            \begin{pmatrix}
+                x_{11} & \hdots & x_{1n}\\
+                x_{21} & \hdots & x_{2n}\\
+                \vdots & \ddots & \vdots\\
+                x_{m1} & \hdots & x_{mn}
+            \end{pmatrix} \xrightarrow{\text{vectorization}} \begin{pmatrix}
+                x_{11}\\\vdots\\x_{1n}\\x_{21}\\\vdots\\x_{2n}\\\vdots\\x_{mn}
+            \end{pmatrix} \in \mathbb{R}^{mn}.
+        \end{equation*}
+    \end{rem}
+    \begin{rem}
+        An $m \times n$ matrix can be used to represent a black-and-white digital image.
+    \end{rem}
+    \begin{eg}
+        All real 3-arrays of size $m \times n \times \ell$, $\mathbb{R}^{m \times n \times \ell}$, with
+        \begin{align*}
+            +&: & &\text{For all } X = (x_{ijk})_{i,j,k}, Y = (y_{ijk})_{i,j,k} \in \mathbb{R}^{m \times n \times \ell}, \text{ we have } X + Y = (x_{ijk} + y_{ijk})_{i,j,k} \in \mathbb{R}^{m \times n \times \ell},\\
+            \bullet&: & &\text{For all } X = (x_{ijk})_{i,j,k} \in \mathbb{R}^{m \times n \times \ell} \text{ and } \alpha \in \mathbb{R}, \text{ we have } \alpha \cdot X = (\alpha x_{ijk})_{i,j,k} \in \mathbb{R}^{m \times n \times \ell}
+        \end{align*}
+        is a vector space over $\mathbb{R}$.
+    \end{eg}
+    \begin{rem}
+        Similar to matrices, this vector space is equivalent to $\mathbb{R}^{mn\ell}$.
+    \end{rem}
+    \begin{rem}
+        Many types of data can be modeled by this vector space $\mathbb{R}^{m \times n \times \ell}$, such as:
+        \begin{enumerate}
+            \item Color images with 3 color channels (RGB) ($\ell = 3$),
+            \item Black-and-white videos with $\ell$ frames, each of size $m \times n$.
+        \end{enumerate}
+        More complex data, such as color videos, are represented as 4-arrays. These arrays are usually collectively called \textbf{tensors}.
+    \end{rem}
+    \begin{eg}
+        Consider the set of all strings. We can quickly see that strings do not satisfy the commutativity property:
+        \begin{equation*}
+            \text{`Standing'} = \text{`Stand'} + \text{`ing'} \neq \text{`ing'} + \text{`Stand'} = \text{`ingStand'}.
+        \end{equation*}
+        Therefore, vector spaces cannot be used to model text data.
+    \end{eg}
+    \newpage
+    
+    \begin{eg}
+        The set of all continuous functions on $[a, b]$, denoted by:
+        \begin{equation*}
+            \mathcal{C}[a, b] = \{f : f \text{ is a continuous function on } [a, b]\},
+        \end{equation*}
+        with, for all $t \in [a, b]$,
+        \begin{align*}
+            +&: & &\text{For all } f, g \in \mathcal{C}[a, b], \text{ we have } (f + g)(t) = f(t) + g(t) \in \mathcal{C}[a, b],\\
+            \bullet&: & &\text{For all } f \in \mathcal{C}[a, b] \text{ and } \alpha \in \mathbb{R}, \text{ we have } (\alpha f)(t) = \alpha f(t) \in \mathcal{C}[a, b].
+        \end{align*}
+        is a vector space over $\mathbb{R}$. It is referred to as a \textbf{function space}.
+    \end{eg}
+    \begin{rem}
+        $\mathcal{C}[a, b]$ can be considered as a hypothesis space of a learner with one input and one output. Given a dataset of $x_{i} \in [a, b]$ and $y_{i} \in \mathbb{R}$, find the function $f \in \mathcal{C}[a, b]$ such that $f(x_{i}) \approx y_{i}$ for all $i$.
+    \end{rem}
+    \begin{eg}
+        The infinite sequences:
+        \begin{equation*}
+            \ell_{\infty} = \left\{\begin{pmatrix}
+                a_{1}\\\vdots\\a_{n}\\\vdots
+            \end{pmatrix} : \text{There exists } c < \infty \text{ such that } \abs{a_{i}} \leq c \text{ for any } i\right\},
+        \end{equation*}
+        with
+        \begin{align*}
+            +&: & &\text{For all } \mathbf{x} = \begin{pmatrix}x_{1}\\\vdots\\x_{n}\\\vdots\end{pmatrix}, \mathbf{y} = \begin{pmatrix}y_{1}\\\vdots\\y_{n}\\\vdots\end{pmatrix} \in \ell_{\infty}, \text{ we have } \mathbf{x} + \mathbf{y} = \begin{pmatrix}x_{1} + y_{1}\\\vdots\\x_{n} + y_{n}\\\vdots\end{pmatrix} \in \ell_{\infty},\\
+            \bullet&: & &\text{For all } \mathbf{x} = \begin{pmatrix}x_{1}\\\vdots\\x_{n}\\\vdots\end{pmatrix} \in \ell_{\infty} \text{ and } \alpha \in \mathbb{R}, \text{ we have } \alpha \cdot \mathbf{x} = \begin{pmatrix}\alpha x_{1}\\\vdots\\\alpha x_{n}\\\vdots\end{pmatrix} \in \ell_{\infty}.
+        \end{align*}
+        is a vector space over $\mathbb{R}$.
+    \end{eg}
+    \newpage
+    
+\section{Metrics on vector space}
+    We can convert some types of input data into vector space. However, how do we determine the distance between two vectors? Our goal is to define the distance in order to perform calculus.
 
+    Let $V$ be a vector space and $\mathbf{u}, \mathbf{v} \in V$. We want to find a function such that:
+    \begin{equation*}
+        \dist(\mathbf{u}, \mathbf{v}) = \dist(\mathbf{0}, \mathbf{u} - \mathbf{v}) = \text{length of } \mathbf{u} - \mathbf{v}.
+    \end{equation*}
+    Therefore, to define the distance, we only need to define the length of vectors.
+    \begin{defn}
+        Let $V$ be a vector space over $\mathbb{R}$. A \textbf{norm} on $V$ is a function $\norm{\cdot}: V \to \mathbb{R}$ such that for $\mathbf{x}, \mathbf{y} \in V$,
+        \begin{enumerate}
+            \item $\norm{\mathbf{x}} \geq 0$ and $\norm{\mathbf{x}} = 0 \Longleftrightarrow \mathbf{x} = \mathbf{0}$.
+            \item $\norm{\alpha \mathbf{x}} = \abs{\alpha} \norm{\mathbf{x}}$ for $\alpha \in \mathbb{R}$.
+            \item $\norm{\mathbf{x} + \mathbf{y}} \leq \norm{\mathbf{x}} + \norm{\mathbf{y}}$. 
+        \end{enumerate}
+        The ordered pair $(V, \norm{\cdot})$ is called a \textbf{normed vector space}.
+    \end{defn}
+    \begin{rem}
+        If it is clear from the context which norm is intended, then it is common to denote the normed vector space by $V$.
+    \end{rem}
+    \begin{rem}
+        $\norm{\mathbf{x}}$ represents the \textbf{length} of $\mathbf{x}$.
+    \end{rem}
+    \begin{rem}
+        The distance between $\mathbf{x}$ and $\mathbf{y}$ can now be defined as $\dist(\mathbf{x}, \mathbf{y}) = \norm{\mathbf{x} - \mathbf{y}}$.
+    \end{rem}
+    \begin{eg}
+        If we set $V = \mathbb{R}$, the following can be norms on $\mathbb{R}$ for all $x \in \mathbb{R}$:
+        \begin{enumerate}
+            \item $\norm{x} = \abs{x}$,
+            \item $\norm{x} = \frac{1}{2} \abs{x}$,
+            \item $\norm{x} = c \abs{x}$ for some $c > 0$.
+        \end{enumerate}
+    \end{eg}
+    \begin{rem}
+        In fact, there are infinitely many norms on the same vector space.
+    \end{rem}
+    \begin{eg}
+        For $\mathbf{x} \in \mathbb{R}^{n}$, the \textbf{Manhattan norm} ($1$-norm or $L_{1}$-norm) defined by:
+        \begin{equation*}
+            \pnorm[1]{\mathbf{x}} = \sum_{i=1}^{n} \abs{x_{i}}
+        \end{equation*}
+        is a norm on $\mathbb{R}^{n}$. The induced distance $\pnorm[1]{\mathbf{x} - \mathbf{y}}$ for $\mathbf{x}, \mathbf{y} \in V$ is called the \textbf{Manhattan distance}.
+    \end{eg}
+    \begin{proofing}
+        \begin{enumerate}
+            \item For any $\mathbf{x}, \in \mathbb{R}^{n}$,
+            \begin{equation*}
+                \pnorm[1]{\mathbf{x}} = \sum_{i=1}^{n} \abs{x_{i}} \geq 0.
+            \end{equation*}
+            Moreover,
+            \begin{align*}
+                \pnorm[1]{\mathbf{x}} = 0 &\Longleftrightarrow \sum_{i=1}^{n} \abs{x_{i}} = 0\\
+                &\Longleftrightarrow \abs{x_{i}} = 0 \Longleftrightarrow x_{i} = 0 \qquad \text{for } i = 1, \cdots, n,\\
+                &\Longleftrightarrow \mathbf{x} = \mathbf{0}.
+            \end{align*}
+            \item For any $\mathbf{x} \in \mathbb{R}^{n}$ and $\alpha \in \mathbb{R}$, 
+            \begin{equation*}
+                \pnorm[1]{\alpha \mathbf{x}} = \sum_{i=1}^{n} \abs{\alpha x_{i}} = \abs{\alpha} \sum_{i=1}^{n} \abs{x_{i}} = \abs{\alpha} \pnorm[1]{\mathbf{x}}.
+            \end{equation*}
+            \item Using the Triangle Inequality, for $\mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}$,
+            \begin{equation*}
+                \pnorm[1]{\mathbf{x} + \mathbf{y}} = \sum_{i=1}^{n} \abs{x_{i} + y_{i}} \leq \sum_{i=1}^{n} (\abs{x_{i}} + \abs{y_{i}}) = \pnorm[1]{\mathbf{x}} + \pnorm[1]{\mathbf{y}}.
+            \end{equation*}
+        \end{enumerate}
+        Therefore, by definition, the 1-norm is a norm on $\mathbb{R}^{n}$.
+    \end{proofing}
+    \newpage
+    
+    \begin{eg}
+        For $\mathbf{x} \in \mathbb{R}^{n}$, the Euclidean norm ($2$-norm or $L_{2}$-norm) defined by:
+        \begin{equation*}
+            \pnorm[2]{\mathbf{x}} = \sqrt{\sum_{i=1}^{n}x_{i}^{2}}
+        \end{equation*}
+        is a norm on $\mathbb{R}^{n}$. The induced distance $\pnorm[2]{\mathbf{x} - \mathbf{y}}$ for $\mathbf{x}, \mathbf{y} \in V$ is called the \textbf{Euclidean distance}.
+    \end{eg}
+    \begin{proofing}
+        \begin{enumerate}
+            \item For $\mathbf{x} \in \mathbb{R}^{n}$,
+            \begin{equation*}
+                \pnorm[2]{\mathbf{x}} = \sqrt{\sum_{i=1}^{n}x_{i}^{2}} \geq 0.
+            \end{equation*}
+            Moreover,
+            \begin{align*}
+                \pnorm[2]{\mathbf{x}} = 0 &\Longleftrightarrow \sum_{i=1}^{n}x_{i}^{2} = 0\\
+                &\Longleftrightarrow x_{i}^{2} = 0 \Longleftrightarrow x_{i} = 0 \qquad \text{for } i = 1, \cdots, n,\\
+                &\Longleftrightarrow \mathbf{x} = \mathbf{0}.
+            \end{align*}
+            \item For any $\alpha \in \mathbb{R}$, $\mathbf{x} \in \mathbb{R}^{n}$,
+            \begin{equation*}
+                \pnorm[2]{\alpha \mathbf{x}} = \sqrt{\sum_{i=1}^{n}(\alpha x_{i})^{2}} = \sqrt{\alpha^{2}} \sqrt{\sum_{i=1}^{n}x_{i}^{2}} = \abs{\alpha} \pnorm[2]{\mathbf{x}}.
+            \end{equation*}
+            \item This is a bit more complicated, but it is similar to the proof of the Cauchy-Schwarz inequality. 
+            
+            For $\mathbf{x} \in \mathbb{R}^{n}$, if $\mathbf{y} = \mathbf{0}$, then:
+            \begin{equation*}
+            	\pnorm[2]{\mathbf{x} + \mathbf{y}} = \pnorm[2]{\mathbf{x}} = \pnorm[2]{\mathbf{x}} + \pnorm[2]{\mathbf{y}}
+            \end{equation*}
+            If $\mathbf{y} \neq 0$, then for any $t \in \mathbb{R}$,
+            \begin{equation*}
+                \pnorm[2]{\mathbf{x} + t\mathbf{y}}^{2} = \sum_{i=1}^{n}(x_{i} + ty_{i})^{2} = \left(\sum_{i=1}^{n}x_{i}^{2}\right) + t\left(2\sum_{i=1}^{n}x_{i}y_{i}\right) + t^{2}\left(\sum_{i=1}^{n}y_{i}^{2}\right).
+            \end{equation*}
+            By (1), $\pnorm[2]{\mathbf{x} + t\mathbf{y}}^{2} \geq 0$. Therefore, since $\sum_{i=1}^{n} y_{i}^{2}>0$, $\pnorm[2]{\mathbf{x} + t\mathbf{y}}^{2}$ is a quadratic function with at most one real root. Using the discriminant, we have:
+            \begin{align*}
+                \Delta &\leq 0,\\
+                \left(2\sum_{i=1}^{n}x_{i}y_{i}\right)^{2} - 4\left(\sum_{i=1}^{n}x_{i}^{2}\right)\left(\sum_{i=1}^{n}y_{i}^{2}\right) &\leq 0,\\
+                \left(\sum_{i=1}^{n}x_{i}y_{i}\right)^{2} &\leq \left(\sum_{i=1}^{n}x_{i}^{2}\right)\left(\sum_{i=1}^{n}y_{i}^{2}\right),\\
+                \tag{Cauchy-Schwarz Inequality for $\mathbb{R}^{n}$}
+                \sum_{i=1}^{n}x_{i}y_{i} &\leq \sqrt{\sum_{i=1}^{n}x_{i}^{2}\sum_{i=1}^{n}y_{i}^{2}}.
+            \end{align*}
+            Consequently, 
+            \begin{align*}
+                \pnorm[2]{\mathbf{x} + \mathbf{y}}^{2} &= \sum_{i=1}^{n}(x_{i} + y_{i})^{2}\\
+                &= \sum_{i=1}^{n}x_{i}^{2} + 2\sum_{i=1}^{n}x_{i}y_{i} + \sum_{i=1}^{n}y_{i}^{2}\\
+                &\leq \sum_{i=1}^{n}x_{i}^{2} + 2\sqrt{\sum_{i=1}^{n}x_{i}^{2}\sum_{i=1}^{n}y_{i}^{2}} + \sum_{i=1}^{n}y_{i}^{2} = \pnorm[2]{\mathbf{x}}^{2} + 2\pnorm[2]{\mathbf{x}}\pnorm[2]{\mathbf{y}} + \pnorm[2]{\mathbf{y}}^{2},\\
+                \pnorm[2]{\mathbf{x} + \mathbf{y}} &\leq \pnorm[2]{\mathbf{x}} + \pnorm[2]{\mathbf{y}}.
+            \end{align*}
+        \end{enumerate}
+        Therefore, by definition, the 2-norm is a norm on $\mathbb{R}^{n}$.
+    \end{proofing}
+    \newpage
+
+    \begin{eg}
+        For $\mathbf{x} \in \mathbb{R}^{n}$, the $p$-norm or $L_{p}$-norm with $p \geq 1$ defined by:
+        \begin{equation*}
+            \pnorm[p]{\mathbf{x}} = \left(\sum_{i=1}^{n}\abs{x_{i}}^{p}\right)^{\frac{1}{p}}
+        \end{equation*}
+        is a norm on $\mathbb{R}^{n}$.
+    \end{eg}
+    \begin{eg}
+        For $\mathbf{x} \in \mathbb{R}^{n}$, the maximum norm ($L_{\infty}$-norm) defined by:
+        \begin{equation*}
+            \pnorm[\infty]{\mathbf{x}} = \lim_{p \to \infty}\pnorm[p]{\mathbf{x}} = \max_{1 \leq i \leq n}\abs{x_{i}}
+        \end{equation*}
+        is a norm on $\mathbb{R}^{n}$.
+    \end{eg}
+    \begin{figure}[h]
+        \centering
+        \begin{subfigure}[h]{0.3\textwidth}
+            \centering
+            \begin{tikzpicture}
+                \node[anchor=north east] at (0,0) {O};
+                \node[anchor=north west] at (2,0) {A};
+                \node[anchor=south west] at (2,1) {B};
+                \draw[help lines] 		(-1,-1) grid (3,3);
+                \draw[thick, ->]		(-1,0) -- (3,0);
+                \draw[thick, ->]		(0,-1) -- (0,3);
+                \draw[thick, ->, blue]	(0,0) -- (2,1);
+                \draw[thick, red]		(0,0) -- (2,0) -- (2,1);
+            \end{tikzpicture}
+        \end{subfigure}
+        \begin{subfigure}[h]{0.4\textwidth}
+            \centering
+            \begin{itemize}
+                \color{red}
+                \item[] Red: Manhattan distance from O to B
+                \begin{equation*}
+                    \abs{\text{OA}} + \abs{\text{AB}}
+                \end{equation*}
+                \color{blue}
+                \item[] Blue: Euclidean distance from O to B
+                \begin{equation*}
+                    \abs{\text{OB}}
+                \end{equation*}
+            \end{itemize}
+        \end{subfigure}
+        \caption{Difference between Manhattan distance and Euclidean distance}
+    \end{figure}
+    \begin{defn}
+        The \textbf{open unit ball} of a norm $\norm{\cdot}$ is defined by:
+        \begin{equation*}
+            B = \{\mathbf{x} \in \mathbb{R}^{n} : \norm{\mathbf{x}} < 1\}.
+        \end{equation*}
+    \end{defn}
+    \begin{eg}
+        For $p$-norm, the open unit ball of $\pnorm[p]{\cdot}$ is defined by:
+        \begin{equation*}
+            B_{p} = \left\{\mathbf{x} \in \mathbb{R}^{n} : \pnorm[p]{\mathbf{x}} = \left(\sum_{i=1}^{n}\abs{x_{i}}^{p}\right)^{\frac{1}{p}} < 1\right\}.
+        \end{equation*}
+    \end{eg}
+    \begin{figure}[h]
+        \centering
+        \begin{subfigure}[h]{0.3\textwidth}
+            \centering
+            \begin{tikzpicture}
+                \draw[help lines] 	(-2,-2) grid (2,2);
+                \draw[thick, ->]	(-2,0) -- (2,0);
+                \draw[thick, ->]	(0,-2) -- (0,2);
+                \draw[thick, red]	(0,0) circle (1cm);
+                \draw[thick, blue]	(1,0) -- (0,1) -- (-1,0) -- (0,-1) -- (1,0);	
+                \draw[thick, green] (1,1) -- (-1,1) -- (-1,-1) -- (1,-1) -- (1,1);
+            \end{tikzpicture}
+        \end{subfigure}
+        \begin{subfigure}[h]{0.5\textwidth}
+            \centering
+            \begin{itemize}
+                \color{red}
+                \item[] $B_{2} = \{\mathbf{x} \in \mathbb{R}^{n} : \pnorm[2]{\mathbf{x}} < 1\}$
+                \color{blue}
+                \item[] $B_{1} = \{\mathbf{x} \in \mathbb{R}^{n} : \pnorm[1]{\mathbf{x}} < 1\}$
+                \color{green}
+                \item[] $B_{\infty} = \{\mathbf{x} \in \mathbb{R}^{n} : \pnorm[\infty]{\mathbf{x}} < 1\}$
+            \end{itemize}
+        \end{subfigure}
+        \caption{Unit balls of $p$-norm for different $p$}
+    \end{figure}
+    \begin{thm}
+        If $0 < q \leq p < \infty$, then for any $\mathbf{x} \in \mathbb{R}^{n}$,
+        \begin{equation*}
+            \pnorm[p]{\mathbf{x}} \leq \pnorm[q]{\mathbf{x}}.
+        \end{equation*}
+    \end{thm}
+    \begin{rem}
+        There are other norms on $\mathbb{R}^{n}$, not just $p$-norms.
+    \end{rem}
+    \newpage
+    
+    For a set of matrices $\mathbb{R}^{m \times n}$, we can view them as $\mathbb{R}^{mn}$.
+    \begin{eg}
+        For $\mathbf{A} \in \mathbb{R}^{m \times n}$, the \textbf{vector $p$-norm} with $p \geq 1$ defined by:
+        \begin{equation*}
+            \pnorm[p,\text{vec}]{\mathbf{A}} = \left(\sum_{i=1}^{m}\sum_{j=1}^{n}\abs{a_{ij}}^{p}\right)^{\frac{1}{p}}
+        \end{equation*}
+        is a norm on $\mathbb{R}^{m \times n}$.
+    \end{eg}
+    \begin{eg}
+        For $\mathbf{A} \in \mathbb{R}^{m \times n}$, when $p = 2$, the \textbf{Frobenius norm} (vector $2$-norm) defined by:
+        \begin{equation*}
+            \pnorm[F]{\mathbf{A}} = \pnorm[2,\text{vec}]{\mathbf{A}} = \sqrt{\sum_{i=1}^{m}\sum_{j=1}^{n}a_{ij}^{2}}
+        \end{equation*}
+        is a norm on $\mathbb{R}^{m \times n}$.
+    \end{eg}
+    We can also view $\mathbb{R}^{m \times n}$ as a linear transformation $\mathbb{R}^{n} \to \mathbb{R}^{m}$. Given a vector $\mathbf{x} \in \mathbb{R}^{n}$, one can consider the function:
+    \begin{equation*}
+        f(\mathbf{x}) = \mathbf{Ax} \in \mathbb{R}^{m}
+    \end{equation*}
+    as a linear transformation from $\mathbb{R}^{n}$ to $\mathbb{R}^{m}$.
+    \begin{eg}
+        For $\mathbf{A} \in \mathbb{R}^{m \times n}$, the \textbf{matrix $p$-norm} with $p\geq 1$ defined by:
+        \begin{equation*}
+            \pnorm[p]{\mathbf{A}} = \max_{\substack{\mathbf{x} \neq \mathbf{0}\\\mathbf{x} \in \mathbb{R}^{n}}}\frac{\pnorm[p]{\mathbf{Ax}}}{\pnorm[p]{\mathbf{x}}} = \max_{\substack{\mathbf{x} \in \mathbb{R}^{n}\\\pnorm[p]{\mathbf{x}} = 1}}\pnorm[p]{\mathbf{Ax}}
+        \end{equation*}
+        is a norm on $\mathbb{R}^{m \times n}$.
+    \end{eg}
+    \begin{eg}
+        For $\mathbf{A} \in \mathbb{R}^{m \times n}$, when $p = 1$, the matrix $1$-norm defined by:
+        \begin{equation*}
+            \pnorm[1]{\mathbf{A}} = \max_{\substack{\mathbf{x} \in \mathbb{R}^{n}\\\pnorm[1]{\mathbf{x}} = 1}}\pnorm[1]{\mathbf{Ax}} = \max_{1 \leq j \leq n}\sum_{i=1}^{m}\abs{a_{ij}}
+        \end{equation*}
+        is a norm on $\mathbb{R}^{m \times n}$.
+    \end{eg}
+    \begin{eg}
+        \label{Chapter 2 (Example) Matrix 2-norm}
+        For $\mathbf{A} \in \mathbb{R}^{m \times n}$, when $p = 2$, the matrix $2$-norm can be described with the following properties:
+        \begin{align*}
+            \pnorm[2]{\mathbf{A}}^{2} &= \max_{\substack{\mathbf{x} \in \mathbb{R}^{n}\\\pnorm[2]{\mathbf{x}} = 1}}\pnorm[2]{\mathbf{Ax}}^{2} = \max_{\substack{\mathbf{x} \in \mathbb{R}^{n}\\\pnorm[2]{\mathbf{x}} = 1}}\mathbf{x}^{T}\mathbf{A}^{T}\mathbf{Ax} = \text{max eigenvalue of } \mathbf{A}^{T}\mathbf{A},\\
+            \pnorm[2]{\mathbf{A}} &= \sqrt{\text{max eigenvalue of } \mathbf{A}^{T}\mathbf{A}} = \text{max singular value of } \mathbf{A}.
+        \end{align*}
+        Therefore, the matrix $2$-norm is also called the \textbf{operator norm} of $\mathbf{A}$.
+    \end{eg}
+    \begin{figure}[h]
+        \centering
+        \begin{subfigure}[h]{0.3\textwidth}
+            \centering
+            \begin{tikzpicture}
+                \draw[thick, ->]	(-2,0) -- (2,0);
+                \draw[thick, ->]	(0,-2) -- (0,2);
+                \draw[thick, red]	(0,0) circle (1cm);
+            \end{tikzpicture}
+            
+            $B_{2}$
+        \end{subfigure}
+        $\xrightarrow{\mathbf{A}}$
+        \begin{subfigure}[h]{0.3\textwidth}
+            \centering
+            \begin{tikzpicture}
+                \draw[thick, ->]	(-2,0) -- (2,0);
+                \draw[thick, ->]	(0,-2) -- (0,2);
+                \draw[thick, red, rotate=20]	(0,0) ellipse (1.5cm and 1cm);
+                \draw[thick, blue, rotate=20]	(0,0) -- (1.5,0) node[above, midway] {$\pnorm[2]{\mathbf{A}}$};
+            \end{tikzpicture}
+            
+            $\{\mathbf{Ax} : \mathbf{x} \in B_{2}\}$
+        \end{subfigure}
+        \caption{Meaning of matrix $2$-norm when $n = 2$ and $m = 2$}
+    \end{figure}
+    \newpage
+
+    In addition, the matrix $p$-norm can be generalized with two different $p$-norms.
+    \begin{eg}
+        For $\mathbf{A} \in \mathbb{R}^{m \times n}$, the matrix norm induced by $p$-norm in $\mathbb{R}^{n}$ and $q$-norm in $\mathbb{R}^{m}$ defined by:
+        \begin{equation*}
+            \pnorm[p \to q]{\mathbf{A}} = \max_{\substack{\mathbf{x} \in \mathbb{R}^{n}\\\pnorm[p]{\mathbf{x}} = 1}}\pnorm[q]{\mathbf{Ax}}
+        \end{equation*}
+        is a norm on $\mathbb{R}^{m \times n}$. Moreover, the matrix $p$-norm is a special case of this norm.
+    \end{eg}
+    Matrix norms do not need to be defined using vector norms.
+    \begin{eg}
+        For $\mathbf{A} \in \mathbb{R}^{m \times n}$, the \textbf{nuclear norm} (trace norm or Ky Fan $n$-norm) defined by:
+        \begin{equation*}
+            \pnorm[*]{\mathbf{A}} = \Tr(\sqrt{\mathbf{A}^{T}\mathbf{A}})
+        \end{equation*}
+        is a norm on $\mathbb{R}^{m \times n}$.
+    \end{eg}
+    How about norms for continuous functions?
+    \begin{eg}
+        For $f \in \mathcal{C}[a, b]$, where the set is defined as:
+        \begin{equation*}
+            \mathcal{C}[a, b] = \{f : f \text{ is a continuous function on } [a, b]\},
+        \end{equation*}
+        the \textbf{maximum norm} (Chebyshev norm) defined by:
+        \begin{equation*}
+            \pnorm[\infty]{f} = \max_{t \in [a, b]}\abs{f(t)}
+        \end{equation*}
+        is a norm on $\mathcal{C}[a, b]$.
+    \end{eg}
+    \begin{eg}
+        For $f \in \mathcal{C}[a, b]$, the \textbf{$p$-norm} with $p\geq 1$ defined by:
+        \begin{equation*}
+            \pnorm[p]{f} = \left(\int_{a}^{b}\abs{f(t)}^{p}\,dt\right)^{\frac{1}{p}}
+        \end{equation*}
+        is a norm on $\mathcal{C}[a, b]$.
+    \end{eg}
+    Is there a norm for the set of vectors with infinite dimensions?
+    \begin{eg}
+        For $\mathbf{x} \in \ell_{\infty}$, where the set is defined as:
+        \begin{equation*}
+            \ell_{\infty} = \left\{\begin{pmatrix}
+                a_{1}\\
+                \vdots\\
+                a_{n}\\
+                \vdots
+            \end{pmatrix} : \text{There exists $c < \infty$ such that $\abs{a_{i}} \leq c$ for any $i$}\right\},
+        \end{equation*}
+        the \textbf{supremum norm} defined by:
+        \begin{equation*}
+            \pnorm[\infty]{\mathbf{x}} = \sup_{i}\abs{x_{i}}
+        \end{equation*}
+        is a norm on $\ell_{\infty}$.
+    \end{eg}
+    \begin{eg}
+        For $\mathbf{x} \in \ell_{p}$ with $p\geq 1$, where the set is defined as:
+        \begin{equation*}
+            \ell_{p} = \{\mathbf{x} \in \ell_{\infty} : \pnorm[p]{\mathbf{x}} < \infty\} \subset \ell_{\infty},
+        \end{equation*}
+        the $p$-norm defined by:
+        \begin{equation*}
+            \pnorm[p]{\mathbf{x}} = \left(\sum_{i=1}^{\infty}\abs{x_{i}}^{p}\right)^{\frac{1}{p}}
+        \end{equation*}
+        is a norm on $\ell_{p}$. However, it is important to note that it is not a norm on $\ell_{\infty}$.
+    \end{eg}
+    \begin{rem}
+        For the same vector space, we can define infinitely many norms on it. The simplest would be by adding or subtracting different norms.
+    \end{rem}
+    \newpage
+    
+\section{Limit and convergence on normed vector space}
+    In this section, assume that $V$ is a vector space over $\mathbb{R}$ with norm $\norm{\cdot}$.
+
+    In data analysis, many algorithms are iterative algorithms, which generate $n$ sequences of vectors:
+    \begin{equation*}
+        \{\mathbf{x}_{i}^{(k)}\} \subset V, \qquad i = 1, \cdots, n,
+    \end{equation*}
+    where $V$ is endowed with a norm $\norm{\cdot}$. As the iteration continues, it is important that the output stays within the hypothesis space. If the algorithm generates an output that is outside the expected domain, then it is not considered a good solution.
+    \begin{defn}
+        Let $\mathbf{x} \in V$. We say the sequence $\{\mathbf{x}^{(k)}\} \in V$ \textbf{converges} to $\mathbf{x}$, denoted by $\mathbf{x}^{(k)} \to \mathbf{x}$, if:
+        \begin{equation*}
+            \lim_{k \to \infty}\snorm{\mathbf{x}^{(k)} - \mathbf{x}} = 0.
+        \end{equation*}
+        More rigorously, the sequence $\{\mathbf{x}^{(k)}\}$ \textbf{converges} to $\mathbf{x}$ if, for any $\varepsilon > 0$, there exists $N$ such that for any $n \geq N$,
+        \begin{equation*}
+            \snorm{\mathbf{x}^{(n)} - \mathbf{x}} < \varepsilon.
+        \end{equation*}
+    \end{defn}
+    \begin{eg}
+        Consider $V = \mathbb{R}^{n}$ with $\pnorm[2]{\cdot}$. Let:
+        \begin{align*}
+            \mathbf{x}^{(k)} &= \begin{pmatrix}
+                \frac{1}{k}\\
+                \vdots\\
+                \frac{n}{k}
+            \end{pmatrix}, & \mathbf{x} &= \mathbf{0}.
+        \end{align*}
+        Then we have:
+        \begin{align*}
+            \spnorm[2]{\mathbf{x}^{(k)} - \mathbf{x}} &= \spnorm[2]{\mathbf{x}^{(k)}} = \sqrt{\sum_{i=1}^{n}\left(\frac{i}{k}\right)^{2}} = \frac{1}{k}\sqrt{\sum_{i=1}^{n}i^{2}},\\
+            \lim_{k \to \infty}\spnorm[2]{\mathbf{x}^{(k)} - \mathbf{x}} &= \lim_{k \to \infty}\frac{1}{k}\sqrt{\sum_{i=1}^{n}i^{2}} = 0.
+        \end{align*}
+        Therefore, $\mathbf{x}^{(k)} \to \mathbf{x}$.
+    \end{eg}
+    \begin{eg}
+        Consider $V = \mathcal{C}[0, 1]$ with $\pnorm[\infty]{\cdot}$. Let:
+        \begin{equation*}
+            f^{(k)}(t) = \frac{\sin(2\pi kt)}{k^{2}} \in \mathcal{C}[0, 1].
+        \end{equation*}
+        Let $0$ be the zero function. We can easily find that $0 \in \mathcal{C}[0, 1]$. Then we have:
+        \begin{align*}
+            \spnorm[\infty]{f^{(k)} - 0} &= \spnorm[\infty]{f^{(k)}} = \max_{t \in [0, 1]}\abs{\frac{\sin(2\pi kt)}{k^{2}}} = \frac{1}{k^{2}},\\
+            \lim_{k \to \infty}\spnorm[\infty]{f^{(k)} - 0} &= \lim_{k \to \infty}\frac{1}{k^{2}} = 0.
+        \end{align*}
+        Therefore, $f^{(k)} \to 0$.
+    \end{eg}
+    \begin{figure}[h]
+        \centering
+        \begin{subfigure}[h]{0.2\textwidth}
+            \centering
+            \begin{tikzpicture}
+                \draw[thick, ->]	(-0.5,0) -- (1.5,0);
+                \draw[thick, red, domain=0:1]	plot (\x, {sin(deg(2*pi*\x))});
+            \end{tikzpicture}
+            
+            $k = 1$
+        \end{subfigure}
+        \begin{subfigure}[h]{0.2\textwidth}
+            \centering
+            \begin{tikzpicture}
+                \draw[thick, ->]	(-0.5,0) -- (1.5,0);
+                \draw[thick, red, domain=0:1]	plot (\x, {sin(deg(2*pi*2*\x))/4});
+            \end{tikzpicture}
+            
+            $k = 2$
+        \end{subfigure}
+        \begin{subfigure}[h]{0.2\textwidth}
+            \centering
+            \begin{tikzpicture}
+                \draw[thick, ->]	(-0.5,0) -- (1.5,0);
+                \draw[thick, red, domain=0:1]	plot (\x, {sin(deg(2*pi*3*\x))/9});
+            \end{tikzpicture}
+            
+            $k = 3$
+        \end{subfigure}
+        $\cdots$
+        \begin{subfigure}[h]{0.2\textwidth}
+            \centering
+            \begin{tikzpicture}
+                \draw[thick, ->]	(-0.5,0) -- (1.5,0);
+                \draw[thick, red, domain=0:1]	plot (\x, {0});
+            \end{tikzpicture}
+            
+            $k = \infty$
+        \end{subfigure}
+        \caption{As $k$ increases, the wave keeps shrinking in amplitude.}
+    \end{figure}
+    \newpage
+
+    \begin{rem}
+        Convergence depends on the norm used.
+    \end{rem}
+    \begin{eg}
+        Consider $V = \ell_{p}$ for any $p$ with $\pnorm[p]{\cdot}$. Let:
+        \begin{align*}
+            \mathbf{x}^{(k)} &= \begin{pmatrix}
+                \frac{1}{k}\\
+                \vdots\\
+                \frac{1}{k}\\
+                0\\
+                \vdots
+            \end{pmatrix}~\begin{array}{@{} c @{}}
+                \\
+                k\text{-terms}\\[1.5ex]
+                \\
+                \\
+                \mathstrut
+            \end{array} = \sum_{i=1}^{k}\frac{1}{k}\mathbf{e}_{i} \in \ell_{p}, & \mathbf{x} &= \begin{pmatrix}
+                0\\
+                0\\
+                \vdots\\
+                0\\
+                \vdots
+            \end{pmatrix} = \mathbf{0} \in \ell_{p}.
+        \end{align*}
+        \begin{itemize}
+            \item[] When $p = 2$,
+            \begin{align*}
+                \spnorm[2]{\mathbf{x}^{(k)} - \mathbf{x}} &= \spnorm[2]{\mathbf{x}^{(k)}} = \sqrt{\sum_{i=1}^{k}\frac{1}{k^{2}}} = \frac{1}{\sqrt{k}},\\
+                \lim_{k \to \infty}\spnorm[2]{\mathbf{x}^{(k)} - \mathbf{x}} &= \lim_{k \to \infty}\frac{1}{\sqrt{k}} = 0.
+            \end{align*}
+            Therefore, $\mathbf{x}^{(k)} \to \mathbf{x}$ with the norm $\spnorm[2]{\cdot}$.
+            \item[] When $p = \infty$,
+            \begin{align*}
+                \spnorm[\infty]{\mathbf{x}^{(k)} - \mathbf{x}} &= \spnorm[\infty]{\mathbf{x}^{(k)}} = \frac{1}{k},\\
+                \lim_{k \to \infty}\spnorm[\infty]{\mathbf{x}^{(k)} - \mathbf{x}} &= \lim_{k \to \infty}\frac{1}{k} = 0.
+            \end{align*}
+            Therefore, $\mathbf{x}^{(k)} \to \mathbf{x}$ with the norm $\spnorm[\infty]{\cdot}$.
+            \item[] When $p = 1$,
+            \begin{align*}
+                \spnorm[1]{\mathbf{x}^{(k)} - \mathbf{x}} &= \spnorm[1]{\mathbf{x}^{(k)}} = \sum_{i=1}^{k}\frac{1}{k} = 1,\\
+                \lim_{k \to \infty}\spnorm[1]{\mathbf{x}^{(k)} - \mathbf{x}} &= \lim_{k \to \infty}1 = 1 \neq 0.
+            \end{align*}
+            Therefore, $\mathbf{x}^{(k)} \not\to \mathbf{x}$ with the norm $\pnorm[1]{\cdot}$.
+        \end{itemize}
+    \end{eg}
+    \begin{rem}
+        The limit may not be in the same vector space. If this happens, the normed vector space is called \textbf{incomplete}.
+    \end{rem}
+    \begin{eg}
+        Consider $V = \ell_{1}$ with $\pnorm[\infty]{\cdot}$. Let:
+        \begin{align*}
+            \mathbf{x}^{(k)} &= \begin{pmatrix}
+                1\\
+                \frac{1}{2}\\
+                \vdots\\
+                \frac{1}{k}\\
+                0\\
+                \vdots
+            \end{pmatrix}=\sum_{i=1}^{k}\frac{1}{i}\mathbf{e}_{i} \in \ell_{1}, & \mathbf{x} &= \begin{pmatrix}
+                1\\
+                \frac{1}{2}\\
+                \vdots\\
+                \frac{1}{k}\\
+                \frac{1}{k+1}\\
+                \vdots
+            \end{pmatrix}=\sum_{i=1}^{\infty}\frac{1}{i}\mathbf{e}_{i}.
+        \end{align*}
+        Then we have:
+        \begin{align*}
+            \lim_{k \to \infty}\spnorm[\infty]{\mathbf{x}^{(k)} - \mathbf{x}} = \lim_{k \to \infty}\pnorm[\infty]{\begin{pmatrix}
+                    0\\
+                    \vdots\\
+                    0\\
+                    \frac{1}{k+1}\\
+                    \vdots
+            \end{pmatrix}} = \lim_{k \to \infty}\frac{1}{k+1} = 0.
+        \end{align*}
+        However, $\sum_{i=1}^{\infty}\frac{1}{i} = \infty$, and thus $\mathbf{x} \not\in \ell_{1}$. Therefore, we cannot say that $\mathbf{x}^{(k)} \to \mathbf{x}$ with the norm $\pnorm[\infty]{\cdot}$.
+    \end{eg}
+    \newpage
+    
+    With the definition of convergence, we can define the completeness of a vector space.
+    \begin{defn}
+        The sequence $\{\mathbf{x}^{(k)}\} \subset V$ is a Cauchy sequence if, for any $\varepsilon > 0$, there exists $N$ such that for any $n, m \geq N$, 
+        \begin{equation*}
+            \snorm{\mathbf{x}^{(n)} - \mathbf{x}^{(m)}} < \varepsilon.
+        \end{equation*}
+    \end{defn}
+    \begin{thm}
+        If $\mathbf{x}^{(k)} \to \mathbf{x}$ in $(V, \norm{\cdot})$, then $\{\mathbf{x}^{(k)}\}$ is a Cauchy sequence.
+    \end{thm}
+    \begin{proofing}
+        If $\mathbf{x}^{(k)} \to \mathbf{x}$, then for all $\varepsilon > 0$, there exists $N$ such that for all $n \geq N$,
+        \begin{equation*}
+            \snorm{\mathbf{x}^{(n)} - \mathbf{x}} < \frac{\varepsilon}{2}.
+        \end{equation*}
+        Therefore, for all $n, m \geq N$,
+        \begin{equation*}
+            \snorm{\mathbf{x}^{(n)} - \mathbf{x}^{(m)}} \leq \snorm{\mathbf{x}^{(n)} - \mathbf{x}} + \snorm{\mathbf{x}^{(m)} - \mathbf{x}} < \varepsilon.
+        \end{equation*}
+    \end{proofing}
+    \begin{rem}
+        The converse is not necessarily true.
+    \end{rem}
+    \begin{defn}
+        A normed vector space $(V, \norm{\cdot})$ is \textbf{complete} if the limit of all Cauchy sequences in $V$ is in $V$.
+    \end{defn}
+    \begin{defn}
+        A complete normed vector space is called a \textbf{Banach space}.
+    \end{defn}
+    \begin{eg}
+        $\mathbb{R}^{n}$, $\mathbb{R}^{m \times n}$, or $\mathbb{R}^{m \times n \times \ell}$ with any norm is a Banach space.
+    \end{eg}
+    \begin{eg}
+        $\mathcal{C}[a, b]$ with $\pnorm[\infty]{\cdot}$ is a Banach space.
+    \end{eg}
+    \begin{eg}
+        For $p \geq 1$, including $p = \infty$, $(\ell_{p}, \pnorm[p]{\cdot})$ is a Banach space.
+    \end{eg}
+    \begin{rem}
+    	We can always include all the limits of the Cauchy sequences to convert an incomplete normed vector space into a complete one.
+    \end{rem}
+    \begin{eg}
+        $(\ell_{1}, \pnorm[\infty]{\cdot})$ is an incomplete normed vector space. Its completion is $\ell_{\infty}$.
+    \end{eg}
+    \begin{eg}
+        For $p \geq 1$, $(\mathcal{C}[a, b], \pnorm[p]{\cdot})$ is an incomplete normed vector space. Its completion is $L^{p}[a, b]$.
+    \end{eg}
+    In practical cases, how do we check the convergence of a given sequence?
+    \begin{eg}
+        From an iterative algorithm, we generate a sequence of vectors $\{\mathbf{x}^{(k)}\}$. Our goal is to check if this sequence converges. Pick a threshold $\varepsilon > 0$. We can check computationally that for large $n, m$,
+        \begin{equation*}
+            \snorm{\mathbf{x}^{(n)} - \mathbf{x}^{(m)}} < \varepsilon.
+        \end{equation*}
+        Practically, to reduce computational cost, we usually only check for large $n$,
+        \begin{equation*}
+            \snorm{\mathbf{x}^{(k)} - \mathbf{x}^{(k-1)}} < \varepsilon.
+        \end{equation*}
+    \end{eg}
+    \newpage
+
+\section{Finite Dimensional Vector Spaces}
+    In most cases, we deal with finite-dimensional vector spaces.
+    \begin{rem}
+        Every finite-dimensional vector space with any norm is complete. That is, any finite-dimensional vector space is Banach.
+    \end{rem}
+    \begin{rem}
+        For a finite-dimensional vector space $V$, all norms are equivalent. For any two norms $\norm{\cdot}_{A}$ and $\norm{\cdot}_{B}$, there exist $c_{1}, c_{2} > 0$ such that:
+        \begin{equation*}
+            c_{1}\norm{\mathbf{x}}_{A} \leq \norm{\mathbf{x}}_{B} \leq c_{2}\norm{\mathbf{x}}_{A}, \qquad \text{for all } \mathbf{x} \in V.
+        \end{equation*}
+    \end{rem}
+    \begin{thm}
+        The limit of the same finite-dimensional sequence under any norm is the same. That means, given two finite-dimensional normed vector spaces $(V, \pnorm[A]{\cdot})$ and $(V, \pnorm[B]{\cdot})$, for any sequence $\{\mathbf{x}^{(k)}\}$ and $\mathbf{x} \in V$,
+        \begin{equation*}
+            \mathbf{x}^{(k)} \to \mathbf{x} \ \text{in} \ \pnorm[A]{\cdot} \Longleftrightarrow \mathbf{x}^{(k)} \to \mathbf{x} \ \text{in} \ \pnorm[B]{\cdot}.
+        \end{equation*}
+    \end{thm}
+    \begin{proofing}
+        Since $\mathbf{x}^{(k)} \to \mathbf{x}$ in $\pnorm[A]{\cdot}$,
+        \begin{equation*}
+            \lim_{k \to \infty}\spnorm[A]{\mathbf{x}^{(k)} - \mathbf{x}} = 0.
+        \end{equation*}
+        Therefore, there exist $c_{1}, c_{2} > 0$ such that:
+        \begin{equation*}
+            c_{1}\spnorm[A]{\mathbf{x}^{(k)} - \mathbf{x}} \leq \spnorm[B]{\mathbf{x}^{(k)} - \mathbf{x}} \leq c_{2}\spnorm[A]{\mathbf{x}^{(k)} - \mathbf{x}}.
+        \end{equation*}
+        Taking $k \to \infty$, we have:
+        \begin{equation*}
+            0 \leq c_{1}\lim_{k \to \infty}\spnorm[A]{\mathbf{x}^{(k)} - \mathbf{x}} \leq \lim_{k \to \infty}\spnorm[B]{\mathbf{x}^{(k)} - \mathbf{x}} \leq c_{2}\lim_{k \to \infty}\spnorm[A]{\mathbf{x}^{(k)} - \mathbf{x}} = 0.
+        \end{equation*}
+        By the Squeeze Theorem, we find that:
+        \begin{equation*}
+            \lim_{k \to \infty}\spnorm[B]{\mathbf{x}^{(k)} - \mathbf{x}} = 0.
+        \end{equation*}
+        To conclude, $\mathbf{x}^{(k)} \to \mathbf{x}$ in $\spnorm[B]{\cdot}$. The proof for the converse is similar.
+    \end{proofing}
+    \begin{eg}
+        Consider $V = \mathbb{R}^{n}$ with $\pnorm[1]{\cdot}$, $\pnorm[2]{\cdot}$, and $\pnorm[\infty]{\cdot}$.
+        \begin{enumerate}
+            \item $\pnorm[1]{\cdot}$ and $\pnorm[2]{\cdot}$ are equivalent because for $\mathbf{x} \in \mathbb{R}^{n}$,
+            \begin{equation*}
+                \pnorm[2]{\mathbf{x}} \leq \pnorm[1]{\mathbf{x}} \leq \sqrt{n}\pnorm[2]{\mathbf{x}}.
+            \end{equation*}
+            \item $\pnorm[2]{\cdot}$ and $\pnorm[\infty]{\cdot}$ are equivalent because for $\mathbf{x} \in \mathbb{R}^{n}$,
+            \begin{equation*}
+                \pnorm[\infty]{\mathbf{x}} \leq \pnorm[2]{\mathbf{x}} \leq \sqrt{n}\pnorm[\infty]{\mathbf{x}}.
+            \end{equation*}
+            \item $\pnorm[1]{\cdot}$ and $\pnorm[\infty]{\cdot}$ are equivalent because for $\mathbf{x} \in \mathbb{R}^{n}$,
+            \begin{equation*}
+                \pnorm[\infty]{\mathbf{x}} \leq \pnorm[1]{\mathbf{x}} \leq n\pnorm[\infty]{\mathbf{x}}.
+            \end{equation*}
+        \end{enumerate}
+    \end{eg}
+    \newpage
+    
+    \begin{rem}
+        Based on the theorem, the convergence speed depends on the norms used.
+    \end{rem}
+    \begin{eg}
+        Consider $V = \mathbb{R}^{2}$. Let:
+        \begin{equation*}
+            \mathbf{x}^{(k)} = \frac{1}{k}\begin{pmatrix}
+                \cos\left(\frac{(2k-1)\pi}{4}\right)\\
+                \sin\left(\frac{(2k-1)\pi}{4}\right)
+            \end{pmatrix} \in \mathbb{R}^{2}.
+        \end{equation*}
+        We can easily find that $\mathbf{x}^{(k)} \to \mathbf{0}$ with the norms $\pnorm[1]{\cdot}$ and $\pnorm[2]{\cdot}$. However,
+        \begin{align*}
+            \spnorm[1]{\mathbf{x}^{(k)} - \mathbf{0}} &= \frac{\sqrt{2}}{k}, & \spnorm[2]{\mathbf{x}^{(k)} - \mathbf{0}} &= \frac{1}{k}.
+        \end{align*}
+        To achieve $\varepsilon$-precision:
+        \begin{align*}
+            \spnorm[1]{\mathbf{x}^{(k)} - \mathbf{0}} < \varepsilon &\Longleftrightarrow \frac{\sqrt{2}}{k_{1}} < \varepsilon \Longrightarrow k_{1} > \frac{\sqrt{2}}{\varepsilon},\\
+            \spnorm[2]{\mathbf{x}^{(k)} - \mathbf{0}} < \varepsilon &\Longleftrightarrow \frac{1}{k_{2}} < \varepsilon \Longrightarrow k_{2} > \frac{1}{\varepsilon}.
+        \end{align*}
+        The norm $\pnorm[1]{\cdot}$ takes about $\sqrt{2}$ times as many iterations as the norm $\pnorm[2]{\cdot}$ to check convergence using $\varepsilon$ as the threshold.
+    \end{eg}
+    \begin{rem}
+        In the case of infinite-dimensional vector spaces, not all norms are equivalent.
+    \end{rem}
+    \begin{eg}
+        Consider $V = \ell_{1}$. Let:
+        \begin{equation*}
+            \mathbf{x}^{(k)} = \begin{pmatrix}
+                1\\
+                \vdots\\
+                1\\
+                0\\
+                \vdots
+            \end{pmatrix}~\begin{array}{@{} c @{}}
+	            \\
+	            k\text{-terms}\\[1.5ex]
+	            \\
+	            \\
+	            \mathstrut
+            \end{array}=\sum_{i=1}^{k}\mathbf{e}_{i} \in \ell_{1}.
+        \end{equation*}
+        Consider the norms $\pnorm[\infty]{\cdot}$ and $\pnorm[1]{\cdot}$. We find that:
+        \begin{align*}
+            \spnorm[\infty]{\mathbf{x}^{(k)}} &= 1, & \spnorm[1]{\mathbf{x}^{(k)}} &= k, & \lim_{k \to \infty}\frac{\spnorm[1]{\mathbf{x}^{(k)}}}{\spnorm[\infty]{\mathbf{x}^{(k)}}} &= \lim_{k \to \infty}k = \infty.
+        \end{align*}
+        Therefore, the two norms are not equivalent.
+    \end{eg}
+    
+    Read Appendix \ref{Case Study A: Clustering, K-means, K-medians} (Clustering, K-means, K-medians) to see the case study for Chapter \ref{Chapter 2: Vector spaces, metrics, limits, and convergence}.
+   
 \end{document}
