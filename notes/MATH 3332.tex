@@ -1343,6 +1343,493 @@
     \end{proofing}
     Read Appendix \ref{Case Study B: Kernel K-means/Kernel Trick} (Kernel K-means/Kernel Trick) and \ref{Case Study C: Metric Learning} (Metric Learning) to see the case studies for Chapter \ref{Chapter 3: Inner products, Hilbert Spaces}.
 
+\chapter{Linear Functions and Differentiation}
+    \label{Chapter 4: Linear Functions and Differentiation}
+    In Chapter \ref{Chapter 2: Vector spaces, metrics, limits, and convergence}, we observed that the norm does not preserve vector addition but does preserve scalar multiplication. In Chapter \ref{Chapter 3: Inner products, Hilbert Spaces}, by fixing one of the vectors, we demonstrated linearity. Here, we aim to investigate the behavior of linear functions in vector spaces.
+\section{Linear Functions}
+    \begin{defn}
+        Let $V$ be a vector space over $\mathbb{R}$. A function $f:V\to\mathbb{R}$ is \textbf{linear} if, for all $\mathbf{x},\mathbf{y}\in V$ and $\alpha,\beta\in\mathbb{R}$,
+        \begin{equation*}
+            f(\alpha\mathbf{x}+\beta\mathbf{y})=\alpha f(\mathbf{x})+\beta f(\mathbf{y}).
+        \end{equation*}
+    \end{defn}
+    \begin{eg}
+        The mean of a vector (not to be confused with mean vectors): for all $\mathbf{x}\in\mathbb{R}^{n}$,
+        \begin{equation*}
+            f(\mathbf{x})=\frac{1}{n}\sum_{i=1}^{n}x_{i}
+        \end{equation*}
+        is a linear function.
+    \end{eg}
+    \begin{proofing}
+        For all $\mathbf{x},\mathbf{y}\in\mathbb{R}^{n}$ and $\alpha,\beta\in\mathbb{R}$,
+        \begin{equation*}
+            f(\alpha\mathbf{x}+\beta\mathbf{y})=\frac{1}{n}\sum_{i=1}^{n}(\alpha x_{i}+\beta y_{i})=\frac{\alpha}{n}\sum_{i=1}^{n}x_{i}+\frac{\beta}{n}\sum_{i=1}^{n}y_{i}=\alpha f(\mathbf{x})+\beta f(\mathbf{y}).
+        \end{equation*}
+    \end{proofing}
+    \begin{eg}
+        The maximum entry of a vector: for all $\mathbf{x}\in\mathbb{R}^{n}$,
+        \begin{equation*}
+            f(\mathbf{x})=\max_{1\leq i\leq n}x_{i}
+        \end{equation*}
+        is not a linear function.
+    \end{eg}
+    \begin{proofing}
+        Assume that $\mathbf{x}=\begin{pmatrix}1\\0\end{pmatrix}$, $\mathbf{y}=\begin{pmatrix}0\\1\end{pmatrix}$, $\alpha=1$, $\beta=1$. We have:
+        \begin{align*}
+            f(\alpha\mathbf{x}+\beta\mathbf{y})&=f\left(\begin{pmatrix}1\\1\end{pmatrix}\right)=1, & \alpha f(\mathbf{x})+\beta f(\mathbf{y})&=f\left(\begin{pmatrix}1\\0\end{pmatrix}\right)+f\left(\begin{pmatrix}0\\1\end{pmatrix}\right)=2\neq f(\alpha\mathbf{x}+\beta\mathbf{y}),
+        \end{align*}
+        which violates the definition of a linear function.
+    \end{proofing}
+    \begin{eg}
+        \label{Chapter 4 (Example) Inner product with fixed vector is a linear function}
+        Let $V$ be a normed vector space with an inner product $\inprod{\cdot}{\cdot}$ and let $\mathbf{a}\in V$. The function $f:V\to\mathbb{R}$ defined by:
+        \begin{equation*}
+            f(\mathbf{x})=\inprod{\mathbf{a}}{\mathbf{x}} \qquad \text{for } \mathbf{x}\in V
+        \end{equation*} 
+        is a linear function.
+    \end{eg}
+    \begin{proofing}
+        For all $\mathbf{x},\mathbf{y}\in V$ and $\alpha,\beta\in\mathbb{R}$,
+        \begin{equation*}
+            f(\alpha\mathbf{x}+\beta\mathbf{y})=\inprod{\mathbf{a}}{\alpha\mathbf{x}+\beta\mathbf{y}}=\alpha\inprod{\mathbf{a}}{\mathbf{x}}+\beta\inprod{\mathbf{a}}{\mathbf{y}}=\alpha f(\mathbf{x})+\beta f(\mathbf{y}).
+        \end{equation*}
+    \end{proofing}
+    \newpage
+
+    \begin{eg}
+        A functional $F:\mathcal{C}[-1,1]\to\mathbb{R}$ defined by:
+        \begin{equation*}
+            F(f)=f(0) \qquad \text{for } f\in\mathcal{C}[-1,1]
+        \end{equation*}
+        is a linear function.
+    \end{eg}
+    \begin{proofing}
+        For all $f,g\in\mathcal{C}[-1,1]$ and $\alpha,\beta\in\mathbb{R}$,
+        \begin{equation*}
+            F(\alpha f+\beta g)=(\alpha f+\beta g)(0)=\alpha f(0)+\beta g(0)=\alpha F(f)+\beta F(g).
+        \end{equation*}
+    \end{proofing}
+    \begin{eg}
+        A functional $F:\mathcal{C}[a,b]\to\mathbb{R}$ defined by:
+        \begin{equation*}
+            F(f)=\int_{a}^{b}f(t)\,dt \qquad \text{for } f\in\mathcal{C}[a,b]
+        \end{equation*}
+        is a linear function.
+    \end{eg}
+    \begin{proofing}
+        For all $f,g\in\mathcal{C}[a,b]$ and $\alpha,\beta\in\mathbb{R}$,
+        \begin{equation*}
+            F(\alpha f+\beta g)=\int_{a}^{b}(\alpha f+\beta g)(t)\,dt=\int_{a}^{b}(\alpha f(t)+\beta g(t))\,dt=\alpha\int_{a}^{b}f(t)\,dt+\beta\int_{a}^{b}g(t)\,dt=\alpha F(f)+\beta F(g).
+        \end{equation*}
+    \end{proofing}
+    \begin{thm}
+        For any vector space $V$, any norm function $\norm{\cdot}$ on $V$ is not a linear function.
+    \end{thm}
+    \begin{proofing}
+        By the absolute homogeneity property of the norm, for all $\mathbf{x}\in V$,
+        \begin{equation*}
+            \norm{-\mathbf{x}}=\norm{\mathbf{x}}.
+        \end{equation*}
+        Assume that the norm function is linear. Then:
+        \begin{equation*}
+            \norm{-\mathbf{x}}=\norm{-\mathbf{x}+0\mathbf{x}}=-\norm{\mathbf{x}}+0\norm{\mathbf{x}}=-\norm{\mathbf{x}},
+        \end{equation*}
+        which results in a contradiction. Therefore, any norm function is not a linear function.
+    \end{proofing}
+    The following properties can be easily derived from the definition.
+    \begin{thm}
+        A linear function $f$ has the following properties:
+        \begin{enumerate}
+            \item Homogeneity: For all $\mathbf{x}\in V$ and $\alpha\in\mathbb{R}$,
+            \begin{equation*}
+                f(\alpha\mathbf{x})=\alpha f(\mathbf{x}).
+            \end{equation*}
+            \item Additivity: For any $\mathbf{x},\mathbf{y}\in V$,
+            \begin{equation*}
+                f(\mathbf{x}+\mathbf{y})=f(\mathbf{x})+f(\mathbf{y}).
+            \end{equation*}
+        \end{enumerate}
+    \end{thm}
+    \begin{proofing}
+        \begin{enumerate}
+            \item Setting $\beta=0$, for any $\mathbf{x}\in V$ and $\alpha\in\mathbb{R}$,
+            \begin{equation*}
+                f(\alpha\mathbf{x})=f(\alpha\mathbf{x}+0\mathbf{y})=\alpha f(\mathbf{x})+0f(\mathbf{y})=\alpha f(\mathbf{x}), \qquad \text{for } \mathbf{y}\in V.
+            \end{equation*}
+            \item Setting $\alpha=\beta=1$, for any $\mathbf{x},\mathbf{y}\in V$,
+            \begin{equation*}
+                f(\mathbf{x}+\mathbf{y})=f(1\mathbf{x}+1\mathbf{y})=1f(\mathbf{x})+1f(\mathbf{y})=f(\mathbf{x})+f(\mathbf{y}).
+            \end{equation*}
+        \end{enumerate}
+    \end{proofing}
+    \begin{rem}
+        By induction, for $\mathbf{x}_{1},\cdots,\mathbf{x}_{k}\in V$ and $\alpha_{1},\cdots,\alpha_{k}\in \mathbb{R}$,
+        \begin{equation*}
+            f(\alpha_{1}\mathbf{x}_{1}+\cdots+\alpha_{k}\mathbf{x}_{k})=\alpha_{1}f(\mathbf{x}_{1})+\cdots+\alpha_{k}f(\mathbf{x}_{k}).
+        \end{equation*}
+    \end{rem}
+    \newpage
+
+    Let $H$ be a Hilbert space. From Example \ref{Chapter 4 (Example) Inner product with fixed vector is a linear function}, we have shown that for all $\mathbf{a}\in H$, the function:
+    \begin{equation*}
+        f(\mathbf{x})=\inprod{\mathbf{a}}{\mathbf{x}} \qquad \text{for } \mathbf{x}\in H
+    \end{equation*}
+    is a linear function. Is it true that for all linear functions $f:H\to\mathbb{R}$, there exists a fixed vector $\mathbf{a}\in H$ such that the function can be written in inner product form? The answer is yes!
+    \begin{thm}\named{Riesz Representation Theorem}
+        Let $H$ be a Hilbert space with an inner product $\inprod{\cdot}{\cdot}$. The function $f:H\to\mathbb{R}$ is linear and bounded if and only if:
+        \begin{equation*}
+            f(\mathbf{x})=\inprod{\mathbf{a}}{\mathbf{x}}, \qquad \text{for } \mathbf{x}\in H
+        \end{equation*}
+        for some unique $\mathbf{a}\in H$, called the \textbf{Riesz representation} of $f$.
+    \end{thm}
+    \begin{proofing}[Proof (When $H=\mathbb{R}^{n}$)]
+        For all $\mathbf{x}\in\mathbb{R}^{n}$, we have:
+        \begin{equation*}
+            \mathbf{x}=x_{1}\mathbf{e}_{1}+\cdots+x_{n}\mathbf{e}_{n}.
+        \end{equation*}
+        Therefore, we have:
+        \begin{equation*}
+            f(\mathbf{x})=f(x_{1}\mathbf{e}_{1}+\cdots+x_{n}\mathbf{e}_{n})=x_{1}f(\mathbf{e}_{1})+\cdots+x_{n}f(\mathbf{e}_{n})=\inprod{\begin{pmatrix}
+                f(\mathbf{e}_{1})\\\vdots\\f(\mathbf{e}_{n})
+            \end{pmatrix}}{\mathbf{x}} \Longrightarrow \mathbf{a}=\begin{pmatrix}
+                f(\mathbf{e}_{1})\\\vdots\\f(\mathbf{e}_{n})
+            \end{pmatrix}.
+        \end{equation*}
+        Suppose that $\mathbf{a}$ is not unique. This means there exist $\mathbf{a},\mathbf{b}\in\mathbb{R}^{n}$ such that:
+        \begin{equation*}
+            f(\mathbf{x})=\inprod{\mathbf{a}}{\mathbf{x}}=\inprod{\mathbf{b}}{\mathbf{x}} \qquad \text{for } \mathbf{x}\in\mathbb{R}^{n}.
+        \end{equation*}
+        If we choose $\mathbf{x}=\mathbf{e}_{i}$ for $i=1,\cdots,n$,
+        \begin{align*}
+            f(\mathbf{e}_{i})=\inprod{\mathbf{a}}{\mathbf{e}_{i}}=\inprod{\mathbf{b}}{\mathbf{e}_{i}} &\Longrightarrow a_{i}=b_{i}, \qquad \text{for } i=1,\cdots,n,\\
+            &\Longrightarrow \mathbf{a}=\mathbf{b}.
+        \end{align*}
+        This results in a contradiction. Therefore, $\mathbf{a}$ is unique.
+    \end{proofing}
+    \begin{rem}
+        The "boundedness" implied in this theorem does not mean the codomain of the function is a bounded set. Given a function $f:X\to Y$ that maps between two normed vector spaces, if $X$ has a norm $\pnorm[X]{\cdot}$ and $Y$ has a norm $\pnorm[Y]{\cdot}$, then there exists some $M>0$ such that:
+        \begin{equation*}
+            \pnorm[Y]{f(\mathbf{x})}\leq M\pnorm[X]{\mathbf{x}}, \qquad \text{for } \mathbf{x}\in X.
+        \end{equation*}
+        In this theorem, if $H$ induces a norm $\pnorm[H]{\cdot}$, then there exists some $M>0$ such that:
+        \begin{equation*}
+            \abs{f(\mathbf{x})}\leq M\pnorm[H]{\mathbf{x}}, \qquad \text{for } \mathbf{x}\in H.
+        \end{equation*}
+    \end{rem}
+    \begin{rem}
+        The smallest value $M$ is often called the \textbf{operator norm}. Recall Example \ref{Chapter 2 (Example) Matrix 2-norm}. It can be generalized to:
+        \begin{equation*}
+            M=\pnorm[op]{f}=\sup\{\pnorm[Y]{f(\mathbf{x})}:\mathbf{x}\in X \text{ with } \pnorm[X]{\mathbf{x}}\leq 1\},
+        \end{equation*}
+        which depends on the choice of norms.
+    \end{rem}
+    \begin{rem}
+        Any linear function defined on a finite-dimensional normed vector space is always bounded.
+    \end{rem}
+    \begin{eg}
+        The mean of a vector $\mathbf{x}\in\mathbb{R}^{n}$ can be represented by:
+        \begin{equation*}
+            f(\mathbf{x})=\frac{1}{n}\sum_{i=1}^{n}x_{i}=\inprod{\frac{1}{n}\begin{pmatrix}
+                    1\\
+                    \vdots\\
+                    1
+                \end{pmatrix}}{\mathbf{x}}.
+        \end{equation*}
+    \end{eg}
+    \begin{eg}
+        The trace of a matrix $\mathbf{A}\in\mathbb{R}^{n\times n}$ can be represented by:
+        \begin{equation*}
+            \Tr(\mathbf{A})=\sum_{i=1}^{n}a_{ii}=\inprod{\mathbf{I}}{\mathbf{A}}.
+        \end{equation*}
+    \end{eg}
+    \newpage
+
+    \begin{rem}
+        In infinite-dimensional Hilbert spaces, there exist linear but unbounded functions.
+    \end{rem}
+    \begin{eg}
+        We consider $L^{2}(-1,1)$, which is the completion of $\mathcal{C}[-1,1]$ under:
+        \begin{align*}
+            \inprod{f}{g}&=\int_{-1}^{1}f(t)g(t)\,dt, & \pnorm[2]{f}&=\sqrt{\inprod{f}{f}}.
+        \end{align*}
+        Let $F(f)=f(0)$ for all $f\in L^{2}(-1,1)$. Consider that:
+        \begin{equation*}
+            f(t)=\begin{cases}
+                1, &t\neq 0,\\
+                +\infty, &t=0
+            \end{cases}, \qquad \text{for } t\in(-1,1).
+        \end{equation*}
+        Therefore, $F(f)=f(0)=+\infty$. There is, in fact, no inner product representation for $F(f)=f(0)$.
+    \end{eg}
+    \begin{eg}
+        We consider $G:L^{2}(-1,1)\to\mathbb{R}$ defined by:
+        \begin{equation*}
+            G(f)=\int_{-1}^{1}f(t)\,dt, \qquad \text{for } f\in L^{2}(-1,1).
+        \end{equation*} 
+        For any $f,g\in L^{2}(-1,1)$ and $\alpha,\beta\in\mathbb{R}$,
+        \begin{equation*}
+            G(\alpha f+\beta g)=\int_{-1}^{1}(\alpha f+\beta g)(t)\,dt=\alpha\int_{-1}^{1}f(t)\,dt+\beta\int_{-1}^{1}g(t)\,dt=\alpha G(f)+\beta G(g).
+        \end{equation*}
+        Therefore, we can find that $G$ is linear. We can also see that for any $f\in L^{2}(-1,1)$,
+        \begin{equation*}
+            G(f)=\int_{-1}^{1}f(t)\,dt=\int_{-1}^{1}1\cdot f(t)\,dt=\inprod{1}{f}\leq\pnorm[2]{f}\sqrt{\int_{-1}^{1}1^{2}\,dt}=\sqrt{2}\pnorm[2]{f}.
+        \end{equation*}
+        Therefore, $G$ is also bounded. In fact, we have found that:
+        \begin{equation*}
+            G(f)=\inprod{1}{f}.
+        \end{equation*}
+    \end{eg}
+    \begin{eg}
+        We consider $\ell_{2}$, which is the completion of the space of all finite sequences under:
+        \begin{align*}
+            \inprod{\mathbf{x}}{\mathbf{y}}&=\sum_{i=1}^{\infty}x_{i}y_{i}, & \pnorm[2]{\mathbf{x}}&=\sqrt{\inprod{\mathbf{x}}{\mathbf{x}}}.
+        \end{align*}
+        Let $H:\ell_{2}\to\mathbb{R}$ be defined by:
+        \begin{equation*}
+            H(\mathbf{x})=x_{1}, \qquad \text{for } \mathbf{x}\in\ell_{2}.
+        \end{equation*}
+        For any $\mathbf{x},\mathbf{y}\in\ell_{2}$ and $\alpha,\beta\in\mathbb{R}$,
+        \begin{equation*}
+            H(\alpha\mathbf{x}+\beta\mathbf{y})=\alpha x_{1}+\beta y_{1}=\alpha H(\mathbf{x})+\beta H(\mathbf{y}).
+        \end{equation*}
+        Therefore, we can find that $H$ is linear. We can also see that for any $\mathbf{x}\in\ell_{2}$,
+        \begin{equation*}
+            H(\mathbf{x})=x_{1}\leq\sqrt{\sum_{i=1}^{\infty}x_{i}^{2}}=\pnorm[2]{\mathbf{x}}.
+        \end{equation*}
+        Therefore, $H$ is also bounded. In fact, we have found that:
+        \begin{equation*}
+            H(\mathbf{x})=\inprod{\begin{pmatrix}
+                    1\\
+                    0\\
+                    0\\
+                    \vdots
+                \end{pmatrix}}{\mathbf{x}}.
+        \end{equation*}
+    \end{eg}
+    \newpage
+
+    Additionally, we have a function that is similar to a linear function but shifted in the output space.
+    \begin{defn}
+        Let $V$ be a vector space over $\mathbb{R}$. A function $f:V\to\mathbb{R}$ is \textbf{affine} if it can be written as:
+        \begin{equation*}
+            f(\mathbf{x})=g(\mathbf{x})+b, \qquad \text{for } \mathbf{x}\in V,
+        \end{equation*}
+        where $g:V\to\mathbb{R}$ is linear and $b\in\mathbb{R}$.
+    \end{defn}
+    We can also derive the following properties from the definition.
+    \begin{thm}
+        An affine function $f$ has the following properties:
+        \begin{enumerate}
+            \item For any $\alpha,\beta\in\mathbb{R}$ such that $\alpha+\beta=1$,
+            \begin{equation*}
+                f(\alpha\mathbf{x}+\beta\mathbf{y})=\alpha f(\mathbf{x})+\beta f(\mathbf{y}).
+            \end{equation*}
+            \item If $H$ is a Hilbert space and $f$ is bounded, then $f$ is affine if and only if:
+            \begin{equation*}
+                f(\mathbf{x}) = \inprod{\mathbf{a}}{\mathbf{x}}+b,
+            \end{equation*}
+            for some $\mathbf{a}\in H$ and $b\in\mathbb{R}$.
+        \end{enumerate}
+    \end{thm}
+    \begin{proofing}
+        \begin{enumerate}
+            \item There exists a linear function $g$ such that:
+            \begin{equation*}
+                f(\mathbf{x})=g(\mathbf{x})+b, \qquad \text{for } \mathbf{x}\in V,
+            \end{equation*}
+            where $b\in\mathbb{R}$. If $\alpha+\beta=1$,
+            \begin{align*}
+                f(\alpha\mathbf{x}+\beta\mathbf{y})&=g(\alpha\mathbf{x}+\beta\mathbf{y})+b,\\
+                \tag{$\alpha+\beta=1$}
+                &=\alpha g(\mathbf{x})+\beta g(\mathbf{y})+(\alpha+\beta)b,\\
+                &=\alpha(g(\mathbf{x})+b)+\beta(g(\mathbf{y})+b),\\
+                &=\alpha f(\mathbf{x})+\beta f(\mathbf{y}).
+            \end{align*}
+            \item \begin{itemize}
+            	\item[$\Longrightarrow$] If $f$ is affine, then there exists a linear function $g$ such that:
+            	\begin{align*}
+            		f(\mathbf{x})&=g(\mathbf{x})+b, & g(\mathbf{x})&=f(\mathbf{x})-b, \qquad \text{for } \mathbf{x}\in V,
+            	\end{align*}
+            	where $b\in\mathbb{R}$. Since $f$ is bounded, there exists some $M_{f}>0$ such that:
+            	\begin{align*}
+            		\abs{f(\mathbf{x})}&\leq M_{f}\pnorm[H]{\mathbf{x}}, & b=\abs{f(\mathbf{0})}&\leq M_{f}\pnorm[H]{\mathbf{0}}=0.
+            	\end{align*}
+            	By the Riesz Representation Theorem, there exists some $\mathbf{a}\in H$ such that:
+            	\begin{equation*}
+            		g(\mathbf{x})=\inprod{\mathbf{a}}{\mathbf{x}}, \qquad \text{for } \mathbf{x}\in H.
+            	\end{equation*}
+            	Therefore,
+            	\begin{equation*}
+            		f(\mathbf{x})=\inprod{\mathbf{a}}{\mathbf{x}}+b, \qquad \text{for } \mathbf{x}\in H.
+            	\end{equation*}
+            	\item[$\Longleftarrow$] If there exists some $\mathbf{a}\in H$ and $b\in\mathbb{R}$ such that:
+            	\begin{equation*}
+            		f(\mathbf{x})=\inprod{\mathbf{a}}{\mathbf{x}}+b, \qquad \text{for } \mathbf{x}\in H,
+            	\end{equation*}
+            	then, by Example \ref{Chapter 4 (Example) Inner product with fixed vector is a linear function}, $\inprod{\mathbf{a}}{\mathbf{x}}$ is a linear function. Therefore, $f$ is affine.
+            \end{itemize}
+        \end{enumerate}
+    \end{proofing}
+    \newpage
+
+\section{Hyperplane}
+    \begin{defn}
+        Let $V$ be a vector space over $\mathbb{R}$. A subset $U \subset V$ is a \textbf{(linear) subspace} of $V$ if, for any $\mathbf{u},\mathbf{v}\in U$ and $\alpha, \beta \in \mathbb{R}$,
+        \begin{equation*}
+            \alpha\mathbf{u} + \beta\mathbf{v} \in U.
+        \end{equation*}
+    \end{defn}
+    \begin{defn}
+        Let $V$ be a vector space over $\mathbb{R}$. A set $W$ is an \textbf{affine subspace} if:
+        \begin{equation*}
+            W = \mathbf{a}+U = \{\mathbf{a}+\mathbf{u}:\mathbf{u}\in U\},
+        \end{equation*}
+        where $\mathbf{a} \in V$ and $U$ is a linear subspace of $V$.
+    \end{defn}
+    Let $H$ be a Hilbert space and $\mathbf{a}\in H$. We denote:
+    \begin{equation*}
+        S_{\mathbf{a},b} = \{\mathbf{x} \in H:\inprod{\mathbf{a}}{\mathbf{x}}=b\} \subset H.
+    \end{equation*}
+    Consider $b = 0$. For all $\mathbf{x}, \mathbf{y} \in S_{\mathbf{a},0}$ and $\alpha, \beta \in \mathbb{R}$,
+    \begin{equation*}
+        \inprod{\mathbf{a}}{\alpha\mathbf{x} + \beta\mathbf{y}} = \alpha\inprod{\mathbf{a}}{\mathbf{x}} + \beta\inprod{\mathbf{a}}{\mathbf{y}} = 0.
+    \end{equation*}
+    This means that $\alpha\mathbf{x} + \beta\mathbf{y} \in S_{\mathbf{a},0}$. Therefore, $S_{\mathbf{a},0}$ is a linear subspace of $H$.
+
+    For a general $b$, let $\mathbf{x}_{0}\in S_{\mathbf{a},b}$. Then we have:
+    \begin{equation*}
+        \inprod{\mathbf{a}}{\mathbf{x}_{0}}=b.
+    \end{equation*}
+    For all $\mathbf{x} \in S_{\mathbf{a},b}$,
+    \begin{align*}
+        \inprod{\mathbf{a}}{\mathbf{x} - \mathbf{x}_{0}} = \inprod{\mathbf{a}}{\mathbf{x}} - \inprod{\mathbf{a}}{\mathbf{x}_{0}} = b-b = 0 &\Longrightarrow \mathbf{x}-\mathbf{x}_{0}\in S_{\mathbf{a},0},\\
+        &\Longrightarrow \mathbf{x} \in \mathbf{x}_{0} + S_{\mathbf{a},0},\\
+        &\Longrightarrow S_{\mathbf{a},b} \subset \mathbf{x}_{0} + S_{\mathbf{a},0}.
+    \end{align*}
+    For all $\mathbf{x} \in S_{\mathbf{a},0}$,
+    \begin{align*}
+        \inprod{\mathbf{a}}{\mathbf{x} + \mathbf{x}_{0}} = \inprod{\mathbf{a}}{\mathbf{x}} + \inprod{\mathbf{a}}{\mathbf{x}_{0}} = 0 + b = b &\Longrightarrow \mathbf{x} + \mathbf{x}_{0} \in S_{\mathbf{a},b},\\
+        &\Longrightarrow S_{\mathbf{a},0} + \mathbf{x}_{0} \subset S_{\mathbf{a},b}.
+    \end{align*}
+    Therefore, we have $S_{\mathbf{a},b} = \mathbf{x}_{0} + S_{\mathbf{a},0}$, and thus $S_{\mathbf{a},b}$ is an affine subspace. We can define such a set as a hyperplane.
+    \begin{defn}
+        A \textbf{hyperplane} $S$ in the Hilbert space $H$ is defined by:
+        \begin{equation*}
+            S = \{\mathbf{x} \in H:\inprod{\mathbf{a}}{\mathbf{x}} = b\} \subset H,
+        \end{equation*}
+        where $\mathbf{a} \in H$ and $b \in \mathbb{R}$. 
+    \end{defn}
+    \begin{rem}
+        If $H$ has a dimension of $n$, then the hyperplane $S$ has a dimension of $n-1$ or a codimension of $1$.
+    \end{rem}
+    \begin{figure}[h!]
+        \centering
+        \begin{tikzpicture}
+            \draw[blue] (-2, 2) node {$H$};
+            \draw[thick] (-2,-0.5) -- (1,-0.5) -- (2,0.5) node[below right, midway] {$S_{\mathbf{a},0}$} -- (-1,0.5) -- (-2,-0.5);
+            \draw[thick, red] (-0.5,1) -- (2.5,1) -- (3.5,2) node[below right, midway] {$S_{\mathbf{a},b}$} -- (0.5,2) -- (-0.5,1);
+            \draw[thick, blue, ->] (0,0) node[left] {$O$} -- (1.5,1.5) node[right] {$\mathbf{x}_{0}$};
+        \end{tikzpicture}
+        \caption{Hyperplanes}
+    \end{figure}
+    \newpage
+
+    For any vectors that do not lie on the hyperplane, we can project those vectors onto the hyperplane.
+    \begin{defn}
+        Consider a hyperplane $S \subset H$. For any $\mathbf{y} \in H$, the vector on $S$ that is closest to $\mathbf{y}$ is called the \textbf{projection} of $\mathbf{y}$ onto $S$, denoted by $P_{S}\mathbf{y}$. Equivalently:
+        \begin{equation*}
+            P_{S}\mathbf{y} = \argmin_{\mathbf{x} \in S}\norm{\mathbf{y} - \mathbf{x}}.
+        \end{equation*} 
+    \end{defn}
+    How do we find the explicit form of such an equation?
+    \begin{thm}
+        \label{Chapter 4 (Theorem) Criteria for Projection Vector}
+        Given a hyperplane $S \subset H$, the vector $\mathbf{z} \in H$ is a solution of:
+        \begin{equation*}
+            \min_{\mathbf{x} \in S}\norm{\mathbf{y}-\mathbf{x}}
+        \end{equation*}
+        if and only if $\mathbf{z} \in S$ and $\inprod{\mathbf{z}-\mathbf{y}}{\mathbf{x}-\mathbf{z}}=0$ for all $\mathbf{x} \in S$.
+    \end{thm}
+    \begin{proofing}
+        \begin{itemize}
+            \item[$\Longrightarrow$] Assume that $\mathbf{z}$ is a solution of the minimization equation. Then $\mathbf{z} \in S$. For all $\mathbf{x} \in S$ and $t \in \mathbb{R}$,
+            \begin{align*}
+                \inprod{\mathbf{a}}{\mathbf{z}+t(\mathbf{x}-\mathbf{z})} &= \inprod{\mathbf{a}}{\mathbf{z}} + t(\inprod{\mathbf{a}}{\mathbf{x}} - \inprod{\mathbf{a}}{\mathbf{z}}),\\
+                &= b + t(b-b),\\
+                &= b.
+            \end{align*}
+            Therefore, $\mathbf{z} + t(\mathbf{x}-\mathbf{z}) \in S$. We have:
+            \begin{align*}
+                \norm{\mathbf{z}-\mathbf{y}}^{2} &\leq \norm{\mathbf{z}+t(\mathbf{x}-\mathbf{z})-\mathbf{y}}^{2} = \norm{\mathbf{z}-\mathbf{y}}^{2} + 2t\inprod{\mathbf{z}-\mathbf{y}}{\mathbf{x}-\mathbf{z}} + t^{2}\norm{\mathbf{x}-\mathbf{z}}^{2},\\
+                -t^{2}\norm{\mathbf{x}-\mathbf{z}}^{2} &\leq 2t\inprod{\mathbf{z}-\mathbf{y}}{\mathbf{x}-\mathbf{z}}.
+            \end{align*}
+            Assume that $t>0$. As $t \to 0^{+}$,
+            \begin{equation*}
+                \inprod{\mathbf{z}-\mathbf{y}}{\mathbf{x}-\mathbf{z}} \geq -\lim_{t \to 0^{+}}\frac{t}{2}\norm{\mathbf{x}-\mathbf{z}}^{2} = 0.
+            \end{equation*}
+            Assume that $t<0$. As $t \to 0^{-}$,
+            \begin{equation*}
+                \inprod{\mathbf{z}-\mathbf{y}}{\mathbf{x}-\mathbf{z}} \leq -\lim_{t \to 0^{-}}\frac{t}{2}\norm{\mathbf{x}-\mathbf{z}}^{2} = 0.
+            \end{equation*}
+            Therefore, $\inprod{\mathbf{z}-\mathbf{y}}{\mathbf{x}-\mathbf{z}} = 0$ for all $\mathbf{x} \in S$.
+            \item[$\Longleftarrow$] Assume that $\mathbf{z} \in S$ and $\inprod{\mathbf{z}-\mathbf{y}}{\mathbf{x}-\mathbf{z}} = 0$ for all $\mathbf{x} \in S$. This means that:
+            \begin{align*}
+                \norm{\mathbf{x}-\mathbf{y}}^{2} &= \norm{(\mathbf{x}-\mathbf{z}) + (\mathbf{z}-\mathbf{y})}^{2},\\
+                &= \norm{\mathbf{x}-\mathbf{z}}^{2} + 2\inprod{\mathbf{x}-\mathbf{z}}{\mathbf{z}-\mathbf{y}} + \norm{\mathbf{z}-\mathbf{y}}^{2},\\
+                &= \norm{\mathbf{x}-\mathbf{z}}^{2} + \norm{\mathbf{z}-\mathbf{y}}^{2},\\
+                &\geq \norm{\mathbf{z}-\mathbf{y}}^{2}.
+            \end{align*}
+            Therefore, we can find that:
+            \begin{equation*}
+                \mathbf{z} = \argmin_{\mathbf{x} \in S}\norm{\mathbf{x}-\mathbf{y}}^{2}.
+            \end{equation*}
+        \end{itemize}
+    \end{proofing}
+    \newpage
+
+    Using the last theorem, we can obtain the explicit form of the projection.
+    \begin{thm}
+        Let $H$ be a Hilbert space and $S$ be the hyperplane defined by:
+        \begin{equation*}
+            S = \{\mathbf{x}\in H:\inprod{\mathbf{a}}{\mathbf{x}} = b\},
+        \end{equation*}
+        where $\mathbf{a} \in H$ and $b \in \mathbb{R}$. Given $\mathbf{y} \in H$, we have a unique solution:
+        \begin{equation*}
+            P_{S}\mathbf{y} = \argmin_{\mathbf{x} \in S}\norm{\mathbf{y}-\mathbf{x}} = \mathbf{y} - \left(\frac{\inprod{\mathbf{a}}{\mathbf{y}}-b}{\norm{\mathbf{a}}^{2}}\right)\mathbf{a}.
+        \end{equation*}
+    \end{thm}
+    \begin{proofing}
+        Let $\mathbf{z} = \mathbf{y} - \left(\frac{\inprod{\mathbf{a}}{\mathbf{y}}-b}{\norm{\mathbf{a}}^{2}}\right)\mathbf{a}$.
+        \begin{align*}
+            \inprod{\mathbf{a}}{\mathbf{z}} &= \inprod{\mathbf{a}}{\mathbf{y}} - \frac{\inprod{\mathbf{a}}{\mathbf{y}}-b}{\norm{\mathbf{a}}^{2}}\inprod{\mathbf{a}}{\mathbf{a}},\\
+            &= \inprod{\mathbf{a}}{\mathbf{y}} - (\inprod{\mathbf{a}}{\mathbf{y}} - b),\\
+            &= b.
+        \end{align*}
+        Therefore, $\mathbf{z} \in S$. For any $\mathbf{x} \in S$,
+        \begin{align*}
+            \inprod{\mathbf{z}-\mathbf{y}}{\mathbf{x}-\mathbf{z}} &= \inprod{-\frac{\inprod{\mathbf{a}}{\mathbf{y}}-b}{\norm{\mathbf{a}}^{2}}\mathbf{a}}{\mathbf{x}-\mathbf{z}},\\
+            &= -\frac{\inprod{\mathbf{a}}{\mathbf{y}}-b}{\norm{\mathbf{a}}^{2}}(\inprod{\mathbf{a}}{\mathbf{x}} - \inprod{\mathbf{a}}{\mathbf{z}}),\\
+            &= -\frac{\inprod{\mathbf{a}}{\mathbf{y}}-b}{\norm{\mathbf{a}}^{2}}(b-b),\\
+            &= 0.
+        \end{align*}
+        Therefore, by Theorem \ref{Chapter 4 (Theorem) Criteria for Projection Vector}, $\mathbf{z}$ is a solution to:
+        \begin{equation*}
+            \min_{\mathbf{x} \in S}\norm{\mathbf{y}-\mathbf{x}}.
+        \end{equation*}
+        We prove that this solution is unique.
+        
+        Suppose that it has two distinct solutions $\mathbf{z}_{1}$ and $\mathbf{z}_{2}$. Then it implies that $\mathbf{z}_{1}, \mathbf{z}_{2} \in S$. By Theorem \ref{Chapter 4 (Theorem) Criteria for Projection Vector},
+        \begin{align*}
+            \inprod{\mathbf{z}_{1}-\mathbf{y}}{\mathbf{z}_{2}-\mathbf{z}_{1}} &= 0, & \inprod{\mathbf{z}_{2}-\mathbf{y}}{\mathbf{z}_{1}-\mathbf{z}_{2}} &= \inprod{\mathbf{y}-\mathbf{z}_{2}}{\mathbf{z}_{2}-\mathbf{z}_{1}} = 0.
+        \end{align*}
+        Adding the two identities, we have:
+        \begin{align*}
+            \inprod{\mathbf{z}_{1}-\mathbf{y}}{\mathbf{z}_{2}-\mathbf{z}_{1}} + \inprod{\mathbf{y}-\mathbf{z}_{2}}{\mathbf{z}_{2}-\mathbf{z}_{1}} = \inprod{\mathbf{z}_{1}-\mathbf{z}_{2}}{\mathbf{z}_{2}-\mathbf{z}_{1}} = 0 &\Longleftrightarrow -\norm{\mathbf{z}_{1}-\mathbf{z}_{2}}^{2} = 0,\\
+            &\Longleftrightarrow \mathbf{z}_{1} = \mathbf{z}_{2}.
+        \end{align*}
+        This results in a contradiction. Therefore, the solution $\mathbf{z}$ is unique.
+    \end{proofing}
+
 \appendix
 \renewcommand{\thechapter}{\Alph{chapter}}
 \chapter{Clustering, K-means, K-medians}
