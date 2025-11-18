@@ -20,4 +20,58 @@
 \maketitle
 \tableofcontents
 
+\chapter{Introduction}
+    \label{Chapter 1: Introduction}
+    Machine Learning is a type of artificial intelligence that focuses on the development of algorithms and models to perform tasks without being explicitly programmed to do so. Machine learning algorithms create a model based on sample data, known as training data. There are three common types of machine learning:
+    \begin{enumerate}
+        \item Supervised learning: Classification, Regression\\
+        Data: $N$ input-output pairs
+        \begin{equation*}
+            (\mathbf{x}_{i}, \mathbf{y}_{i}) \qquad \text{for } \mathbf{x}_{i} \in X, \mathbf{y}_{i} \in Y, \ i = 1, \cdots, N.
+        \end{equation*}
+        Goal: Find a function map $f: X \to Y$ such that:
+        \begin{equation*}
+            f(\mathbf{x}_{i}) \approx \mathbf{y}_{i} \qquad \text{for } i = 1, \cdots, N.
+        \end{equation*}
+        If a new input $\mathbf{x}$ is provided, $f(\mathbf{x})$ should accurately predict the label of $\mathbf{x}$.
+        \item Unsupervised learning: Clustering, Self-supervised Learning\\
+        Data: $N$ inputs without labels
+        \begin{equation*}
+            \mathbf{x}_{i} \qquad \text{for } \mathbf{x}_{i} \in X, \ i = 1, \cdots, N.
+        \end{equation*}
+        Goal: Different applications have their own goals. For example, in the case of denoising, find a function map $f$ such that:
+        \begin{equation*}
+            f(\mathbf{x}_{i} + \boldsymbol{\varepsilon}_{i}) = \mathbf{x}_{i} \qquad \text{for } i = 1, \cdots, N,
+        \end{equation*}
+        where $\boldsymbol{\varepsilon}_{i}$ are noise vectors.
+        \item Reinforcement learning (Reinforcement learning algorithms are usually iterative algorithms).
+    \end{enumerate}
+    In general, we want to find a good function $f$ that maps the training data well while generalizing to other inputs.
+    \begin{defn}
+        The set of all 'good' candidate functions (models) is called the \textbf{hypothesis space}.
+    \end{defn}
+    In our case studies, we will follow Pedro Domingos' definition of machine learning:
+    \begin{equation*}
+        \text{Learning} = \text{Representation} + \text{Evaluation} + \text{Optimization}.
+    \end{equation*}
+    \begin{enumerate}
+        \item Representation: Mainly focuses on 'vector' representations.
+        \begin{enumerate}
+            \item How can we effectively represent the input data $\mathbf{x}_{i}$?
+            \item How can we represent the function $f$?
+        \end{enumerate}
+        \item Evaluation: Evaluate the problem.
+        \begin{enumerate}
+            \item How do we define 'the best' function in the hypothesis space?\\
+            We need to define a function $f': f \to \mathbb{R}$ to compare.
+            \item How do we define 'the best' representation of the input data?
+        \end{enumerate}
+        \item Optimization: Find the optimal model.
+        \begin{enumerate}
+            \item How can we obtain the optimal solution numerically using a computer?
+            \item Is convex optimization feasible? (Some problems involve non-convex optimization.)
+        \end{enumerate}
+    \end{enumerate}
+
+
 \end{document}
