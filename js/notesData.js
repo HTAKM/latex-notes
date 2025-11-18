@@ -64,8 +64,8 @@ const notesData = [
     {
         title: "HKUST MATH 3332 (Working in Progress)",
         class: "huhtakm-template-book-v2",
-        // pdfLink: "",
-        // texLink: "", 
+        pdfLink: "https://htakm.github.io/latex-notes/notes/MATH 3332.pdf",
+        texLink: "https://htakm.github.io/latex-notes/notes/MATH 3332.tex"
     }
 ];
 
