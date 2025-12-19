@@ -2678,4 +2678,191 @@
     \end{equation*}
     This allows for more interpretable predictions.
     
+\chapter{Kernel Ridge Regression}
+    \label{Case Study E: Kernel Ridge Regression}
+    This case study assumes that you have already read Chapter \ref{Chapter 4: Linear Functions and Differentiation} and Appendices \ref{Case Study B: Kernel K-means/Kernel Trick} and \ref{Case Study D: Linear Regression}.
+
+    Similarly, in regular linear regression, we assume that a linear model is sufficient to predict a desirable output. In practice, however, points in datasets often exhibit non-linear relationships. Therefore, similar to the Kernel K-means algorithm, we can also apply the kernel method in regression.
+
+    \begin{enumerate}
+        \item Representations: Starting with $N$ input-output pairs $\{(\mathbf{x}_{i}, y_{i})\}_{i=1}^{N}$, we define the following variables:
+        \begin{enumerate}
+            \item $\mathbf{x}_{i} \in \mathbb{R}^{n}$: the input vectors (independent variables).
+            \item $y_{i} \in \mathbb{R}$: the corresponding outputs of $\mathbf{x}_{i}$ (dependent variables).
+            \item $H$: the feature space that contains the transformed input vectors.
+            \item $\phi:\mathbb{R}^{n} \to H$: the feature map that transforms the input vectors.
+            \item $f:H \to \mathbb{R}$: the function that predicts the outputs.
+        \end{enumerate}
+        \item Evaluation: With the feature map, our objective becomes finding an affine function $f$ such that:
+        \begin{equation*}
+            f(\phi(\mathbf{x}_{i})) = y_{i}, \qquad \text{for } i=1,\cdots,N.
+        \end{equation*}
+        How do we find a good $H$, $\phi$, and $f$? Assume that $f:H \to \mathbb{R}$ is affine and bounded. For any $\mathbf{x} \in \mathbb{R}^{n}$, we may define a new $\widetilde{\phi}$ and $\widetilde{H}=(H,\mathbb{R})$: 
+        \begin{equation*}
+            \widetilde{\phi}(\mathbf{x}) = \begin{pmatrix}
+                \phi(\mathbf{x})\\
+                1
+            \end{pmatrix} \in \widetilde{H}.
+        \end{equation*}
+        Then for any $\mathbf{x} \in \mathbb{R}^{n}$,
+        \begin{align*}
+            f(\phi(\mathbf{x})) &= \inprod{\phi(\mathbf{x})}{\mathbf{a}} + b\\
+            &= \inprod{\begin{pmatrix}
+                \phi(\mathbf{x})\\
+                1
+            \end{pmatrix}}{\begin{pmatrix}
+                \mathbf{a}\\
+                b
+            \end{pmatrix}}\\
+            &= \inprod{\widetilde{\phi}(\mathbf{x})}{\widetilde{\mathbf{a}}}, \qquad \text{where } \widetilde{\mathbf{a}} = \begin{pmatrix}
+                \mathbf{a}\\
+                b
+            \end{pmatrix} \in \widetilde{H},
+        \end{align*}
+        where $\mathbf{a} \in H$ and $b \in \mathbb{R}$. Therefore, $f(\phi(\mathbf{x}))$ is a linear and bounded function on $\widetilde{H}$.
+        
+        Thus, we only need to consider linear and bounded functions on $H$, which means that we want to find $\mathbf{a} \in H$ such that:
+        \begin{equation*}
+            \inprod{\mathbf{a}}{\phi(\mathbf{x}_{i})} \approx y_{i}, \qquad \text{for } i=1,\cdots,N.
+        \end{equation*}
+        Therefore, our problem is to solve:
+        \begin{equation*}
+            \min_{\mathbf{a} \in \mathbb{R}^{n}} \sum_{i=1}^{N}(\inprod{\mathbf{a}}{\phi(\mathbf{x}_{i})}-y_{i})^{2}.
+        \end{equation*}
+        We still need to find explicit $\phi$ and $H$.
+        \item Optimization: 
+        \begin{enumerate}
+            \item The feature space $H$ is infinitely dimensional in most cases. It is impossible to find $\mathbf{a}$ with $N$ data points only. Therefore, we need to perform regularization directly.
+            \item We can utilize the Kernel trick—define the kernel function $\kappa$ implicitly.
+        \end{enumerate}
+    \end{enumerate}
+    \newpage
+
+    How do we perform regularization? Recall that we use a subset of affine functions when performing regularization for regular ridge regression. The subset would now be:
+    \begin{equation*}
+        \Phi_{S} = \left\{f:f(\mathbf{x})=\inprod{\mathbf{a}}{\phi(\mathbf{x})} \text{ and } \mathbf{a} \in S\right\}.
+    \end{equation*}
+    Assume that $H$ has a norm $\pnorm[H]{\cdot}$. We choose
+    \begin{equation*}
+        S = \left\{\mathbf{a} \in \mathbb{R}^{n} : \pnorm[H]{\mathbf{a}} \leq c\right\},
+    \end{equation*}
+    for some $c>0$. Therefore, the minimization problem is to solve:
+    \begin{equation*}
+        \tag{KR}
+        \min_{\mathbf{a} \in H} \left(\sum_{i=1}^{N}(\inprod{\mathbf{a}}{\phi(\mathbf{x}_{i})}-y_{i})^{2} + \lambda\pnorm[H]{\mathbf{a}}^{2}\right),
+    \end{equation*}
+    where $\lambda>0$ is a constant depending on $c$ and other factors.
+
+    How do we find the vector $\mathbf{a}$? The following theorem provides the solution.
+    \begin{thm}\named{Representer Theorem}
+        The solution of (KR) must be in the form:
+        \begin{equation*}
+            \mathbf{a} = \sum_{i=1}^{N} c_{i}\phi(\mathbf{x}_{i}), \qquad \text{where } \mathbf{c} = \begin{pmatrix}
+                c_{1}\\
+                \vdots\\
+                c_{N}
+            \end{pmatrix} \in \mathbb{R}^{N}.
+        \end{equation*}
+    \end{thm}
+    \begin{proofing}
+        For any $\mathbf{a} \in H$, we claim that $\mathbf{a}$ can be decomposed as:
+        \begin{align*}
+            \mathbf{a} &= \mathbf{a}_{S} + \sum_{i=1}^{N}c_{i}\phi(\mathbf{x}_{i}), & \qquad \text{where } \mathbf{c} = \begin{pmatrix}
+                c_{1}\\
+                \vdots\\
+                c_{N}
+            \end{pmatrix} \in \mathbb{R}^{N}, \inprod{\mathbf{a}_{S}}{\phi(\mathbf{x}_{i})} = 0, \qquad \text{for } i=1,\cdots,N.
+        \end{align*}
+        We first prove the case when $N=1$. Let $S = \{\mathbf{v} \in H: \inprod{\mathbf{v}}{\phi(\mathbf{x}_{1})} = 0\}$, which is a hyperplane. We may write $\mathbf{a}$ as:
+        \begin{equation*}
+            \mathbf{a} = P_{S}\mathbf{a} + (\mathbf{a}-P_{S}\mathbf{a}).
+        \end{equation*}
+        By Theorem \ref{Chapter 4 (Theorem) Criteria for Projection Vector}, setting $\mathbf{x}=\mathbf{0}$, we have:
+        \begin{equation*}
+            \inprod{\mathbf{a}-P_{S}\mathbf{a}}{P_{S}\mathbf{a}} = 0.
+        \end{equation*}
+        Moreover, by the explicit formula for $P_{S}\mathbf{a}$,
+        \begin{equation*}
+            \mathbf{a}-P_{S}\mathbf{a} = \frac{\inprod{\phi(\mathbf{x}_{1})}{\mathbf{a}}}{\pnorm[H]{\phi(\mathbf{x}_{1})}^{2}} \phi(\mathbf{x}_{1}).
+        \end{equation*}
+        Therefore, by setting:
+        \begin{align*}
+            c_{i} &= \frac{\inprod{\phi(\mathbf{x}_{1})}{\mathbf{a}}}{\pnorm[H]{\phi(\mathbf{x}_{1})}^{2}}, & \mathbf{a}_{S} = P_{S}\mathbf{a},
+        \end{align*}
+        we obtain:
+        \begin{equation*}
+            \mathbf{a} = \mathbf{a}_{S} + c_{1}\phi(\mathbf{x}_{1}), \qquad \text{where } \inprod{\mathbf{a}_{S}}{\phi(\mathbf{x}_{1})} = 0.
+        \end{equation*}
+        For general $N$, we can use projection onto the intersection of the hyperplanes:
+        \begin{equation*}
+            S = \bigcap_{i=1}^{N} \{\mathbf{v} \in H:\inprod{\mathbf{v}}{\phi(\mathbf{x}_{i})} = 0\}.
+        \end{equation*}
+        This concludes the claim. The proof continues on the next page.
+        \newpage
+        
+        We may rearrange the objective function:
+        \begin{align*}
+            \sum_{i=1}^{N}(\inprod{\mathbf{a}}{\phi(\mathbf{x}_{i})}-y_{i})^{2} + \lambda\pnorm[H]{\mathbf{a}}^{2} &= \sum_{i=1}^{N}\left(\inprod{\mathbf{a}_{S} + \sum_{j=1}^{N}c_{i}\phi(\mathbf{x}_{j})}{\phi(\mathbf{x}_{i})}-y_{i}\right)^{2} + \lambda\pnorm[H]{\mathbf{a}_{S} + \sum_{i=1}^{N}c_{i}\phi(\mathbf{x}_{i})}^{2}\\
+            &= \sum_{i=1}^{N}\left(\sum_{j=1}^{N}c_{j}\inprod{\phi(\mathbf{x}_{j})}{\phi(\mathbf{x}_{i})}-y_{i}\right)^{2} + \lambda\pnorm[H]{\sum_{i=1}^{N}c_{i}\phi(\mathbf{x}_{i})}^{2} + \lambda\pnorm[H]{\mathbf{a}_{S}}^{2}\\
+            &= \sum_{i=1}^{N}\left(\sum_{j=1}^{N}c_{j}\inprod{\phi(\mathbf{x}_{j})}{\phi(\mathbf{x}_{i})}-y_{i}\right)^{2} + \lambda \sum_{i=1}^{N}\sum_{j=1}^{N}c_{i}c_{j}\inprod{\phi(\mathbf{x}_{i})}{\phi(\mathbf{x}_{j})} + \lambda\pnorm[H]{\mathbf{a}_{S}}^{2}.
+        \end{align*}
+        We can define the kernel function and kernel matrix as follows:
+        \begin{align*}
+            \kappa(\mathbf{x},\mathbf{y}) &= \inprod{\phi(\mathbf{x})}{\phi(\mathbf{y})}, \qquad \text{for } \mathbf{x},\mathbf{y} \in \mathbb{R}^{n}, & \boldsymbol{\kappa} &= [\kappa(\mathbf{x}_{i},\mathbf{x}_{j})]_{i,j}.
+        \end{align*}
+        Therefore, we may rewrite the objective function as:
+        \begin{equation*}
+            \tag{P1}
+            \text{(KR)} \Longleftrightarrow \min_{\substack{\mathbf{c} \in \mathbb{R}^{N}\\\mathbf{a}_{S} \in H}}(\spnorm[2]{\boldsymbol{\kappa}^{T}\mathbf{c}-\mathbf{y}}^{2} + \lambda \mathbf{c}^{T}\boldsymbol{\kappa}\mathbf{c} + \lambda\pnorm[H]{\mathbf{a}_{S}}^{2}), \qquad \text{such that } \inprod{\mathbf{a}_{S}}{\phi(\mathbf{x}_{i})}=0 \text{ for } i=1,\cdots,N.
+        \end{equation*}
+        For now, we drop the constraints in (P1):
+        \begin{equation*}
+            \tag{P2}
+            \min_{\substack{\mathbf{c} \in \mathbb{R}^{N}\\\mathbf{a}_{S} \in H}}(\spnorm[2]{\boldsymbol{\kappa}^{T}\mathbf{c}-\mathbf{y}}^{2} + \lambda \mathbf{c}^{T}\boldsymbol{\kappa}\mathbf{c} + \lambda\pnorm[H]{\mathbf{a}_{S}}^{2}) \Longleftrightarrow \min_{\mathbf{c} \in \mathbb{R}^{n}}(\spnorm[2]{\boldsymbol{\kappa}^{T}\mathbf{c}-\mathbf{y}}^{2} + \lambda \mathbf{c}^{T}\boldsymbol{\kappa}\mathbf{c}) \text{ and } \min_{\mathbf{a}_{S} \in H} \lambda \pnorm[H]{\mathbf{a}_{S}}^{2}.
+        \end{equation*}
+        We set the solution of (P2) to be:
+        \begin{align*}
+            \mathbf{c}^{*} &= \argmin_{\mathbf{c} \in \mathbb{R}^{N}} (\spnorm[2]{\boldsymbol{\kappa}^{T}\mathbf{c}-\mathbf{y}}^{2} + \lambda \mathbf{c}^{T}\boldsymbol{\kappa}\mathbf{c}), & \mathbf{a}_{S}^{*} &= \mathbf{0}.
+        \end{align*}
+        We show that $(\mathbf{c}^{*},\mathbf{a}_{S}^{*})$ is also a solution of (P1).
+        
+        Since (P2) only removed the constraints from (P1), we find that:
+        \begin{equation*}
+            \text{(P1)} \geq \text{(P2)}.
+        \end{equation*}
+        Since $\mathbf{a}_{S}^{*} = \mathbf{0}$, we find that:
+        \begin{equation*}
+            \inprod{\mathbf{a}_{S}^{*}}{\phi(\mathbf{x}_{i})} = 0, \qquad \text{for } i=1,\cdots,N.
+        \end{equation*}
+        Therefore, $(\mathbf{c}^{*},\mathbf{a}_{S}^{*})$ satisfies the constraints in (P1), and we have:
+        \begin{equation*}
+            \text{(P1)} \leq \text{(P2)}.
+        \end{equation*}
+        Thus, $(\mathbf{c}^{*},\mathbf{a}_{S}^{*})$ is a solution of (P1), and the solution of (KR) is given by:
+        \begin{equation*}
+            \mathbf{a} = \mathbf{a}_{S}^{*} + \sum_{i=1}^{N}c_{i}^{*}\phi(\mathbf{x}_{i}) = \sum_{i=1}^{N}c_{i}^{*}\phi(\mathbf{x}_{i}), \qquad \text{where } \mathbf{c}^{*} = \argmin_{\mathbf{c} \in \mathbb{R}^{N}} (\spnorm[2]{\boldsymbol{\kappa}^{T}\mathbf{c}-\mathbf{y}}^{2} + \lambda \mathbf{c}^{T}\boldsymbol{\kappa}\mathbf{c}).
+        \end{equation*}
+    \end{proofing}
+    \newpage
+
+    Similar to the K-Means Algorithm, we may define Kernel ridge regression as follows:
+    \begin{defn}
+        \textbf{Kernel ridge regression} is a regression method that estimates the model $f$ that best fits the given $N$ input-output pairs, where each input vector is transformed such that:
+        \begin{equation*}
+            f(\phi(\mathbf{x}_{i})) \approx y_{i}, \qquad \text{for } i=1,\cdots,N.
+        \end{equation*}
+        The steps of the algorithm are as follows:
+        \begin{itemize}
+            \item[1:] Choose a kernel function $\kappa$.
+            \item[2:] Form a kernel matrix $\boldsymbol{\kappa} = [\kappa(\mathbf{x}_{i},\mathbf{x}_{j})]_{i,j} \in \mathbb{R}^{N \times N}$.
+            \item[3:] Solve $\mathbf{c}^{*}$ from:
+            \begin{equation*}
+                \mathbf{c}^{*} = \argmin_{\mathbf{c} \in \mathbb{R}^{N}} (\spnorm[2]{\boldsymbol{\kappa}^{T}\mathbf{c}-\mathbf{y}}^{2} + \lambda \mathbf{c}^{T}\boldsymbol{\kappa}\mathbf{c}).
+            \end{equation*}
+            \item[4:] Obtain the regression function:
+            \begin{equation*}
+                f(\phi(\mathbf{x})) = \sum_{i=1}^{N} c_{i}^{*}\kappa(\mathbf{x}_{i},\mathbf{x}), \qquad \text{for } \mathbf{x} \in \mathbb{R}^{n}.
+            \end{equation*}
+        \end{itemize}
+    \end{defn}
 \end{document}
