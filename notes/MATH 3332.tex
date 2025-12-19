@@ -2865,4 +2865,196 @@
             \end{equation*}
         \end{itemize}
     \end{defn}
+
+\chapter{Linear Classification}
+    \label{Case Study F: Linear Classification}
+    This case study assumes that you have already read Chapter \ref{Chapter 4: Linear Functions and Differentiation} and Appendices \ref{Case Study B: Kernel K-means/Kernel Trick} and \ref{Case Study E: Kernel Ridge Regression}.
+
+    Suppose that we are given $N$ input-output pairs:
+    \begin{equation*}
+        (\mathbf{x}_{1},y_{1}), \cdots, (\mathbf{x}_{N},y_{N})
+    \end{equation*}
+    where $\mathbf{x}_{i} \in \mathbb{R}^{n}$ and $y_{i} \in \{-1,1\}$ for $i=1,\cdots,N$. We aim to classify any given new $\mathbf{x}$ as either $-1$ or $1$.
+    \begin{enumerate}
+        \item Representation: Starting with $N$ input-output pairs $\{(\mathbf{x}_{i},y_{i})\}_{i=1}^{N}$, we define the following variables:
+        \begin{enumerate}
+            \item $\mathbf{x}_{i} \in \mathbb{R}^{n}$: the input vectors.
+            \item $y_{i} \in \{-1,1\}$: the corresponding class of $\mathbf{x}_{i}$.
+            \item $f:\mathbb{R}^{n} \to \mathbb{R}$: the function that allows for classification based on its output for $\mathbf{x}_{i}$.
+        \end{enumerate}
+        \item Evaluation: We use the function $f$ to define a separation between two classes. 
+        \begin{enumerate}
+            \item Given a new $\mathbf{x} \in \mathbb{R}^{n}$, the predicted label would be:
+            \begin{equation*}
+                y = \sgn(f(\mathbf{x}))
+            \end{equation*}
+            Here, we use $\{\mathbf{x}:f(\mathbf{x})=0\}$ to separate the two classes. To enhance confidence, we should find a function such that:
+            \begin{equation*}
+                \begin{cases}
+                    f(\mathbf{x}_{i}) \geq 1, &\text{if } y_{i}=1,\\
+                    f(\mathbf{x}_{i}) \leq -1, &\text{if } y_{i}=-1
+                \end{cases}, \qquad \text{for } i=1,\cdots,N.
+            \end{equation*}
+            \item What function class should $f$ belong to? Similar to linear regression, we can use the set of all affine functions. We need to find $\mathbf{a} \in \mathbb{R}^{n}$ and $b \in \mathbb{R}$ such that:
+            \begin{equation*}
+                \begin{cases}
+                    \inprod{\mathbf{a}}{\mathbf{x}_{i}}+b \geq 1, &\text{if } y_{i}=1,\\
+                    \inprod{\mathbf{a}}{\mathbf{x}_{i}}+b \leq -1, &\text{if } y_{i}=-1
+                \end{cases}, \qquad \text{for } i=1,\cdots,N.
+            \end{equation*}
+            This means we are using hyperplanes to separate points in different classes.
+            \item Which hyperplane is the best among all the possible ones? The larger the margin, the more stable the classification.
+            \begin{defn}
+                The \textbf{Support Vector Machine (SVM)} is an algorithm that finds the best hyperplane that maximizes the margin between the two classes. Let:
+                \begin{align*}
+                    S_{+} &= \{\mathbf{x}:\inprod{\mathbf{a}}{\mathbf{x}} + b = 1\}, & S_{-} &= \{\mathbf{x}:\inprod{\mathbf{a}}{\mathbf{x}} + b = -1\}.
+                \end{align*}
+                The margin is defined by:
+                \begin{equation*}
+                    \pnorm[2]{\mathbf{x}_{+} - \mathbf{x}_{-}}, \qquad \text{where } \begin{cases}
+                        \mathbf{x}_{+} = P_{S_{+}}\mathbf{x}_{-},\\
+                        \mathbf{x}_{-} = P_{S_{-}}\mathbf{x}_{+}.
+                    \end{cases}
+                \end{equation*}
+            \end{defn}
+            By the projection formula, since $\mathbf{x}_{-} \in S_{-}$,
+            \begin{equation*}
+                \mathbf{x}_{+} = \mathbf{x}_{-} - \left(\frac{\inprod{\mathbf{a}}{\mathbf{x}_{-}} - (1-b)}{\pnorm[2]{\mathbf{a}}^{2}}\right)\mathbf{a} = \mathbf{x}_{-} - \left(\frac{(-1-b) - (1-b)}{\pnorm[2]{\mathbf{a}}^{2}}\right)\mathbf{a} = \mathbf{x}_{-} + \frac{2}{\pnorm[2]{\mathbf{a}}^{2}}\mathbf{a}.
+            \end{equation*}
+            Therefore, the margin is $\pnorm[2]{\mathbf{x}_{+} - \mathbf{x}_{-}} = \frac{2}{\pnorm[2]{\mathbf{a}}}$.
+        \end{enumerate}
+    \end{enumerate}
+    \newpage
+
+    We can prevent data points from falling into the margin. Therefore, our problem is to solve:
+    \begin{equation*}
+        \max_{\substack{\mathbf{a} \in \mathbb{R}^{n}\\ b \in \mathbb{R}}}\frac{2}{\pnorm[2]{\mathbf{a}}} \text{ such that } \begin{cases}
+            \inprod{\mathbf{a}}{\mathbf{x}_{i}} + b \geq 1, &\text{for } y_{i} = 1,\\
+            \inprod{\mathbf{a}}{\mathbf{x}_{i}} + b \leq -1, &\text{for } y_{i} = -1
+        \end{cases}, \qquad \text{for } i=1,\cdots,N.
+    \end{equation*}
+    The hard-margin SVM is defined as follows:
+    \begin{defn}
+        The \textbf{hard-margin Support Vector Machine} is an algorithm that finds the best hyperplane $S$ that maximizes the margin between the two classes, requiring that all data points be linearly separable and not allowed to be on the other side. The hyperplane is in the form of:
+        \begin{equation*}
+            S = \{\mathbf{x}:\inprod{\mathbf{a}}{\mathbf{x}}+b = 0\},
+        \end{equation*}
+        where $(\mathbf{a},b)$ is the solution of:
+        \begin{equation*}
+            \tag{SVM-1}
+            \min_{\substack{\mathbf{a} \in \mathbb{R}^{n}\\ b \in \mathbb{R}}} \pnorm[2]{\mathbf{a}}^{2} \text{ such that } y_{i}(\inprod{\mathbf{a}}{\mathbf{x}_{i}}+b) \geq 1, \qquad \text{for } i=1,\cdots,N.
+        \end{equation*}
+    \end{defn}
+    \begin{figure}[h]
+        \centering
+        \begin{tikzpicture}
+            \draw[thick, dotted] (-0.3, 1.5) node[anchor=south] {$S$} -- (0.3, -1.5);
+            \draw[thick] (-0.8, 1.5) node[anchor=south] {$S_{+}$} -- (-0.2, -1.5);
+            \draw[thick] (0.2, 1.5) node[anchor=south] {$S_{-}$} -- (0.8, -1.5);
+            \draw[red] plot [only marks, mark=*, mark size=0.5, domain=-1.5:-0.8, samples=80] (\x, {rnd*3-1.5});
+            \draw[red] plot [only marks, mark=*, mark size=0.5, domain=-0.8:-0.25, samples=20] (\x, {min(rnd*-5*(\x+0.25)-1.5,rnd*3-1.5)});
+            \draw[blue] plot [only marks, mark=*, mark size=0.5, domain=0.8:1.5, samples=80] (\x, {rnd*3-1.5});
+            \draw[blue] plot [only marks, mark=*, mark size=0.5, domain=0.25:0.8, samples=20] (\x, {rnd*-5*(\x-0.25))+1.5});
+        \end{tikzpicture}
+        \caption{Hard-margin SVM}
+    \end{figure}
+    \begin{rem}
+        (SVM-1) is not robust to noise in training data.
+    \end{rem}
+    \begin{rem}
+        In some cases, the hyperplane cannot separate the two classes in the presence of high noise.
+    \end{rem}
+    \begin{figure}[h]
+        \centering
+        \begin{tikzpicture}
+            \draw[red] plot [only marks, mark=*, mark size=0.5, domain=-1.5:0.2, samples=100] (\x, {rnd*3-1.5});
+            \draw[blue] plot [only marks, mark=*, mark size=0.5, domain=-0.2:1.5, samples=100] (\x, {rnd*3-1.5});
+        \end{tikzpicture}
+        \caption{No solution to (SVM-1)}
+    \end{figure}
+    Is there a way to improve SVM? We need to first reformulate (SVM-1). We define a function $h:\mathbb{R} \to \mathbb{R}\cup\{+\infty\}$ by:
+    \begin{equation*}
+        h(t) = \begin{cases}
+            0, &\text{if } t \geq 0,\\
+            +\infty, &\text{if } t < 0.
+        \end{cases}
+    \end{equation*}
+    Then we can rewrite (SVM-1) as:
+    \begin{equation*}
+        \text{(SVM-1)} \Longleftrightarrow \min_{\substack{\mathbf{a} \in \mathbb{R}^{n}\\ b \in \mathbb{R}}} \left(\sum_{i=1}^{N} h(y_{i}(\inprod{\mathbf{a}}{\mathbf{x}_{i}}+b)-1) + \lambda\pnorm[2]{\mathbf{a}}^{2}\right),
+    \end{equation*}
+    where $\lambda>0$. This still fulfills the constraint that no data points must sit on the margin.
+    \newpage
+
+    In order to consider the case when some data points cannot be separated with a hard margin, we can soften the function $h$ by defining it as:
+    \begin{equation*}
+        h(t) = \max(0, -t) = \begin{cases}
+            0, &\text{if } t \geq 0,\\
+            \abs{t}, &\text{if } t < 0.
+        \end{cases}
+    \end{equation*}
+    This function is called the hinge loss function. The soft-margin SVM is defined as follows:
+    \begin{defn}
+        The \textbf{soft-margin Support Vector Machine} is an algorithm that finds the best hyperplane $S$ that maximizes the margin between the two classes, allowing some data points to be misclassified or fall within the margin. The hyperplane is in the form of:
+        \begin{equation*}
+            S = \{\mathbf{x}:\inprod{\mathbf{a}}{\mathbf{x}} + b = 0\},
+        \end{equation*}
+        where $(\mathbf{a},b)$ is the solution of:
+        \begin{equation*}
+            \tag{SVM-2}
+            \min_{\substack{\mathbf{a} \in \mathbb{R}^{n}\\ b \in \mathbb{R}}} \left(\sum_{i=1}^{N}\max(0,1-y_{i}(\inprod{\mathbf{a}}{\mathbf{x}_{i}}+b)) + \lambda\pnorm[2]{\mathbf{a}}\right),
+        \end{equation*}
+        where $\lambda > 0$.
+    \end{defn}
+    \begin{rem}
+        We can replace $h$ with some other functions. For example,
+        \begin{equation*}
+            h(t) = \log(1+e^{-t}),
+        \end{equation*}
+        which is a smooth function that approximates hinge loss, called logistic loss.
+    \end{rem}
+    So far, we have only introduced classifiers that are linear. Similar to what we did in regression, we can apply the Kernel trick to create a non-linear classifier. Consider a feature map $\phi:\mathbb{R}^{n} \to H$. The hyperplane will become:
+    \begin{equation*}
+        S = \{\mathbf{x}:\inprod{\mathbf{a}}{\phi(\mathbf{x})} = 0\}.
+    \end{equation*}
+    The formulation of SVM becomes:
+    \begin{align*}
+        \sum_{i=1}^{N} h(y_{i}\inprod{\mathbf{a}}{\phi(\mathbf{x}_{i})}-1) + \lambda\pnorm[H]{\mathbf{a}}^{2} &= \sum_{i=1}^{N} h\left(y_{i}\inprod{\mathbf{a}_{S} + \sum_{j=1}^{N}c_{j}\phi(\mathbf{x}_{j})}{\phi(\mathbf{x}_{i})}-1\right) + \lambda\pnorm[H]{\mathbf{a}_{S} + \sum_{j=1}^{N}c_{j}\phi(\mathbf{x}_{j})}^{2}\\
+        &= \sum_{i=1}^{N} h\left(y_{i}\sum_{j=1}^{N}c_{j}\inprod{\phi(\mathbf{x}_{j})}{\phi(\mathbf{x}_{i})}-1\right) + \lambda\pnorm[H]{\mathbf{a}_{S}}^{2} + \lambda\sum_{i=1}^{N}\sum_{j=1}^{N}c_{i}c_{j}\inprod{\phi(\mathbf{x}_{i})}{\phi(\mathbf{x}_{j})}.
+    \end{align*}
+    We introduce the kernel function $\kappa(\mathbf{x},\mathbf{y}) = \inprod{\phi(\mathbf{x})}{\phi(\mathbf{y})}$ for any $\mathbf{x},\mathbf{y} \in \mathbb{R}^{n}$ and the kernel matrix $\boldsymbol{\kappa} = \{\kappa(\mathbf{x}_{i},\mathbf{x}_{j})\}_{i,j=1}^{N} \in \mathbb{R}^{N \times N}$. Therefore, we would be solving:
+    \begin{equation*}
+        \tag{K-SVM}
+        \min_{\substack{\mathbf{c} \in \mathbb{R}^{N}\\ \mathbf{a}_{S} \in H}} (h(y_{i}[\boldsymbol{\kappa}^{T}\mathbf{c}]_{i}-1) + \lambda \mathbf{c}^{T}\boldsymbol{\kappa}\mathbf{c} + \lambda\pnorm[H]{\mathbf{a}_{S}}^{2}), \qquad \text{such that } \inprod{\mathbf{a}_{S}}{\phi(\mathbf{x}_{i})} = 0 \text{ for } i=1,\cdots,N.
+    \end{equation*}
+    Similar to Appendix \ref{Case Study E: Kernel Ridge Regression}, by the Representer Theorem, the solution of (K-SVM) is:
+    \begin{align*}
+        \mathbf{a} &= \sum_{i=1}^{N} c_{i}^{*}\phi(\mathbf{x}_{i}), & \mathbf{c}^{*} &= \argmin_{\mathbf{c} \in \mathbb{R}^{N}} \left(\sum_{i=1}^{N}h(y_{i}[\kappa^{T}\mathbf{c}]_{i}-1) + \lambda\mathbf{c}^{T}\boldsymbol{\kappa}\mathbf{c}\right), & \mathbf{a}_{S} &= \mathbf{0}.
+    \end{align*}
+    \newpage
+
+    Therefore, we may define the Kernel SVM as follows:
+    \begin{defn}
+        The \textbf{Kernel Support Vector Machine} is an algorithm that finds the best hyperplane that maximizes the margin between the two classes in the feature space, where the input vectors are transformed. The hyperplane is in the form of:
+        \begin{equation*}
+            S = \{\mathbf{x}:\inprod{\mathbf{a}}{\phi(\mathbf{x})} = 0\},
+        \end{equation*}
+        where $\mathbf{a}$ can be found by the following algorithm:
+        \begin{itemize}
+            \item[1:] Choose a kernel function $\kappa$.
+            \item[2:] Form a kernel matrix $\boldsymbol{\kappa} = [\kappa(\mathbf{x}_{i},\mathbf{x}_{j})]_{i,j} \in \mathbb{R}^{N \times N}$.
+            \item[3:] Solve $\mathbf{c}^{*}$ from:
+            \begin{equation*}
+                \argmin_{\mathbf{c} \in \mathbb{R}^{N}} \left(\sum_{i=1}^{N}h(y_{i}[\kappa^{T}\mathbf{c}]_{i}-1) + \lambda\mathbf{c}^{T}\boldsymbol{\kappa}\mathbf{c}\right).
+            \end{equation*}
+            \item[4:] Obtain the classifier function:
+            \begin{equation*}
+                \inprod{\mathbf{a}}{\phi(\mathbf{x})} = \sum_{i=1}^{N}c_{i}^{*}\kappa(\mathbf{x}_{i},\mathbf{x}), \qquad \text{for } \mathbf{x} \in \mathbb{R}^{n}.
+            \end{equation*}
+            \item[5:] Predict the label of any input:
+            \begin{equation*}
+                y = \sgn\left(\sum_{i=1}^{N}c_{i}^{*}\kappa(\mathbf{x}_{i},\mathbf{x})\right), \qquad \text{for } \mathbf{x} \in \mathbb{R}^{n}.
+            \end{equation*}
+        \end{itemize}
+    \end{defn}
 \end{document}
