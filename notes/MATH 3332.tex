@@ -2452,4 +2452,230 @@
         \end{equation*}
         \item Optimization: We do not perform it here.
     \end{enumerate}
+
+\chapter{Linear Regression}
+    \label{Case Study D: Linear Regression}
+    This case study assumes that you have already read Chapter \ref{Chapter 4: Linear Functions and Differentiation}.
+
+    Suppose that we are given $N$ input-output pairs:
+    \begin{equation*}
+        (\mathbf{x}_{1}, y_{1}), \cdots, (\mathbf{x}_{N}, y_{N})
+    \end{equation*}
+    where $\mathbf{x}_{i} \in \mathbb{R}^{n}$ and $y_{i} \in \mathbb{R}$ for $i=1,\cdots,N$. We aim to predict the corresponding output of any given new $\mathbf{x}$.
+    \begin{enumerate}
+        \item Representations: Starting with $N$ input-output pairs $\{(\mathbf{x}_{i}, y_{i})\}_{i=1}^{N}$, we define the following variables:
+        \begin{enumerate}
+            \item $\mathbf{x}_{i} \in \mathbb{R}^{n}$: the input vectors (independent variable).
+            \item $y_{i} \in \mathbb{R}$: the corresponding output of $\mathbf{x}_{i}$ (dependent variable).
+            \item $f:\mathbb{R}^{n} \to \mathbb{R}$: the function that predicts the output.
+        \end{enumerate}
+        \item Evaluation: We aim to find the function $f$ such that:
+        \begin{equation*}
+            f(\mathbf{x}_{i}) = y_{i}, \qquad\text{for } i = 1, \cdots, N.
+        \end{equation*}
+        \begin{enumerate}
+            \item The set of all functions that map from $\mathbb{R}^{n}$ to $\mathbb{R}$ is too large because:
+            \begin{enumerate}
+                \item We do not have enough data to determine $f$ uniquely.
+                \item There are too many functions that are not suitable for prediction.
+            \end{enumerate}
+            Therefore, we find $f$ in a subset $\Phi$ of all functions. 
+            \item The choice of $\Phi$ is fundamental since too small a subset would result in weak approximation power. We may choose a large enough subset:
+            \begin{equation*}
+                \Phi = \{\text{all affine functions } f:\mathbb{R}^{n} \to \mathbb{R}\}.
+            \end{equation*}
+            Our objective becomes finding a linear model $f$.
+            \item By Theorem \ref{Chapter 4 (Theorem) Properties of affine functions}(2), we can rewrite our function as:
+            \begin{equation*}
+                f(\mathbf{x}) = \inprod{\mathbf{a}}{\mathbf{x}} + b, \qquad\text{for } \mathbf{x} \in \mathbb{R}^{n}
+            \end{equation*}
+            where $\mathbf{a} \in \mathbb{R}^{n}$ and $b \in \mathbb{R}$. Therefore, our problem is to solve:
+            \begin{equation*}
+                \min_{\substack{\mathbf{a} \in \mathbb{R}^{n}\\ b \in \mathbb{R}}}\sum_{i=1}^{N}(\inprod{\mathbf{a}}{\mathbf{x}_{i}} + b - y_{i})^{2} \Longleftrightarrow \min_{\substack{\mathbf{a} \in \mathbb{R}^{n}\\ b \in \mathbb{R}}}\sum_{i=1}^{N}(\mathbf{x}_{i}^{T}\mathbf{a} + b - y_{i})^{2}
+            \end{equation*}
+            \item We write that:
+            \begin{align*}
+                \mathbf{X} &= \begin{pmatrix}
+                    \mathbf{x}_{1}^{T} & 1\\
+                    \vdots & \vdots\\
+                    \mathbf{x}_{N}^{T} & 1
+                \end{pmatrix} \in \mathbb{R}^{N \times (n+1)} & \boldsymbol{\beta} &= \begin{pmatrix}
+                    \mathbf{a}\\
+                    b
+                \end{pmatrix} \in \mathbb{R}^{n+1} & \mathbf{y} &= \begin{pmatrix}
+                    y_{1}\\
+                    \vdots\\
+                    y_{N}
+                \end{pmatrix} \in \mathbb{R}^{N}
+            \end{align*}
+            Therefore, our problem now is to solve:
+            \begin{equation*}
+                \min_{\substack{\mathbf{a} \in \mathbb{R}^{n}\\ b \in \mathbb{R}}}\sum_{i=1}^{N}(\mathbf{x}_{i}^{T}\mathbf{a} + b - y_{i})^{2} \Longleftrightarrow \min_{\boldsymbol{\beta} \in \mathbb{R}^{n+1}} \pnorm[2]{\mathbf{X}\boldsymbol{\beta}-\mathbf{y}}^{2}
+            \end{equation*}
+        \end{enumerate}
+        \newpage
+        
+        \item Optimization: For a limited amount of data, can we always find a unique solution? In order to solve the following equation,
+        \begin{equation*}
+            \mathbf{X}\boldsymbol{\beta} = \mathbf{y}
+        \end{equation*}
+        which has $N$ equations and $n+1$ unknowns, we would need $N \geq n+1$ for a unique solution. 
+        
+        However, in practice, we may also have cases when $N << n$. For example, in image recognition. Therefore, we need to perform some regularizations to further shrink the set of candidate functions. We will discuss this later.
+    \end{enumerate}
+    The method is called the least squares.
+    \begin{defn}
+        The \textbf{(linear) least squares regression} is a regression method that estimates the model $f$ that best fits the given $N$ input-output pairs, such that:
+        \begin{equation*}
+            f(\mathbf{x}_{i}) = \mathbf{x}_{i}^{T}\hat{\boldsymbol{\beta}} \approx y_{i}, \qquad \text{for } i = 1,\cdots,N
+        \end{equation*}
+        where $\hat{\boldsymbol{\beta}}$ is the solution of:
+        \begin{equation*}
+            \min_{\boldsymbol{\beta} \in \mathbb{R}^{n+1}} \pnorm[2]{\mathbf{X}\boldsymbol{\beta}-\mathbf{y}}^{2}
+        \end{equation*}
+    \end{defn}
+    \begin{thm}
+        If $\mathbf{X}^{T}\mathbf{X}$ is invertible, then least squares regression has a unique solution for $\boldsymbol{\beta}$:
+        \begin{equation*}
+            \hat{\boldsymbol{\beta}} = (\mathbf{X}^{T}\mathbf{X})^{-1}\mathbf{X}^{T}\mathbf{y}
+        \end{equation*}
+    \end{thm}
+    \begin{proofing}
+        Let $X_{ij}$ be the $(i,j)$-th entry of $\mathbf{X}$ such that $X_{i(n+1)}=1$. We can rewrite the minimization problem:
+        \begin{equation*}
+            \min_{\boldsymbol{\beta} \in \mathbb{R}^{n+1}} \pnorm[2]{\mathbf{X}\boldsymbol{\beta}-\mathbf{y}}^{2} \Longleftrightarrow \min_{\beta_{1},\cdots,\beta_{n+1}\in\mathbb{R}} \sum_{i=1}^{N}(X_{i1}\beta_{1}+\cdots+X_{i(n+1)}\beta_{n+1}-y_{i})^{2}
+        \end{equation*}
+        Taking the derivatives of $\beta_{j}$ for $j=1,\cdots,n+1$, we have:
+        \begin{equation*}
+            2\sum_{i=1}^{N}X_{ij}(X_{i1}\beta_{1}+\cdots+X_{i(n+1)}\beta_{n+1}-y_{i}) = 0 \Longleftrightarrow \sum_{i=1}^{N}X_{ij}(X_{i1}\beta_{1}+\cdots+X_{i(n+1)}\beta_{n+1}) = \sum_{i=1}^{N}X_{ij}y_{i}
+        \end{equation*}
+        By substituting:
+        \begin{align*}
+            \mathbf{X}^{T}\mathbf{X} &= \begin{pmatrix}
+                \sum_{i=1}^{N}X_{i1}^{2} & \sum_{i=1}^{N}X_{i1}X_{i2} & \hdots & \sum_{i=1}^{N}X_{i1}X_{i(n+1)}\\
+                \sum_{i=1}^{N}X_{i2}X_{i1} & \sum_{i=1}^{N}X_{i2}^{2} & \hdots & \sum_{i=1}^{N}X_{i2}X_{i(n+1)}\\
+                \vdots & \vdots & \ddots & \vdots\\
+                \sum_{i=1}^{N}X_{i(n+1)}X_{i1} & \sum_{i=1}^{N}X_{i(n+1)}X_{i2} & \hdots & \sum_{i=1}^{N}X_{i(n+1)}^{2}
+            \end{pmatrix}
+        \end{align*}
+        We can find that:
+        \begin{equation*}
+            \mathbf{X}^{T}\mathbf{X}\boldsymbol{\beta} = \mathbf{X}^{T}\mathbf{y}
+        \end{equation*}
+        Therefore, $\hat{\boldsymbol{\beta}} = (\mathbf{X}^{T}\mathbf{X})^{-1}\mathbf{X}^{T}\mathbf{y}$ if $\mathbf{X}^{T}\mathbf{X}$ is invertible.
+    \end{proofing}
+    In cases where the number of data points is significantly smaller than the dimension of the data, we have to use regularizations, which means that we have to use a subset of affine functions. The subset would be obtained by:
+    \begin{equation*}
+        \Phi_{S} = \left\{f: f(\mathbf{x}) = \inprod{\mathbf{a}}{\mathbf{x}} + b\text{ and }\boldsymbol{\beta}=\begin{pmatrix}
+            \mathbf{a}\\
+            b
+        \end{pmatrix}\in S\right\}
+    \end{equation*}
+    for a given set $S$. Therefore, our problem now turns into solving:
+    \begin{equation*}
+        \min_{\boldsymbol{\beta} \in S}\pnorm[2]{\mathbf{X}\boldsymbol{\beta}-\mathbf{y}}^{2}
+    \end{equation*}
+    \newpage
+
+    We can obtain two popular choices of regularizations.
+    \begin{enumerate}
+        \item Ridge regression: We choose
+        \begin{equation*}
+            S = \left\{\boldsymbol{\beta} = \begin{pmatrix}
+                \mathbf{a}\\
+                b
+            \end{pmatrix}\in\mathbb{R}^{n+1} : \pnorm[2]{\mathbf{a}} \leq c\right\}
+        \end{equation*}
+        for some $c>0$. Therefore, the minimization problem is to solve:
+        \begin{equation*}
+            \min_{\boldsymbol{\beta} \in S}\pnorm[2]{\mathbf{X}\boldsymbol{\beta}-\mathbf{y}}^{2} \Longleftrightarrow \min_{\boldsymbol{\beta}=\begin{pmatrix}
+                    \mathbf{a}\\
+                    b
+            \end{pmatrix} \in \mathbb{R}^{n+1}} \left(\pnorm[2]{\mathbf{X}\boldsymbol{\beta}-\mathbf{y}}^{2} + \lambda\pnorm[2]{\mathbf{a}}^{2}\right)
+        \end{equation*}
+        where $\lambda>0$ is a constant depending on $c$ and other factors. The ridge regression is defined as follows:
+        \begin{defn}
+            The \textbf{ridge regression} is a regression method that estimates the model $f$ that best fits the given $N$ input-output pairs, such that:
+            \begin{equation*}
+                f(\mathbf{x}_{i}) = \mathbf{x}_{i}^{T}\hat{\boldsymbol{\beta}} \approx y_{i}, \qquad \text{for } i = 1,\cdots,N
+            \end{equation*}
+            where $\hat{\boldsymbol{\beta}}$ is the solution of:
+            \begin{equation*}
+                \min_{\boldsymbol{\beta}=\begin{pmatrix}
+                    \mathbf{a}\\
+                    b
+                \end{pmatrix} \in \mathbb{R}^{n+1}} \left(\pnorm[2]{\mathbf{X}\boldsymbol{\beta}-\mathbf{y}}^{2} + \lambda\pnorm[2]{\mathbf{a}}^{2}\right), \qquad \text{for } \lambda>0
+            \end{equation*}
+        \end{defn}
+        \begin{thm}
+            Ridge regression has a unique solution for $\boldsymbol{\beta}$:
+            \begin{equation*}
+                \hat{\boldsymbol{\beta}}=(\mathbf{X}^{T}\mathbf{X}+\lambda\mathbf{I})^{-1}\mathbf{X}^{T}\mathbf{y}
+            \end{equation*}
+        \end{thm}
+        This minimization problem can be separated into three parts:
+        \begin{enumerate}
+            \item Data-fitting term: $\pnorm[2]{\mathbf{X}\boldsymbol{\beta}-\mathbf{y}}^{2}$.
+            \item Regularization term: $\pnorm[2]{\mathbf{a}}^{2}$.
+            \item Regularization parameter: $\lambda$.
+            
+            A larger $\lambda$ means a smaller $\Phi_{S}$, allowing for looser fitting.\\ 
+            A smaller $\lambda$ means a larger $\Phi_{S}$, allowing for better fitting.
+        \end{enumerate}
+        \item LASSO regression: We choose
+        \begin{equation*}
+            S = \left\{\boldsymbol{\beta} = \begin{pmatrix}
+                \mathbf{a}\\
+                b
+            \end{pmatrix}\in\mathbb{R}^{n+1} : \pnorm[1]{\mathbf{a}} \leq c\right\}
+        \end{equation*}
+        for some $c>0$. Therefore, the minimization problem is to solve:
+        \begin{equation*}
+            \min_{\boldsymbol{\beta} \in S}\pnorm[2]{\mathbf{X}\boldsymbol{\beta}-\mathbf{y}}^{2} \Longleftrightarrow \min_{\boldsymbol{\beta}=\begin{pmatrix}
+                    \mathbf{a}\\
+                    b
+                \end{pmatrix} \in \mathbb{R}^{n+1}} \left(\pnorm[2]{\mathbf{X}\boldsymbol{\beta}-\mathbf{y}}^{2} + \lambda\pnorm[1]{\mathbf{a}}^{2}\right)
+        \end{equation*}
+        where $\lambda>0$ is a constant depending on $c$ and other factors. The LASSO regression is defined as follows:
+        \begin{defn}
+            The \textbf{LASSO regression} is a regression method that estimates the model $f$ that best fits the given $N$ input-output pairs, such that:
+            \begin{equation*}
+                f(\mathbf{x}_{i}) = \mathbf{x}_{i}^{T}\hat{\boldsymbol{\beta}} \approx y_{i}, \qquad \text{for } i = 1,\cdots,N
+            \end{equation*}
+            where $\hat{\boldsymbol{\beta}}$ is the solution of:
+            \begin{equation*}
+                \min_{\boldsymbol{\beta}=\begin{pmatrix}
+                        \mathbf{a}\\
+                        b
+                    \end{pmatrix} \in \mathbb{R}^{n+1}} \left(\pnorm[2]{\mathbf{X}\boldsymbol{\beta}-\mathbf{y}}^{2} + \lambda\pnorm[1]{\mathbf{a}}^{2}\right), \qquad \text{for } \lambda>0
+            \end{equation*}
+        \end{defn}
+        Similarly, this minimization problem can be separated into three parts:
+        \begin{enumerate}
+            \item Data-fitting term: $\pnorm[2]{\mathbf{X}\boldsymbol{\beta}-\mathbf{y}}^{2}$.
+            \item Regularization term: $\pnorm[1]{\mathbf{a}}^{2}$.
+            \item Regularization parameter: $\lambda$.
+        \end{enumerate}
+    \end{enumerate}
+    \newpage
+
+    What are the differences between these two types of regularizations? 
+
+    In general, LASSO gives a sparse vector $\mathbf{a}$ (more zeros in $\mathbf{a}$). Before we dive in, we first define the support of a vector.
+    \begin{defn}
+        Let $V$ be a vector space over $\mathbb{R}$ and let $\mathbf{x} \in V$. The \textbf{support} of $\mathbf{x}$ is given by:
+        \begin{equation*}
+            \supp(\mathbf{x}) = \{i : x_{i} \neq 0\}.
+        \end{equation*}
+    \end{defn}
+    The model now predicts the output by:
+    \begin{equation*}
+        f(\mathbf{x}) = \inprod{\mathbf{a}}{\mathbf{x}} + b = \sum_{i=1}^{n}a_{i}x_{i} + b = \sum_{i \in \supp(\mathbf{a})}a_{i}x_{i} + b
+    \end{equation*}
+    Only $x_{i}$ where $i \in \supp(\mathbf{a})$ contributes to the prediction. If $\mathbf{a}$ is sparse, then:
+    \begin{equation*}
+        \abs{\supp(\mathbf{a})} << n
+    \end{equation*}
+    This allows for more interpretable predictions.
+    
 \end{document}
