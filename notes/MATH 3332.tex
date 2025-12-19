@@ -1830,6 +1830,287 @@
         This results in a contradiction. Therefore, the solution $\mathbf{z}$ is unique.
     \end{proofing}
 
+\section{Linear approximation and Differentiation}
+    Recall that for a function $f:\mathbb{R} \to \mathbb{R}$, its derivative at $x$ is defined as:
+    \begin{equation*}
+        f'(x) = \lim_{y \to x}\frac{f(y) - f(x)}{y - x}.
+    \end{equation*}
+    This is equivalent to:
+    \begin{equation*}
+        \lim_{y \to x}\frac{\abs{f(y) - (f(x) + f'(x)(y-x))}}{\abs{y-x}} = 0.
+    \end{equation*}
+    Let $g(y) = f(x) + f'(x)(y-x)$. This function satisfies the following properties:
+    \begin{enumerate}
+        \item It is affine.
+        \item It passes through $(x, f(x))$.
+        \item 
+        \begin{equation*}
+            \lim_{y \to x}\frac{\abs{f(y) - g(y)}}{\abs{y-x}} = 0,
+        \end{equation*}
+        i.e., the error $f(y) - g(y) = o(\abs{y-x})$.
+    \end{enumerate}
+    We can extend this to functions $f: H \to \mathbb{R}$, where $H$ is a Hilbert space. Consider $\mathbf{x} \in H$. We want to find a function $g: H \to \mathbb{R}$ such that:
+    \begin{enumerate}
+        \item It is affine and bounded.
+        \item It passes through $(\mathbf{x}, f(\mathbf{x}))$.
+        \item 
+        \begin{equation*}
+            \lim_{\mathbf{y} \to \mathbf{x}} \frac{\abs{f(\mathbf{y}) - g(\mathbf{y})}}{\norm{\mathbf{y}-\mathbf{x}}} = 0.
+        \end{equation*}
+    \end{enumerate}
+    By Theorem \ref{Chapter 4 (Theorem) Properties of affine functions}(2), let $g(\mathbf{y}) = \inprod{\mathbf{v}}{\mathbf{y}} + b$, where $\mathbf{v} \in H$ and $b \in \mathbb{R}$. We may define $\mathbf{v}$ and $b$ such that:
+    \begin{equation*}
+        g(\mathbf{y}) = \inprod{\mathbf{v}}{\mathbf{x}} + b = f(\mathbf{x}).
+    \end{equation*}
+    Therefore, the error limit becomes:
+    \begin{equation*}
+        \lim_{\mathbf{y} \to \mathbf{x}} \frac{\abs{f(\mathbf{y})-(f(\mathbf{x})+\inprod{\mathbf{v}}{\mathbf{y}-\mathbf{x}})}}{\norm{\mathbf{y}-\mathbf{x}}} = 0.
+    \end{equation*}
+    We have obtained the following definition.
+    \begin{defn}
+        Let $H$ be a Hilbert space. Let $f: H \to \mathbb{R}$ be a function and $\mathbf{x} \in H$. Then, $f$ is said to be \textbf{Fr\'echet differentiable} at $\mathbf{x}$ if there exists $\mathbf{v} \in H$ such that:
+        \begin{equation*}
+            \lim_{\mathbf{y} \to \mathbf{x}} \frac{\abs{f(\mathbf{y})-(f(\mathbf{x})
+            +\inprod{\mathbf{v}}{\mathbf{y}-\mathbf{x}})}}{\norm{\mathbf{y}-\mathbf{x}}} = 0.
+        \end{equation*}
+        If $f$ is differentiable at $\mathbf{x}$, then $\mathbf{v}$ is called the gradient at $\mathbf{x}$, denoted by $\nabla f(\mathbf{x})$.
+    \end{defn}
+    \begin{rem}
+        With the definition of convergence for vectors, we can rewrite the formula as:
+        \begin{equation*}
+            \lim_{\norm{\mathbf{y}-\mathbf{x}} \to 0} \frac{\abs{f(\mathbf{y})-(f(\mathbf{x})
+                    +\inprod{\mathbf{v}}{\mathbf{y}-\mathbf{x}})}}{\norm{\mathbf{y}-\mathbf{x}}} = 0.
+        \end{equation*}
+    \end{rem}
+    \begin{rem}
+        Fr\'echet differentiation depends on the inner product on $H$.
+    \end{rem}
+    \newpage
+
+    \begin{eg}
+        Consider $f(\mathbf{x}) = \norm{\mathbf{x}}^{2}$, where $\norm{\cdot}$ is the norm on $H$. At $\mathbf{x} \in H$, for any $\mathbf{y} \in H$,
+        \begin{align*}
+            f(\mathbf{y}) = \norm{\mathbf{y}}^{2} &= \norm{\mathbf{x} + (\mathbf{y}-\mathbf{x})}^{2}\\
+            &= \norm{\mathbf{x}}^{2} + 2\inprod{\mathbf{x}}{\mathbf{y}-\mathbf{x}} + \norm{\mathbf{y}-\mathbf{x}}^{2}\\
+            &= f(\mathbf{x}) + \inprod{2\mathbf{x}}{\mathbf{y}-\mathbf{x}} + \norm{\mathbf{y}-\mathbf{x}}^{2}.
+        \end{align*}
+        We find that:
+        \begin{equation*}
+            \lim_{\norm{\mathbf{y}-\mathbf{x}} \to 0} \frac{\abs{f(\mathbf{y}) - (f(\mathbf{x}) + \inprod{2\mathbf{x}}{\mathbf{y}-\mathbf{x}})}}{\norm{\mathbf{y}-\mathbf{x}}} = \lim_{\norm{\mathbf{y}-\mathbf{x}} \to 0} \frac{\norm{\mathbf{y}-\mathbf{x}}^{2}}{\norm{\mathbf{y}-\mathbf{x}}} = 0.
+        \end{equation*}
+        Therefore, $\nabla f(\mathbf{x}) = 2\mathbf{x}$.
+    \end{eg}
+    \begin{eg}
+        Consider $f(\mathbf{x})=\inprod{\mathbf{a}}{\mathbf{x}}$ for some $\mathbf{a} \in H$. At $\mathbf{x} \in H$, for any $\mathbf{y} \in H$,
+        \begin{align*}
+            f(\mathbf{y}) = \inprod{\mathbf{a}}{\mathbf{y}} &= \inprod{\mathbf{a}}{\mathbf{x}} + \inprod{\mathbf{a}}{\mathbf{y}-\mathbf{x}}\\
+            &= f(\mathbf{x}) + \inprod{\mathbf{a}}{\mathbf{y}-\mathbf{x}} + 0.
+        \end{align*}
+        We find that:
+        \begin{equation*}
+            \lim_{\norm{\mathbf{y}-\mathbf{x}} \to 0} \frac{\abs{f(\mathbf{y})-(f(\mathbf{x})+\inprod{\mathbf{a}}{\mathbf{y}-\mathbf{x}})}}{\norm{\mathbf{y}-\mathbf{x}}} = 0.
+        \end{equation*}
+        Therefore, $\nabla f(\mathbf{x}) = \mathbf{a}$.
+    \end{eg}
+    \begin{eg}
+        Consider $f(\mathbf{x}) = \norm{\mathbf{x}-\mathbf{a}}^{2}$, where $\norm{\cdot}$ is the norm on $H$ and $\mathbf{a} \in H$. At $\mathbf{x} \in H$, for any $\mathbf{y} \in H$,
+        \begin{align*}
+            f(\mathbf{y}) &= \norm{\mathbf{y}-\mathbf{a}}^{2}\\
+            &= \norm{\mathbf{x}-\mathbf{a}+\mathbf{y}-\mathbf{x}}^{2}\\
+            &= \norm{\mathbf{x}-\mathbf{a}}^{2} + 2\inprod{\mathbf{x}-\mathbf{a}}{\mathbf{y}-\mathbf{x}} + \norm{\mathbf{y}-\mathbf{x}}^{2}\\
+            &= f(\mathbf{x}) + \inprod{2(\mathbf{x}-\mathbf{a})}{\mathbf{y}-\mathbf{x}} + \norm{\mathbf{y}-\mathbf{x}}^{2}.
+        \end{align*}
+        We find that:
+        \begin{equation*}
+            \lim_{\norm{\mathbf{y}-\mathbf{x}} \to 0} \frac{\abs{f(\mathbf{y}) - (f(\mathbf{x}) + \inprod{2(\mathbf{x}-\mathbf{a})}{\mathbf{y}-\mathbf{x}})}}{\norm{\mathbf{y}-\mathbf{x}}} = \lim_{\norm{\mathbf{y}-\mathbf{x}} \to 0} \frac{\norm{\mathbf{y}-\mathbf{x}}^{2}}{\norm{\mathbf{y}-\mathbf{x}}} = 0.
+        \end{equation*}
+        Therefore, $\nabla f(\mathbf{x}) = 2(\mathbf{x}-\mathbf{a})$.
+    \end{eg}
+    There are some properties of Fr\'echet differentiation.
+    \begin{thm}
+        \label{Chapter 4 (Theorem) Properties of Frechet differentiation}
+        Fr\'echet differentiation has the following properties:
+        \begin{enumerate}
+            \item Fr\'echet differentiation is linear in $f$, i.e., for any $\alpha,\beta \in \mathbb{R}$ and $f,g: H \to \mathbb{R}$, 
+            \begin{equation*}
+                \nabla(\alpha f + \beta g)(\mathbf{x}) = \alpha \nabla f(\mathbf{x}) + \beta \nabla g(\mathbf{x}), \qquad \text{for } \mathbf{x} \in H,
+            \end{equation*}
+            provided that $\nabla f(\mathbf{x})$ and $\nabla g(\mathbf{x})$ exist.
+            \item \named{Chain rule} Let $f: H \to \mathbb{R}$ and $g: \mathbb{R} \to \mathbb{R}$. Then $g \circ f: H \to \mathbb{R}$ and:
+            \begin{equation*}
+                \nabla(g \circ f)(\mathbf{x}) = g'(f(\mathbf{x})) \cdot \nabla f(\mathbf{x}), \qquad \text{for } \mathbf{x} \in H,
+            \end{equation*}
+            provided that $g$ and $f$ are differentiable at $f(\mathbf{x})$ and $\mathbf{x}$, respectively.
+        \end{enumerate}
+    \end{thm}
+    \newpage
+
+    \begin{proofing}
+        \begin{enumerate}
+            \item By definition, for any $\mathbf{x} \in  H$,
+            \begin{align*}
+                \lim_{\norm{\mathbf{y}-\mathbf{x}} \to 0} \frac{\abs{f(\mathbf{y})-(f(\mathbf{x}) + \inprod{\nabla f(\mathbf{x})}{\mathbf{y}-\mathbf{x}})}}{\norm{\mathbf{y}-\mathbf{x}}} &= 0, & \lim_{\norm{\mathbf{y}-\mathbf{x}} \to 0} \frac{\abs{g(\mathbf{y})-(g(\mathbf{x}) + \inprod{\nabla g(\mathbf{x})}{\mathbf{y}-\mathbf{x}})}}{\norm{\mathbf{y}-\mathbf{x}}} &= 0.
+            \end{align*}
+            We check if $\alpha \nabla f(\mathbf{x}) + \beta \nabla g(\mathbf{x})$ is the gradient of $\alpha f + \beta g$ at $\mathbf{x}$.
+            \begin{align*}
+                0 &\leq \lim_{\norm{\mathbf{y}-\mathbf{x}} \to 0} \frac{\abs{(\alpha f + \beta g)(\mathbf{y})-((\alpha f + \beta g)(\mathbf{x}) + \inprod{\alpha \nabla f(\mathbf{x}) + \beta \nabla g(\mathbf{x})}{\mathbf{y}-\mathbf{x}})}}{\norm{\mathbf{y}-\mathbf{x}}}\\
+                &\leq \lim_{\norm{\mathbf{y}-\mathbf{x}} \to 0} \frac{\abs{\alpha (f(\mathbf{y}) - (f(\mathbf{x}) + \inprod{\nabla f(\mathbf{x})}{\mathbf{y}-\mathbf{x}})) + \beta (g(\mathbf{y}) - (g(\mathbf{x}) + \inprod{\nabla g(\mathbf{x})}{\mathbf{y}-\mathbf{x}}))}}{\norm{\mathbf{y}-\mathbf{x}}}\\
+                \tag{Triangle Inequality}
+                &\leq \lim_{\norm{\mathbf{y}-\mathbf{x}} \to 0} \left(\abs{\alpha} \frac{\abs{f(\mathbf{y}) - (f(\mathbf{x}) + \inprod{\nabla f(\mathbf{x})}{\mathbf{y}-\mathbf{x}})}}{\norm{\mathbf{y}-\mathbf{x}}} + \abs{\beta} \frac{\abs{g(\mathbf{y}) - (g(\mathbf{x}) + \inprod{\nabla g(\mathbf{x})}{\mathbf{y}-\mathbf{x}})}}{\norm{\mathbf{y}-\mathbf{x}}}\right) = 0.
+            \end{align*}
+            Therefore, $\nabla(\alpha f + \beta g)(\mathbf{x}) = \alpha \nabla f(\mathbf{x}) + \beta \nabla g(\mathbf{x})$.
+            \item By definition, if $f$ is differentiable at $\mathbf{x} \in H$ and $g$ is differentiable at $t \in \mathbb{R}$,
+            \begin{align*}
+                \lim_{\norm{\mathbf{y}-\mathbf{x}} \to 0} \frac{\abs{f(\mathbf{y})-(f(\mathbf{x}) + \inprod{\nabla f(\mathbf{x})}{\mathbf{y}-\mathbf{x}})}}{\norm{\mathbf{y}-\mathbf{x}}} &= 0, & \lim_{s \to t} \frac{g(s) - (g(t) + g'(t)(s-t))}{\abs{s-t}} &= 0.
+            \end{align*}
+            We check if $g'(f(\mathbf{x}))\cdot\nabla f(\mathbf{x})$ is the gradient of $g \circ f$ at $\mathbf{x}$.
+            \begin{align*}
+                0 &\leq \lim_{\norm{\mathbf{y}-\mathbf{x}} \to 0} \frac{\abs{g(f(\mathbf{y})) - (g(f(\mathbf{x})) + \inprod{g'(f(\mathbf{x})) \cdot \nabla f(\mathbf{x})}{\mathbf{y} - \mathbf{x}})}}{\norm{\mathbf{y}-\mathbf{x}}}\\
+                &\leq \lim_{\norm{\mathbf{y}-\mathbf{x}} \to 0} \frac{\abs{g(f(\mathbf{y})) - (g(f(\mathbf{x})) + g'(f(\mathbf{x}))(f(\mathbf{y})-f(\mathbf{x})) - g'(f(\mathbf{x}))(f(\mathbf{y})-f(\mathbf{x})) + \inprod{g'(f(\mathbf{x})) \cdot \nabla f(\mathbf{x})}{\mathbf{y} - \mathbf{x}})}}{\norm{\mathbf{y}-\mathbf{x}}}\\
+                \tag{Triangle Inequality}
+                &\leq \lim_{\norm{\mathbf{y}-\mathbf{x}} \to 0} \left(\frac{\abs{g(f(\mathbf{y})) - (g(f(\mathbf{x})) + g'(f(\mathbf{x}))(f(\mathbf{y})-f(\mathbf{x}))}}{\norm{\mathbf{y}-\mathbf{x}}} + \abs{g'(f(\mathbf{x}))}\frac{\abs{f(\mathbf{y})-(f(\mathbf{x}) + \inprod{\nabla f(\mathbf{x})}{\mathbf{y} - \mathbf{x}})}}{\norm{\mathbf{y}-\mathbf{x}}}\right)\\
+                &\leq \lim_{\norm{\mathbf{y}-\mathbf{x}} \to 0} \frac{\abs{g(f(\mathbf{y})) - (g(f(\mathbf{x})) + g'(f(\mathbf{x}))(f(\mathbf{y})-f(\mathbf{x}))}}{\norm{\mathbf{y}-\mathbf{x}}}\\
+                &\leq \lim_{\norm{\mathbf{y}-\mathbf{x}} \to 0} \frac{\abs{g(f(\mathbf{y})) - (g(f(\mathbf{x})) + g'(f(\mathbf{x}))(f(\mathbf{y})-f(\mathbf{x}))}}{\abs{f(\mathbf{y})-f(\mathbf{x})}}\left(\frac{\abs{f(\mathbf{y})-f(\mathbf{x})}}{\norm{\mathbf{y}-\mathbf{x}}}\right).
+            \end{align*}
+            Now the only thing left to prove is that $f(\mathbf{y}) \to f(\mathbf{x})$ when $\norm{\mathbf{y} - \mathbf{x}} \to 0$. Recall that:
+            \begin{equation*}
+                f(\mathbf{y}) - (f(\mathbf{x}) + \inprod{\nabla f(\mathbf{x})}{\mathbf{y}-\mathbf{x}}) = o(\norm{\mathbf{y} - \mathbf{x}}).
+            \end{equation*}
+            Rearrange the terms:
+            \begin{align*}
+                0 \leq \abs{f(\mathbf{y}) - f(\mathbf{x})} &= \abs{\inprod{\nabla f(\mathbf{x})}{\mathbf{y}-\mathbf{x}} + o(\norm{\mathbf{y}-\mathbf{x}})}\\
+                \tag{Triangle Inequality}
+                &\leq \abs{\inprod{\nabla f(\mathbf{x})}{\mathbf{y}-\mathbf{x}}} + o(\norm{\mathbf{y}-\mathbf{x}})\\
+                \tag{Cauchy-Schwarz Inequality}
+                &\leq \norm{\nabla f(\mathbf{x})}\norm{\mathbf{y}-\mathbf{x}} + o(\norm{\mathbf{y}-\mathbf{x}})\\
+                &\leq \norm{\nabla f(\mathbf{x})}\norm{\mathbf{y}-\mathbf{x}} + c\norm{\mathbf{y}-\mathbf{x}}, \qquad \text{for some } c \in \mathbb{R}\\
+                0 \leq \frac{\abs{f(\mathbf{y}) - f(\mathbf{x})}}{\norm{\mathbf{y}-\mathbf{x}}} &\leq \norm{\nabla f(\mathbf{x})} + c.
+            \end{align*}
+            This means as $\norm{\mathbf{y}-\mathbf{x}} \to 0$, $f(\mathbf{y})$ has to converge to $f(\mathbf{x})$. By applying $s = f(\mathbf{y})$ and $t = f(\mathbf{x})$,
+            \begin{equation*}
+                \lim_{\norm{\mathbf{y}-\mathbf{x}} \to 0} \frac{\abs{g(f(\mathbf{y})) - (g(f(\mathbf{x})) + g'(f(\mathbf{x}))(f(\mathbf{y})-f(\mathbf{x}))}}{\abs{f(\mathbf{y})-f(\mathbf{x})}} = 0.
+            \end{equation*}
+            Therefore, $\nabla(g \circ f)(\mathbf{x}) = g'(f(\mathbf{x})) \cdot \nabla f(\mathbf{x})$.
+        \end{enumerate}
+    \end{proofing}
+    \newpage
+
+    \begin{eg}
+        Consider $f(\mathbf{x})=\norm{\mathbf{x}}$, where $\norm{\cdot}$ is the norm on $H$. Find its derivative for any $\mathbf{x} \in H$. Let:
+        \begin{align*}
+            f_{1}(\mathbf{x}) &= \norm{\mathbf{x}}^{2}, \qquad \text{for } \mathbf{x} \in H, & f_{2}(t) &= \sqrt{t}, \qquad \text{for } t \in \mathbb{R}_{\geq 0}, & f(\mathbf{x}) = f_{2}(f_{1}(\mathbf{x})).
+        \end{align*}
+        When $\mathbf{x} \neq 0$, both $f_{1}$ and $f_{2}$ are differentiable. By the chain rule,
+        \begin{equation*}
+            \nabla f(\mathbf{x}) = f_{2}'(f_{1}(\mathbf{x})) \cdot \nabla f_{1}(\mathbf{x}) = \frac{1}{2\sqrt{\norm{\mathbf{x}}^{2}}}(2\mathbf{x}) = \frac{\mathbf{x}}{\norm{\mathbf{x}}}.
+        \end{equation*}
+        When $\mathbf{x} = \mathbf{0}$, $f_{1}(\mathbf{0}) = 0$. $f_{2}$ is not differentiable at $f_{1}(\mathbf{0})$. We cannot apply the chain rule.
+        
+        In fact, $f$ is not differentiable at $\mathbf{x} = \mathbf{0}$.
+    \end{eg}
+    We can find Fr\'echet differentiation element-wise if the Hilbert space we are considering is $\mathbb{R}^{n}$.
+    \begin{thm}
+        \label{Chapter 4 (Theorem) Elementwise Gradient}
+        For functions $f:\mathbb{R}^{n} \to \mathbb{R}$, where $\mathbb{R}^{n}$ is with the standard inner product, if $f$ is differentiable at $\mathbf{x} \in \mathbb{R}^{n}$, then:
+        \begin{equation*}
+            \nabla f(\mathbf{x}) = \begin{pmatrix}
+                \pdv*{f(\mathbf{x})}{x_{1}}\\
+                \vdots\\
+                \pdv*{f(\mathbf{x})}{x_{n}}
+            \end{pmatrix}.
+        \end{equation*}
+    \end{thm}
+    \begin{proofing}
+        Since $f$ is differentiable at $\mathbf{x}$,
+        \begin{equation*}
+            \lim_{\mathbf{y} \to \mathbf{x}} \frac{\abs{f(\mathbf{y})-(f(\mathbf{x})+\inprod{\nabla f(\mathbf{x})}{\mathbf{y}-\mathbf{x}})}}{\norm{\mathbf{y}-\mathbf{x}}} = 0.
+        \end{equation*}
+        Choose $\mathbf{y} = \mathbf{x} + t\mathbf{e}_{i}$ where $t \in \mathbb{R}$ and let $g(t) = f(\mathbf{x}+t\mathbf{e}_{i})$. We have:
+        \begin{align*}
+            \lim_{t \to 0} \frac{\abs{f(\mathbf{x}+t\mathbf{e}_{i})-(f(\mathbf{x})+t\inprod{\nabla f(\mathbf{x})}{\mathbf{e}_{i}})}}{\abs{t}} &= 0,\\
+            \lim_{t \to 0} \frac{\abs{g(t)-(g(0)+\inprod{\nabla f(\mathbf{x})}{\mathbf{e}_{i}}(t-0))}}{\abs{t-0}} &= 0.
+        \end{align*}
+        Therefore, by definition, $g'(0) = \inprod{\nabla f(\mathbf{x})}{\mathbf{e}_{i}}$. Moreover,
+        \begin{equation*}
+            \inprod{\nabla f(\mathbf{x})}{\mathbf{e}_{i}} = \left.\odv*{g(t)}{t}\right|_{t=0} = \left.\odv*{f(\mathbf{x}+t\mathbf{e}_{i})}{t}\right|_{t=0} = \pdv*{f(\mathbf{x})}{x_{i}}.
+        \end{equation*}
+        Thus,
+        \begin{equation*}
+            \nabla f(\mathbf{x}) = \begin{pmatrix}
+                \pdv*{f(\mathbf{x})}{x_{1}}\\
+                \vdots\\
+                \pdv*{f(\mathbf{x})}{x_{n}}
+            \end{pmatrix}.
+        \end{equation*}
+    \end{proofing}
+    \begin{rem}
+        Fr\'echet differentiation is consistent with the standard differentiation in multi-variable calculus if $\mathbb{R}^{n}$ is with the standard inner product.
+    \end{rem}
+    \newpage
+
+    Based on the last theorem, we used $\mathbf{y} = \mathbf{x}+t\mathbf{e}_{i}$. Can we extend $\mathbf{e}_{i}$ to any vector?
+    \begin{thm}
+        Let $f:H \to \mathbb{R}$. Assume that $f$ is differentiable at $\mathbf{x} \in \mathbb{R}^{n}$. For any $\mathbf{u} \in \mathbb{R}^{n}$ that satisfies $\norm{\mathbf{u}} = 1$,
+        \begin{equation*}
+            \inprod{\nabla f(\mathbf{x})}{\mathbf{u}} = \left.\odv*{f(\mathbf{x} + t\mathbf{u})}{t}\right|_{t=0}.
+        \end{equation*}
+        $\inprod{\nabla f(\mathbf{x})}{\mathbf{u}}$ is the \textbf{directional derivative} along the $\mathbf{u}$ direction.
+    \end{thm}
+    \begin{proofing}
+        The proof is similar to the last theorem. Since $f$ is differentiable at $\mathbf{x}$,
+        \begin{equation*}
+            \lim_{\mathbf{y} \to \mathbf{x}} \frac{\abs{f(\mathbf{y})-(f(\mathbf{x})+\inprod{\nabla f(\mathbf{x})}{\mathbf{y}-\mathbf{x}})}}{\norm{\mathbf{y}-\mathbf{x}}} = 0.
+        \end{equation*}
+        Choose $\mathbf{y} = \mathbf{x} + t\mathbf{u}$ where $t \in \mathbb{R}$ and let $g(t) = f(\mathbf{x}+t\mathbf{u})$. We have:
+        \begin{align*}
+            \lim_{t \to 0} \frac{\abs{f(\mathbf{x}+t\mathbf{u})-(f(\mathbf{x})+t\inprod{\nabla f(\mathbf{x})}{\mathbf{u}})}}{\abs{t}} &= 0,\\
+            \lim_{t \to 0} \frac{\abs{g(t)-(g(0)+\inprod{\nabla f(\mathbf{x})}{\mathbf{u}}(t-0))}}{\abs{t-0}} &= 0.
+        \end{align*}
+        Therefore, by definition, $g'(0) = \inprod{\nabla f(\mathbf{x})}{\mathbf{u}}$. Moreover,
+        \begin{equation*}
+            \inprod{\nabla f(\mathbf{x})}{\mathbf{u}} = \left.\odv*{g(t)}{t}\right|_{t=0} = \left.\odv*{f(\mathbf{x}+t\mathbf{u})}{t}\right|_{t=0}.
+        \end{equation*}
+    \end{proofing}
+    Recall the Taylor expansion for functions $f:\mathbb{R} \to \mathbb{R}$:
+    \begin{equation*}
+        f(y) = f(x) + f'(x)(y-x) + o((y-x)^{k}), \qquad \text{for } y \in \mathbb{R}.
+    \end{equation*}
+    Similarly, we can extend it to $f: H \to \mathbb{R}$ by Fr\'echet differentiation.
+    \begin{thm}
+        Assume that $f: H \to \mathbb{R}$ is differentiable at $\mathbf{x} \in H$. The \textbf{Taylor expansion} of $f$ is:
+        \begin{equation*}
+            f(\mathbf{y}) = f(\mathbf{x}) + \inprod{\nabla f(\mathbf{x})}{\mathbf{y}-\mathbf{x}} + o(\snorm{\mathbf{y}-\mathbf{x}}), \qquad \text{for } \mathbf{y} \in H.
+        \end{equation*}
+    \end{thm}
+    \newpage
+
+    Up to this point, we have only considered the Hilbert space $H$. What about functions on Banach spaces, which may not have an inner product? Let $f: V \to \mathbb{R}$, where $V$ is a Banach space. Let $\mathbf{x} \in V$. We want to find $g: V \to \mathbb{R}$ such that:
+    \begin{enumerate}
+        \item It is affine.
+        \item $g(\mathbf{x}) = f(\mathbf{x})$.
+        \item The error is $o(\norm{\mathbf{y}-\mathbf{x}})$.
+    \end{enumerate}
+    We cannot use the inner product. Instead, we let $g(\mathbf{x}) = L\mathbf{x} + \mathbf{a}$ for all $\mathbf{x} \in V$, where $L: V \to \mathbb{R}$ is linear and $\mathbf{a} \in \mathbb{R}$. Therefore,
+    \begin{equation*}
+        g(\mathbf{y}) = L \mathbf{y} + \mathbf{a} = L \mathbf{y} - L \mathbf{x} + L \mathbf{x} + \mathbf{a} = L (\mathbf{y}-\mathbf{x}) + f(\mathbf{x}).
+    \end{equation*}
+    The error limit becomes:
+    \begin{equation*}
+        \lim_{\snorm{\mathbf{y}-\mathbf{x}} \to 0} \frac{\abs{f(\mathbf{y}) - (f(\mathbf{x})+L (\mathbf{y}-\mathbf{x}))}}{\snorm{\mathbf{y}-\mathbf{x}}}.
+    \end{equation*}
+    We now have a more general definition for differentiation.
+    \begin{defn}
+        Let $V$ be a Banach space. Let $f: V \to \mathbb{R}$ be a function and $\mathbf{x} \in V$. Then, $f$ is said to be \textbf{(Fr\'echet) differentiable} at $\mathbf{x}$ if there exists a linear function $L: V \to \mathbb{R}$ such that:
+        \begin{equation*}
+            \lim_{\snorm{\mathbf{y}-\mathbf{x}} \to 0} \frac{\abs{f(\mathbf{y}) - (f(\mathbf{x})+L (\mathbf{y}-\mathbf{x}))}}{\snorm{\mathbf{y}-\mathbf{x}}} = 0.
+        \end{equation*}
+        The linear function $L$ is called the \textbf{differentiation} of $f$ at $\mathbf{x}$, defined by: 
+        \begin{equation*}
+            D f(\mathbf{x}) = L.
+        \end{equation*}
+    \end{defn} 
+    We will continue discussing this differentiation in the next chapter. Read Appendix \ref{Case Study D: Linear Regression} (Linear Regression), \ref{Case Study E: Kernel Ridge Regression} (Kernel Ridge Regression), and \ref{Case Study F: Linear Classification} (Linear Classification) to see the case studies for Chapter \ref{Chapter 4: Linear Functions and Differentiation}.
+
 \appendix
 \renewcommand{\thechapter}{\Alph{chapter}}
 \chapter{Clustering, K-means, K-medians}
