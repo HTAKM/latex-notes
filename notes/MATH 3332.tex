@@ -2554,6 +2554,488 @@
     \end{eg}
     \newpage
     
+\section{Linear Approximation and Differentiation of Transformations}
+    Recall the definition of differentiation in the previous chapter. We can generalize it to linear transformations. Let $V, W$ be two Banach spaces with norms $\pnorm[V]{\cdot}$ and $\pnorm[W]{\cdot}$, respectively. Let $F: V \to W$ be a map (not necessarily linear). At $\mathbf{x} \in V$, the linear approximation passing through $(\mathbf{x}, F(\mathbf{x}))$ is given by:
+    \begin{equation*}
+        F(\mathbf{y}) \approx F(\mathbf{x}) + L(\mathbf{y}-\mathbf{x}), \qquad \text{for } \mathbf{y} \in V,
+    \end{equation*}
+    where $L \in \mathscr{L}(V, W)$. If the error is $o(\pnorm[V]{\mathbf{y}-\mathbf{x}})$, then we call $L$ the differentiation of $F$ at $\mathbf{x}$.
+    \begin{defn}
+        Let $V, W$ be Banach spaces. Let $F: V \to W$ be a map and $\mathbf{x} \in V$. Then, $F$ is said to be \textbf{(Fr\'echet) differentiable} at $\mathbf{x}$ if there exists $L \in \mathscr{L}(V, W)$ such that:
+        \begin{equation*}
+            \lim_{\pnorm[V]{\mathbf{y}-\mathbf{x}} \to 0} \frac{\pnorm[W]{F(\mathbf{y}) - (F(\mathbf{x}) + L(\mathbf{y}-\mathbf{x}))}}{\pnorm[V]{\mathbf{y}-\mathbf{x}}} = 0.
+        \end{equation*}
+        $L$ is called the \textbf{differentiation} of $F$ at $\mathbf{x}$, defined by:
+        \begin{equation*}
+            D F(\mathbf{x}) = L.
+        \end{equation*}
+    \end{defn}
+    \begin{rem}
+        $D F(\mathbf{x})$ is a function, not a vector in $W$.
+    \end{rem}
+    \begin{rem}
+    	We can substitute $\mathbf{y} = \mathbf{x} + \mathbf{h}$. Then the definition becomes:
+    	\begin{equation*}
+    		\lim_{\pnorm[V]{\mathbf{h}} \to 0} \frac{\pnorm[W]{F(\mathbf{x} + \mathbf{h}) - (F(\mathbf{x}) + L \mathbf{h})}}{\pnorm[V]{\mathbf{y}-\mathbf{x}}} = 0.
+    	\end{equation*}
+    	$L \mathbf{h}$ is called the \textbf{differential} of $F$ at $\mathbf{x}$, defined by:
+    	\begin{equation*}
+    		D F(\mathbf{x})(\mathbf{h}) = L \mathbf{h}.
+    	\end{equation*}
+    \end{rem}
+    \begin{rem}
+        Let $V, W_{1}, W_{2}$ be Banach spaces, and let $f_{1}: V \to W_{1}$, $f_{2}: V \to W_{2}$. Define:
+        \begin{equation*}
+            F(\mathbf{x}) = (f_{1}(\mathbf{x}), f_{2}(\mathbf{x})) \in W_{1} \times W_{2}, \qquad \text{for } \mathbf{x} \in V.
+        \end{equation*}
+        If $f_{1}$ and $f_{2}$ are differentiable, then:
+        \begin{equation*}
+            D F(\mathbf{x}) = (D f_{1}(\mathbf{x}), D f_{2}(\mathbf{x})).
+        \end{equation*}
+    \end{rem}
+    \begin{eg}
+        Let $\mathbf{A} \in \mathscr{L}(V, W)$. Then, for all $\mathbf{x} \in V$,
+        \begin{equation*}
+            \lim_{\pnorm[V]{\mathbf{y}-\mathbf{x}} \to 0} \frac{\pnorm[W]{\mathbf{A}\mathbf{y}-(\mathbf{A}\mathbf{x} + \mathbf{A}(\mathbf{y}-\mathbf{x}))}}{\pnorm[V]{\mathbf{y}-\mathbf{x}}} = 0.
+        \end{equation*}
+        Therefore, $D \mathbf{A}\mathbf{x} = \mathbf{A} \in \mathscr{L}(V, W)$.
+    \end{eg}
+    This example is related to the following theorem.
+    \begin{thm}
+        \label{Chapter 5 (Theorem) Differentiation of Linear Map}
+        Let $V, W$ be Banach spaces. Then, for any linear $F: V \to W$, 
+        \begin{equation*}
+            D F(\mathbf{x}) = F, \qquad \text{for } \mathbf{x} \in V.
+        \end{equation*}
+    \end{thm}
+    \begin{proofing}
+        If $F$ is linear,
+        \begin{equation*}
+            \lim_{\pnorm[V]{\mathbf{y}-\mathbf{x}} \to 0} \frac{\pnorm[W]{F(\mathbf{y}) - (F(\mathbf{x}) + F(\mathbf{y}-\mathbf{x}))}}{\pnorm[V]{\mathbf{y}-\mathbf{x}}} = \lim_{\pnorm[V]{\mathbf{y}-\mathbf{x}} \to 0} \frac{\pnorm[W]{F(\mathbf{y}) - (F(\mathbf{x}) + F(\mathbf{y})-F(\mathbf{x}))}}{\pnorm[V]{\mathbf{y}-\mathbf{x}}} = 0.
+        \end{equation*}
+    \end{proofing}
+    \newpage
+
+    \begin{eg}
+        Let $H$ be a Hilbert space and $F: H \to \mathbb{R}$. Then, the differentiation of $F$ at $\mathbf{x} \in H$ is:
+        \begin{equation*}
+            D F(\mathbf{x})(\mathbf{y}) = \inprod{\nabla F(\mathbf{x})}{\mathbf{y}}, \qquad \text{for } \mathbf{y} \in H.
+        \end{equation*}
+    \end{eg}
+    \begin{rem}
+        The gradient is defined only for $F: H \to \mathbb{R}$.
+    \end{rem}
+    \begin{eg}
+        Let $\mathbf{A} \in \mathscr{L}(H_{1}, H_{2})$, where $H_{1}, H_{2}$ are Hilbert spaces. Let $f: H_{1} \to \mathbb{R}$ be defined by:
+        \begin{equation*}
+            f(\mathbf{x}) = \frac{1}{2}\pnorm[H_{2}]{\mathbf{A}\mathbf{x}-\mathbf{b}}^{2}, \qquad \text{for } \mathbf{x} \in H_{1},
+        \end{equation*}
+        where $\mathbf{b} \in H_{2}$. How do we find $\nabla f(\mathbf{x})$?
+        \begin{align*}
+            f(\mathbf{y}) &= \frac{1}{2}\pnorm[H_{2}]{\mathbf{A}\mathbf{y}-\mathbf{b}}^{2}\\
+            &= \frac{1}{2}\pnorm[H_{2}]{(\mathbf{A}\mathbf{x}-\mathbf{b}) + (\mathbf{A}\mathbf{y} - \mathbf{A}\mathbf{x})}^{2}\\
+            &= \frac{1}{2}\pnorm[H_{2}]{\mathbf{A}\mathbf{x}-\mathbf{b}}^{2} + \inprod{\mathbf{A}\mathbf{x}-\mathbf{b}}{\mathbf{A}(\mathbf{y}-\mathbf{x})}_{H_{2}} + \frac{1}{2}\pnorm[H_{2}]{\mathbf{A}(\mathbf{y}-\mathbf{x})}^{2}\\
+            &= f(\mathbf{x}) + \inprod{\mathbf{A}^{*}(\mathbf{A}\mathbf{x}-\mathbf{b})}{\mathbf{y}-\mathbf{x}} + \frac{1}{2}\pnorm[H_{2}]{\mathbf{A}(\mathbf{y}-\mathbf{x})}^{2}.
+        \end{align*}
+        We may find that as $\pnorm[H_{1}]{\mathbf{y}-\mathbf{x}} \to 0$,
+        \begin{equation*}
+            \frac{\abs{f(\mathbf{y})-(f(\mathbf{x}) + \inprod{\mathbf{A}^{*}(\mathbf{A}\mathbf{x}-\mathbf{b})}{\mathbf{y}-\mathbf{x}})}}{\pnorm[H_{1}]{\mathbf{y}-\mathbf{x}}} = \frac{\frac{1}{2}\pnorm[H_{2}]{\mathbf{A}(\mathbf{y}-\mathbf{x})}^{2}}{\pnorm[H_{1}]{\mathbf{y}-\mathbf{x}}} \leq \frac{1}{2}\norm{\mathbf{A}}^{2} \frac{\pnorm[H_{1}]{\mathbf{y}-\mathbf{x}}^{2}}{\pnorm[H_{1}]{\mathbf{y}-\mathbf{x}}} \to 0.
+        \end{equation*}
+        Therefore, $\nabla f(\mathbf{x}) = \mathbf{A}^{*}(\mathbf{A}\mathbf{x}-\mathbf{b})$ and $D f(\mathbf{x})(\mathbf{y}) = \inprod{\mathbf{A}^{*}(\mathbf{A}\mathbf{x}-\mathbf{b})}{\mathbf{y}}$.
+    \end{eg}
+    It has some properties.
+    \begin{thm}
+        Let $V, W$ be Banach spaces. For any $F, G: V \to W$ and $\alpha, \beta \in \mathbb{R}$,
+        \begin{equation*}
+            D(\alpha F + \beta G)(\mathbf{x}) = \alpha D F(\mathbf{x}) + \beta D G(\mathbf{x}), \qquad \text{for } \mathbf{x} \in V.
+        \end{equation*}
+    \end{thm}
+    \begin{proofing}
+        By definition, for all $\mathbf{x} \in V$,
+        \begin{align*}
+            0 &\leq \lim_{\pnorm[V]{\mathbf{y}-\mathbf{x}} \to 0} \frac{\pnorm[W]{(\alpha F + \beta G)(\mathbf{y})-((\alpha F + \beta G)(\mathbf{x}) + (\alpha D F(\mathbf{x}) + \beta D G(\mathbf{x}))(\mathbf{y}-\mathbf{x}))}}{\pnorm[V]{\mathbf{y}-\mathbf{x}}}\\
+            &\leq \abs{\alpha} \lim_{\pnorm[V]{\mathbf{y}-\mathbf{x}} \to 0} \frac{\pnorm[W]{F(\mathbf{y})-(F(\mathbf{x}) + D F(\mathbf{x})(\mathbf{y}-\mathbf{x}))}}{\pnorm[V]{\mathbf{y}-\mathbf{x}}} + \abs{\beta} \lim_{\pnorm[V]{\mathbf{y}-\mathbf{x}} \to 0} \frac{\pnorm[W]{G(\mathbf{y})-(G(\mathbf{x}) + D G(\mathbf{x})(\mathbf{y}-\mathbf{x}))}}{\pnorm[V]{\mathbf{y}-\mathbf{x}}}\\
+            &\leq \abs{\alpha}(0) + \abs{\beta}(0) = 0.
+        \end{align*}
+        Therefore, $D(\alpha F + \beta G)(\mathbf{x}) = \alpha D F(\mathbf{x}) + \beta D G(\mathbf{x})$.
+    \end{proofing}
+    \newpage
+
+    The differentiation has an important property that is fundamental to many other properties.
+    \begin{thm}\named{Chain Rule}
+        Let $V_{1}, V_{2}, V_{3}$ be Banach spaces. Let $F: V_{1} \to V_{2}$ and $G: V_{2} \to V_{3}$. Then, the differentiation of $G \circ F: V_{1} \to V_{3}$ at $\mathbf{x} \in V_{1}$ is given by:
+        \begin{equation*}
+            D(G \circ F)(\mathbf{x}) = D G(F(\mathbf{x})) \circ D F(\mathbf{x}),
+        \end{equation*}
+        if $F$ is differentiable at $\mathbf{x}$ and $G$ is differentiable at $F(\mathbf{x})$.
+    \end{thm}
+    \begin{proofing}
+        Since $F$ is differentiable at $\mathbf{x}$ and $G$ is differentiable at $F(\mathbf{x})$, we have:
+        \begin{align*}
+            \tag{1}
+            \lim_{\pnorm[V_{1}]{\mathbf{y}-\mathbf{x}} \to 0} \frac{\pnorm[V_{2}]{F(\mathbf{y}) - (F(\mathbf{x}) + D F(\mathbf{x})(\mathbf{y}-\mathbf{x}))}}{\pnorm[V_{1}]{\mathbf{y}-\mathbf{x}}} &= 0,\\
+            \tag{2}
+            \lim_{\pnorm[V_{2}]{F(\mathbf{y})-F(\mathbf{x})} \to 0} \frac{\pnorm[V_{3}]{G(F(\mathbf{y})) - (G(F(\mathbf{x})) + DG(F(\mathbf{x}))(F(\mathbf{y})-F(\mathbf{x})))}}{\pnorm[V_{2}]{F(\mathbf{y})-F(\mathbf{x})}} &= 0.
+        \end{align*}
+        By (1), there exists $\delta>0$ such that if $\pnorm[V_{1}]{\mathbf{y}-\mathbf{x}} < \delta$,
+        \begin{equation*}
+            \pnorm[V_{2}]{F(\mathbf{y}) - (F(\mathbf{x}) + D F(\mathbf{x})(\mathbf{y}-\mathbf{x}))} < \pnorm[V_{1}]{\mathbf{y}-\mathbf{x}}.
+        \end{equation*}
+        Therefore, since $D F(\mathbf{x})$ is bounded, $\norm{D F(\mathbf{x})} = M < \infty$,
+        \begin{align*}
+            \pnorm[V_{2}]{F(\mathbf{y}) - F(\mathbf{x})} &= \pnorm[V_{2}]{F(\mathbf{y}) - F(\mathbf{x}) - D F(\mathbf{x})(\mathbf{y} - \mathbf{x}) + D F(\mathbf{x})(\mathbf{y} - \mathbf{x})}\\
+            &\leq \pnorm[V_{2}]{F(\mathbf{y}) - (F(\mathbf{x}) + D F(\mathbf{x})(\mathbf{y} - \mathbf{x}))} + \pnorm[V_{2}]{D F(\mathbf{x})(\mathbf{y} - \mathbf{x})}\\
+            &\leq \pnorm[V_{1}]{\mathbf{y}-\mathbf{x}} + M \pnorm[V_{1}]{\mathbf{y}-\mathbf{x}},\\
+            \frac{\pnorm[V_{2}]{F(\mathbf{y}) - F(\mathbf{x})}}{\pnorm[V_{1}]{\mathbf{y}-\mathbf{x}}} &\leq 1 + M.
+        \end{align*}
+        From this, we also have that $\pnorm[V_{1}]{\mathbf{y}-\mathbf{x}} \to 0$ implies that $\pnorm[V_{2}]{F(\mathbf{y}) - F(\mathbf{x})} \to 0$. Therefore, since $D G(F(\mathbf{x}))$ is bounded,
+        \begin{align*}
+            0 &\leq \lim_{\pnorm[V_{1}]{\mathbf{y}-\mathbf{x}} \to 0} \frac{\pnorm[V_{3}]{G(F(\mathbf{y})) - (G(F(\mathbf{x})) + DG(F(\mathbf{x}))(D F(\mathbf{x})(\mathbf{y}-\mathbf{x})))}}{\pnorm[V_{1}]{\mathbf{y}-\mathbf{x}}}\\
+            &\leq \lim_{\pnorm[V_{1}]{\mathbf{y}-\mathbf{x}} \to 0} \frac{\pnorm[V_{3}]{G(F(\mathbf{y})) - (G(F(\mathbf{x})) + DG(F(\mathbf{x}))(F(\mathbf{y})-F(\mathbf{x})))}}{\pnorm[V_{2}]{F(\mathbf{y})-F(\mathbf{x})}}\left(\frac{\pnorm[V_{2}]{F(\mathbf{y})-F(\mathbf{x})}}{\pnorm[V_{1}]{\mathbf{y}-\mathbf{x}}}\right)\\
+            & \qquad + \lim_{\pnorm[V_{1}]{\mathbf{y}-\mathbf{x}} \to 0} \frac{\pnorm[V_{3}]{DG(F(\mathbf{x}))(F(\mathbf{y})-F(\mathbf{x})) - DG(F(\mathbf{x}))(D F(\mathbf{x})(\mathbf{y}-\mathbf{x}))}}{\pnorm[V_{1}]{\mathbf{y}-\mathbf{x}}}\\
+            &\leq (1+M)\lim_{\pnorm[V_{2}]{F(\mathbf{y})-F(\mathbf{x})} \to 0} \frac{\pnorm[V_{3}]{G(F(\mathbf{y})) - (G(F(\mathbf{x})) + DG(F(\mathbf{x}))(F(\mathbf{y})-F(\mathbf{x})))}}{\pnorm[V_{2}]{F(\mathbf{y})-F(\mathbf{x})}}\\
+            & \qquad + \norm{D G(F(\mathbf{x}))} \lim_{\pnorm[V_{1}]{\mathbf{y}-\mathbf{x}} \to 0} \frac{\pnorm[V_{2}]{F(\mathbf{y}) - (F(\mathbf{x}) + D F(\mathbf{x})(\mathbf{y}-\mathbf{x}))}}{\pnorm[V_{1}]{\mathbf{y}-\mathbf{x}}} = 0.
+        \end{align*}
+        Therefore, by the Squeeze Theorem,
+        \begin{equation*}
+            \lim_{\pnorm[V_{1}]{\mathbf{y}-\mathbf{x}} \to 0} \frac{\pnorm[V_{3}]{G(F(\mathbf{y})) - (G(F(\mathbf{x})) + DG(F(\mathbf{x}))(D F(\mathbf{x})(\mathbf{y}-\mathbf{x})))}}{\pnorm[V_{1}]{\mathbf{y}-\mathbf{x}}} = 0,
+        \end{equation*}
+        and thus $D(G \circ F)(\mathbf{x}) = D G(F(\mathbf{x})) \circ D F(\mathbf{x})$.
+    \end{proofing}
+    \newpage
+
+    We can use the chain rule to derive many properties of differentiation.
+    \begin{thm}\named{Theorem \ref{Chapter 4 (Theorem) Properties of Frechet differentiation}}
+        Let $H$ be a Hilbert space. Let $F: H \to \mathbb{R}$ and $G: \mathbb{R} \to \mathbb{R}$. Then, the gradient of $G \circ F: H \to \mathbb{R}$ at $\mathbf{x} \in H$ is given by:
+        \begin{equation*}
+            \nabla(G \circ F)(\mathbf{x}) = G'(F(\mathbf{x})) \cdot \nabla F(\mathbf{x}),
+        \end{equation*}
+        if $F$ is differentiable at $\mathbf{x}$ and $G$ is differentiable at $F(\mathbf{x})$.
+    \end{thm}
+    \begin{proofing}[Alternative Proof.]
+        For $\mathbf{y} \in H$ and $\alpha \in \mathbb{R}$,
+        \begin{align*}
+            D G(F(\mathbf{x}))(\alpha) &= G'(F(\mathbf{x})) \alpha, & D F(\mathbf{x})(\mathbf{y}) &= \inprod{\nabla F(\mathbf{x})}{\mathbf{y}}.
+        \end{align*}
+        Therefore, by the chain rule,
+        \begin{align*}
+            D(G \circ F)(\mathbf{x})(\mathbf{y}) &= D G(F(\mathbf{x}))(D F(\mathbf{x})(\mathbf{y}))\\
+            &= G'(F(\mathbf{x})) \inprod{\nabla F(\mathbf{x})}{\mathbf{y}}\\
+            &= \inprod{G'(F(\mathbf{x})) \cdot \nabla F(\mathbf{x})}{\mathbf{y}}.
+        \end{align*}
+        Therefore, $\nabla(G \circ F)(\mathbf{x}) = G'(F(\mathbf{x})) \cdot \nabla F(\mathbf{x})$.
+    \end{proofing}
+    \begin{thm}
+        Let $H_{1}, H_{2}$ be Hilbert spaces. Let $F: H_{1} \to H_{2}$ and $G: H_{2} \to \mathbb{R}$. Then, the gradient of $G \circ F: H_{1} \to \mathbb{R}$ at $\mathbf{x} \in H_{1}$ is given by:
+        \begin{equation*}
+            \nabla(G \circ F)(\mathbf{x}) = (D F(\mathbf{x}))^{*} \nabla G(F(\mathbf{x})),
+        \end{equation*}
+        if $F$ is differentiable at $\mathbf{x}$ and $G$ is differentiable at $F(\mathbf{x})$.
+    \end{thm}
+    \begin{proofing}
+        For $\mathbf{y} \in H_{1}$, by the chain rule,
+        \begin{align*}
+            D(G \circ F)(\mathbf{x})(\mathbf{y}) &= D G(F(\mathbf{x}))(D F(\mathbf{x})(\mathbf{y}))\\
+            &= \inprod{\nabla G(F(\mathbf{x}))}{D F(\mathbf{x})(\mathbf{y})}\\
+            &= \inprod{(D F(\mathbf{x}))^{*} \nabla G(F(\mathbf{x}))}{\mathbf{y}}.
+        \end{align*}
+        Therefore, $\nabla(G \circ F)(\mathbf{x}) = (D F(\mathbf{x}))^{*} \nabla G(F(\mathbf{x}))$.
+    \end{proofing}
+    \begin{rem}
+        If $G$ is linear and bounded, then there exists $\mathbf{a} \in H_{2}$ such that:
+        \begin{align*}
+            G(\mathbf{x}) &= \inprod{\mathbf{a}}{\mathbf{x}}, & \nabla G(\mathbf{x}) &= \mathbf{a}, \qquad \text{for } \mathbf{x} \in H_{2}.
+        \end{align*}
+        Therefore, $\nabla(G \circ F)(\mathbf{x}) = (D F(\mathbf{x}))^{*}\mathbf{a}$.
+    \end{rem}
+    \begin{rem}
+        If $F$ is linear and bounded ($F \in \mathscr{L}(H_{1}, H_{2})$), then:
+        \begin{equation*}
+            D F(\mathbf{x}) = F, \qquad \text{for } \mathbf{x} \in H_{1}.
+        \end{equation*}
+        Therefore, $\nabla(G \circ F)(\mathbf{x}) = F^{*}\nabla G(F(\mathbf{x}))$.
+    \end{rem}
+    \newpage
+
+    We can also derive the product rule for differentiation.
+    \begin{thm}
+        Let $H$ be a Hilbert space, and let $f_{1}, f_{2}: H \to \mathbb{R}$. If $f_{1}$ and $f_{2}$ are differentiable at $\mathbf{x} \in H$, then:
+        \begin{equation*}
+            \nabla(f_{1}f_{2})(\mathbf{x}) = f_{2}(\mathbf{x}) \cdot \nabla f_{1}(\mathbf{x}) + f_{1}(\mathbf{x}) \cdot \nabla f_{2}(\mathbf{x}).
+        \end{equation*}
+    \end{thm}
+    \begin{proofing}
+        Define $F: H \to \mathbb{R}^{2}$ and $G: \mathbb{R}^{2} \to \mathbb{R}$ by:
+        \begin{align*}
+            F(\mathbf{x}) &= \begin{pmatrix}
+                f_{1}(\mathbf{x})\\
+                f_{2}(\mathbf{x})
+            \end{pmatrix}, \qquad \text{for } \mathbf{x} \in H, & G\left(\begin{pmatrix}
+                \alpha\\
+                \beta
+            \end{pmatrix}\right) = \alpha\beta, \qquad \text{for } \alpha, \beta \in \mathbb{R}.
+        \end{align*}
+        Then, $f(\mathbf{x}) = G(F(\mathbf{x})) = (G \circ F)(\mathbf{x})$. For $D G$, for any $\alpha, \beta \in \mathbb{R}$,
+        \begin{equation*}
+            D G\left(\begin{pmatrix}
+                \alpha\\
+                \beta
+            \end{pmatrix}\right)(\mathbf{y}) = \inprod{\nabla G\left(\begin{pmatrix}
+                \alpha\\
+                \beta
+            \end{pmatrix}\right)}{\mathbf{y}} = \inprod{\begin{pmatrix}
+                \beta\\
+                \alpha
+            \end{pmatrix}}{\mathbf{y}}.
+        \end{equation*}
+        For $D F$, since $f_{1}$ and $f_{2}$ are Fr\'echet differentiable at $\mathbf{x} \in H$, for any $\mathbf{z} \in H$,
+        \begin{align*}
+            f_{1}(\mathbf{z}) &= f_{1}(\mathbf{x}) + \inprod{\nabla f_{1}(\mathbf{x})}{\mathbf{z}-\mathbf{x}} + o(\norm{\mathbf{z}-\mathbf{x}}) = f_{1}(\mathbf{x}) + \inprod{\nabla f_{1}(\mathbf{x})}{\mathbf{z}-\mathbf{x}} + \varepsilon_{1},\\
+            f_{2}(\mathbf{z}) &= f_{2}(\mathbf{x}) + \inprod{\nabla f_{2}(\mathbf{x})}{\mathbf{z}-\mathbf{x}} + o(\norm{\mathbf{z}-\mathbf{x}}) = f_{2}(\mathbf{x}) + \inprod{\nabla f_{2}(\mathbf{x})}{\mathbf{z}-\mathbf{x}} + \varepsilon_{2},\\
+            F(\mathbf{z}) &= F(\mathbf{x}) + \begin{pmatrix}
+                \inprod{\nabla f_{1}(\mathbf{x})}{\mathbf{z}-\mathbf{x}}\\
+                \inprod{\nabla f_{2}(\mathbf{x})}{\mathbf{z}-\mathbf{x}}
+            \end{pmatrix} + \begin{pmatrix}
+                \varepsilon_{1}\\
+                \varepsilon_{2}
+            \end{pmatrix} = F(\mathbf{x}) + \begin{pmatrix}
+                \inprod{\nabla f_{1}(\mathbf{x})}{\mathbf{z}-\mathbf{x}}\\
+                \inprod{\nabla f_{2}(\mathbf{x})}{\mathbf{z}-\mathbf{x}}
+            \end{pmatrix} + \boldsymbol{\varepsilon}.
+        \end{align*}
+        Since $\pnorm[2]{\boldsymbol{\varepsilon}} \leq \pnorm[1]{\boldsymbol{\varepsilon}} = \abs{\varepsilon_{1}} + \abs{\varepsilon_{2}} \sim o(\norm{\mathbf{z}-\mathbf{x}})$, for $\mathbf{y} \in H$,
+        \begin{equation*}
+            D F(\mathbf{x})(\mathbf{y}) = \begin{pmatrix}
+                \inprod{\nabla f_{1}(\mathbf{x})}{\mathbf{y}}\\
+                \inprod{\nabla f_{2}(\mathbf{x})}{\mathbf{y}}
+            \end{pmatrix}.
+        \end{equation*}
+        By the chain rule, for $\mathbf{y} \in H$,
+        \begin{align*}
+            D(f_{1}f_{2})(\mathbf{x})(\mathbf{y}) &= D G(F(\mathbf{x})) \circ D F(\mathbf{x}) = \inprod{\begin{pmatrix}
+                f_{2}(\mathbf{x})\\
+                f_{1}(\mathbf{x})
+            \end{pmatrix}}{\begin{pmatrix}
+                \inprod{\nabla f_{1}(\mathbf{x})}{\mathbf{y}}\\
+                \inprod{\nabla f_{2}(\mathbf{x})}{\mathbf{y}}
+            \end{pmatrix}} = \inprod{f_{2}(\mathbf{x}) \cdot \nabla f_{1}(\mathbf{x}) + f_{1}(\mathbf{x}) \cdot \nabla f_{2}(\mathbf{x})}{\mathbf{y}},\\
+            \nabla(f_{1}f_{2})(\mathbf{x}) &= f_{2}(\mathbf{x}) \cdot \nabla f_{1}(\mathbf{x}) + f_{1}(\mathbf{x}) \cdot \nabla f_{2}(\mathbf{x}).
+        \end{align*}
+    \end{proofing}
+    \begin{thm}
+        \label{Chapter 5 (Theorem) Jacobian Matrix}
+        Let $F: \mathbb{R}^{n} \to \mathbb{R}^{m}$, where $\mathbb{R}^{n}$ and $\mathbb{R}^{m}$ are equipped with the standard inner product. Then:
+        \begin{equation*}
+            D F(\mathbf{x}) = \left(\pdv{(F(\mathbf{x}))_{i}}{x_{j}}\right)_{i=1,j=1}^{m,n} \in \mathbb{R}^{m \times n}.
+        \end{equation*}
+    \end{thm}
+    \begin{proofing}
+        Denote $(F(\mathbf{x}))_{i} = f_{i}(\mathbf{x}) \in \mathbb{R}$. By differentiability,
+        \begin{equation*}
+            f_{i}(\mathbf{y}) = f_{i}(\mathbf{x}) + \inprod{\nabla f_{i}(\mathbf{x})}{\mathbf{y}-\mathbf{x}} + \varepsilon_{i}, \qquad \text{for } \mathbf{y} \in \mathbb{R}^{n},
+        \end{equation*}
+        where $\abs{\varepsilon_{i}} = o(\pnorm[2]{\mathbf{y}-\mathbf{x}})$. Therefore,
+        \begin{equation*}
+            F(\mathbf{y}) = F(\mathbf{x}) + \begin{pmatrix}
+                \inprod{\nabla f_{1}(\mathbf{x})}{\mathbf{y}-\mathbf{x}}\\
+                \vdots\\
+                \inprod{\nabla f_{m}(\mathbf{x})}{\mathbf{y}-\mathbf{x}}
+            \end{pmatrix} + \begin{pmatrix}
+                \varepsilon_{1}\\
+                \vdots\\
+                \varepsilon_{m}
+            \end{pmatrix} = F(\mathbf{x}) + \begin{pmatrix}
+                \inprod{\nabla f_{1}(\mathbf{x})}{\mathbf{y}-\mathbf{x}}\\
+                \vdots\\
+                \inprod{\nabla f_{m}(\mathbf{x})}{\mathbf{y}-\mathbf{x}}
+            \end{pmatrix} + \boldsymbol{\varepsilon}.
+        \end{equation*}
+        Since $\pnorm[2]{\boldsymbol{\varepsilon}} \leq \pnorm[1]{\boldsymbol{\varepsilon}} \sim o(\pnorm[2]{\mathbf{y}-\mathbf{x}})$,
+        \begin{align*}
+            D F(\mathbf{x})(\mathbf{y}) &= \begin{pmatrix}
+                \inprod{\nabla f_{1}(\mathbf{x})}{\mathbf{y}}\\
+                \vdots\\
+                \inprod{\nabla f_{m}(\mathbf{x})}{\mathbf{y}}
+            \end{pmatrix} = \begin{pmatrix}
+                (\nabla f_{1}(\mathbf{x}))^{T}\mathbf{y}\\
+                \vdots\\
+                (\nabla f_{m}(\mathbf{x}))^{T}\mathbf{y}
+            \end{pmatrix} = \begin{pmatrix}
+                (\nabla f_{1}(\mathbf{x}))^{T}\\
+                \vdots\\
+                (\nabla f_{m}(\mathbf{x}))^{T}
+            \end{pmatrix}\mathbf{y}, & D F(\mathbf{x}) &= \begin{pmatrix}
+                (\nabla f_{1}(\mathbf{x}))^{T}\\
+                \vdots\\
+                (\nabla f_{m}(\mathbf{x}))^{T}
+            \end{pmatrix}.
+        \end{align*}
+    \end{proofing}
+    \begin{rem}
+        Differentiation is an extension of the Jacobian matrix.
+    \end{rem}
+    \newpage
+
+    Can we extend the multiplication property to Banach spaces?
+    \begin{thm}\named{Number Multiplication Rule}
+        Let $V$ be a Banach space, and let $f_{1}, f_{2}: V \to \mathbb{R}$. If $f_{1}$ and $f_{2}$ are differentiable at $\mathbf{x} \in V$, then:
+        \begin{equation*}
+            D(f_{1}f_{2})(\mathbf{x})(\mathbf{y}) = f_{2}(\mathbf{x}) \cdot D f_{1}(\mathbf{x})(\mathbf{y}) + f_{1}(\mathbf{x}) \cdot D f_{2}(\mathbf{x})(\mathbf{y}), \qquad \text{for } \mathbf{y} \in V.
+        \end{equation*}
+    \end{thm}
+    \begin{proofing}
+        Since $f_{1}$ and $f_{2}$ are differentiable at $\mathbf{x}$, for any $\mathbf{h} \in V$,
+        \begin{align*}
+            f_{1}(\mathbf{x}+\mathbf{h}) &= f_{1}(\mathbf{x}) + D f_{1}(\mathbf{x})(\mathbf{h}) + \varepsilon_{1},\\
+            f_{2}(\mathbf{x}+\mathbf{h}) &= f_{2}(\mathbf{x}) + D f_{2}(\mathbf{x})(\mathbf{h}) + \varepsilon_{2},
+        \end{align*}
+        where $\abs{\varepsilon_{i}} = o(\norm{\mathbf{h}})$. Expanding the product,
+        \begin{align*}
+            (f_{1}f_{2})(\mathbf{x}+\mathbf{h}) &= (f_{1}f_{2})(\mathbf{x}) + (f_{1}(\mathbf{x}) \cdot D f_{2}(\mathbf{x}) + f_{2}(\mathbf{x}) \cdot D f_{1}(\mathbf{x}))(\mathbf{h}) + (D f_{1}(\mathbf{x}) \cdot D f_{2}(\mathbf{x}))(\mathbf{h})\\
+            & \qquad + \varepsilon_{1}(f_{2}(\mathbf{x}) + D f_{2}(\mathbf{x})(\mathbf{h})) + \varepsilon_{2}(f_{1}(\mathbf{x}) + D f_{1}(\mathbf{x})(\mathbf{h})) + \varepsilon_{1}\varepsilon_{2}.
+        \end{align*}
+        Let $R(\mathbf{h}) = (D f_{1}(\mathbf{x}) D f_{2}(\mathbf{x}))(\mathbf{h}) + \varepsilon_{1}(f_{2}(\mathbf{x}) + D f_{2}(\mathbf{x})(\mathbf{h})) + \varepsilon_{2}(f_{1}(\mathbf{x}) + D f_{1}(\mathbf{x})(\mathbf{h})) + \varepsilon_{1}\varepsilon_{2}$. As $\norm{\mathbf{h}} \to 0$,
+        \begin{align*}
+            \frac{\abs{(D f_{1}(\mathbf{x}) D f_{2}(\mathbf{x}))(\mathbf{h})}}{\norm{\mathbf{h}}} &\leq \frac{\norm{D f_{1}(\mathbf{x})}\norm{D f_{2}(\mathbf{x})}\norm{\mathbf{h}}^{2}}{\norm{\mathbf{h}}} = \norm{D f_{1}(\mathbf{x})}\norm{D f_{2}(\mathbf{x})}\norm{\mathbf{h}} \to 0,\\
+            \tag{$\abs{\varepsilon_{1}} = o(\norm{\mathbf{h}})$}
+            \frac{\abs{\varepsilon_{1}(f_{2}(\mathbf{x}) + D f_{2}(\mathbf{x})(\mathbf{h}))}}{\norm{\mathbf{h}}} &\leq \frac{\abs{\varepsilon_{1}}}{\norm{\mathbf{h}}}(\abs{f_{2}(\mathbf{x})}+\norm{D f_{2}(\mathbf{x})}\norm{\mathbf{h}}) \to 0,\\
+            \tag{$\abs{\varepsilon_{2}} = o(\norm{\mathbf{h}})$}
+            \frac{\abs{\varepsilon_{2}(f_{1}(\mathbf{x}) + D f_{1}(\mathbf{x})(\mathbf{h}))}}{\norm{\mathbf{h}}} &\leq \frac{\abs{\varepsilon_{2}}}{\norm{\mathbf{h}}}(\abs{f_{1}(\mathbf{x})}+\norm{D f_{1}(\mathbf{x})}\norm{\mathbf{h}}) \to 0,\\
+            \tag{$\abs{\varepsilon_{1}\varepsilon_{2}} = o(\norm{\mathbf{h}}^{2})$}
+            \abs{\varepsilon_{1}\varepsilon_{2}} &= o(\norm{\mathbf{h}}).
+        \end{align*}
+        Therefore, $\abs{R(\mathbf{h})} = o(\norm{\mathbf{h}})$. We have:
+        \begin{equation*}
+            (f_{1}f_{2})(\mathbf{x}+\mathbf{h}) = (f_{1}f_{2})(\mathbf{x}) + (f_{1}(\mathbf{x}) \cdot D f_{2}(\mathbf{x}) + f_{2}(\mathbf{x}) \cdot D f_{1}(\mathbf{x}))(\mathbf{h}) + o(\norm{\mathbf{h}}).
+        \end{equation*}
+        By definition, $D(f_{1}f_{2})(\mathbf{x})(\mathbf{y}) = f_{2}(\mathbf{x}) \cdot D f_{1}(\mathbf{x})(\mathbf{y}) + f_{1}(\mathbf{x}) \cdot D f_{2}(\mathbf{x})(\mathbf{y})$.
+    \end{proofing}
+    \newpage
+
+    \begin{thm}\named{Scalar Multiplication Rule}
+        Let $V$ be a Banach space. Let $f: V \to \mathbb{R}$ and $F: V \to V$. If $f$ and $F$ are differentiable at $\mathbf{x} \in V$, then:
+        \begin{equation*}
+            D(fF)(\mathbf{x})(\mathbf{y}) = f(\mathbf{x}) \cdot D F(\mathbf{x})(\mathbf{y}) + D f(\mathbf{x})(\mathbf{y}) F(\mathbf{x}), \qquad \text{for } \mathbf{y} \in V.
+        \end{equation*}
+    \end{thm}
+    \begin{proofing}
+        Define $G: V \to \mathbb{R} \times V$ and $\widetilde{F}: \mathbb{R} \times V \to V$ by:
+        \begin{align*}
+            G(\mathbf{x}) &= (f(\mathbf{x}), F(\mathbf{x})), & \text{for } & \mathbf{x} \in V,\\
+            \widetilde{F}(\lambda, \mathbf{v}) &= \lambda\mathbf{v}, & \text{for } & \lambda \in \mathbb{R}, \mathbf{v} \in V,\\
+            fF &= \widetilde{F} \circ G.
+        \end{align*}
+        We check the differentiability of $\widetilde{F}$. For $h \in \mathbb{R}$ and $\mathbf{k} \in V$, since $\widetilde{F}$ is bilinear,
+        \begin{align*}
+            \widetilde{F}(\lambda + h, \mathbf{v} + \mathbf{k}) &= \lambda\mathbf{v} + \lambda\mathbf{k} + h\mathbf{v} + h\mathbf{k}\\
+            &= \widetilde{F}(\lambda, \mathbf{v}) + \lambda\mathbf{k} + h\mathbf{v}.
+        \end{align*}
+        We have that $\pnorm[V]{h\mathbf{v}} = \abs{h}\pnorm[V]{\mathbf{v}}$ and as $(h, \mathbf{v}) \to (0, \mathbf{0})$,
+        \begin{align*}
+            &\frac{\abs{h}\pnorm[V]{\mathbf{v}}}{\sqrt{\abs{h}^{2}+\pnorm[V]{\mathbf{v}}^{2}}} \leq \frac{\abs{h}\pnorm[V]{\mathbf{v}}}{\abs{h}} = \pnorm[V]{\mathbf{v}} \to 0,\\
+            &\frac{\abs{h}\pnorm[V]{\mathbf{v}}}{\sqrt{\abs{h}^{2}+\pnorm[V]{\mathbf{v}}^{2}}} \leq \frac{\abs{h}\pnorm[V]{\mathbf{v}}}{\pnorm[V]{\mathbf{v}}} = \abs{h} \to 0,\\
+            \implies& \frac{\abs{h}\pnorm[V]{\mathbf{v}}}{\sqrt{\abs{h}^{2}+\pnorm[V]{\mathbf{v}}^{2}}} \leq \min(\abs{h}, \pnorm[V]{\mathbf{v}}) \to 0.
+        \end{align*}
+        Thus, $\pnorm[V]{h\mathbf{v}} = o(\sqrt{h^{2} + \pnorm[V]{\mathbf{v}}^{2}})$ and:
+        \begin{equation*}
+            D \widetilde{F}(\lambda, \mathbf{v})(h,\mathbf{k}) = \lambda\mathbf{k} + h\mathbf{v}.
+        \end{equation*}
+        By the chain rule,
+        \begin{align*}
+            D(fF)(\mathbf{x})(\mathbf{y}) &= D \widetilde{F}(G(\mathbf{x}))(D G(\mathbf{x})(\mathbf{y}))\\
+            &= D \widetilde{F}(f(\mathbf{x}), F(\mathbf{x}))(D f(\mathbf{x})(\mathbf{y}), D F(\mathbf{x})(\mathbf{y}))\\
+            &= f(\mathbf{x}) \cdot D F(\mathbf{x})(\mathbf{y}) + D f(\mathbf{x})(\mathbf{y}) F(\mathbf{x}).
+        \end{align*}
+    \end{proofing}
+    \begin{rem}
+        You can also prove the number multiplication rule with a similar proof.
+    \end{rem}
+    \newpage
+
+    \begin{thm}\named{Matrix Multiplication Rule}
+        Let $V$ be a Banach space. Let $F: V \to \mathbb{R}^{m \times n}$ and $G: V \to \mathbb{R}^{n \times p}$. If $F$ and $G$ are differentiable at $\mathbf{x} \in V$, then:
+        \begin{equation*}
+            D(FG)(\mathbf{x})(\mathbf{y}) = D F(\mathbf{x})(\mathbf{y}) G(\mathbf{x}) + F(\mathbf{x}) D G(\mathbf{x})(\mathbf{y}), \qquad \text{for } \mathbf{y} \in V.
+        \end{equation*}
+    \end{thm}
+    \begin{proofing}
+        Define $T: V \to \mathbb{R}^{m \times n} \times \mathbb{R}^{n \times p}$ and $M: \mathbb{R}^{m \times n} \times \mathbb{R}^{n \times p} \to \mathbb{R}^{m \times p}$ by:
+        \begin{align*}
+            T(\mathbf{x}) &= (F(\mathbf{x}), G(\mathbf{x})), & \text{for } & \mathbf{x} \in V,\\
+            M(\mathbf{A}, \mathbf{B}) &= \mathbf{A}\mathbf{B}, & \text{for } & \mathbf{A} \in \mathbb{R}^{m \times n}, \mathbf{B} \in \mathbb{R}^{n \times p},\\
+            FG &= M \circ T.
+        \end{align*}
+        We check the differentiability of $M$. For $\mathbf{H} \in \mathbb{R}^{m \times n}$ and $\mathbf{K} \in \mathbb{R}^{n \times p}$, since $M$ is bilinear,
+        \begin{align*}
+            M(\mathbf{A}+\mathbf{H},\mathbf{B}+\mathbf{K}) &= \mathbf{A}\mathbf{B} + \mathbf{H}\mathbf{B} + \mathbf{A}\mathbf{K} + \mathbf{H}\mathbf{K}\\
+            &= M(\mathbf{A}, \mathbf{B}) + \mathbf{H}\mathbf{B} + \mathbf{A}\mathbf{K} + \mathbf{H}\mathbf{K}.
+        \end{align*}
+        We have that $\norm{\mathbf{H}\mathbf{K}} \leq \norm{\mathbf{H}}\norm{\mathbf{K}}$ and as $(\mathbf{H}, \mathbf{K}) \to (\mathbf{O}, \mathbf{O})$,
+        \begin{align*}
+            &\frac{\norm{\mathbf{H}}\norm{\mathbf{K}}}{\sqrt{\norm{\mathbf{H}}^{2}+\norm{\mathbf{K}}^{2}}} \leq \frac{\norm{\mathbf{H}}\norm{\mathbf{K}}}{\norm{\mathbf{H}}} = \norm{\mathbf{K}} \to 0,\\
+            &\frac{\norm{\mathbf{H}}\norm{\mathbf{K}}}{\sqrt{\norm{\mathbf{H}}^{2}+\norm{\mathbf{K}}^{2}}} \leq \frac{\norm{\mathbf{H}}\norm{\mathbf{K}}}{\norm{\mathbf{K}}} = \norm{\mathbf{H}} \to 0,\\
+            \implies & \frac{\norm{\mathbf{H}}\norm{\mathbf{K}}}{\sqrt{\norm{\mathbf{H}}^{2}+\norm{\mathbf{K}}^{2}}} \leq \min(\norm{\mathbf{H}}, \norm{\mathbf{K}}) \to 0.
+        \end{align*}
+        Thus, $\norm{\mathbf{H}\mathbf{K}} = o(\sqrt{\norm{\mathbf{H}}^{2}+\norm{\mathbf{K}}^{2}})$ and:
+        \begin{equation*}
+            D M(\mathbf{A}, \mathbf{B})(\mathbf{H}, \mathbf{K}) = \mathbf{H}\mathbf{B} + \mathbf{A}\mathbf{K}.
+        \end{equation*}
+        By the chain rule,
+        \begin{align*}
+            D(FG)(\mathbf{x})(\mathbf{y}) &= D M(T(\mathbf{x}))(D T(\mathbf{x})(\mathbf{y}))\\
+            &= D M(F(\mathbf{x}), G(\mathbf{x}))(D F(\mathbf{x})(\mathbf{y}), D G(\mathbf{x})(\mathbf{y}))\\
+            &= D F(\mathbf{x})(\mathbf{y}) G(\mathbf{x}) + F(\mathbf{x}) D G(\mathbf{x})(\mathbf{y}).
+        \end{align*}
+    \end{proofing}
+    \begin{rem}
+        The matrix multiplication rule can also be applied to $\mathbb{R}$ and $\mathbb{R}^{n}$.
+    \end{rem}
+    \newpage
+
+    \begin{thm}
+        Let $H_{1},H_{2}$ be Hilbert spaces. Let $F, G: H_{1} \to H_{2}$ and define:
+        \begin{equation*}
+            \inprod{F}{G}(\mathbf{x}) = \inprod{F(\mathbf{x})}{G(\mathbf{x})}_{H_{2}}, \qquad \text{for } \mathbf{x} \in H_{1}.
+        \end{equation*}
+        If $F$ and $G$ are differentiable at $\mathbf{x} \in H_{1}$, then:
+        \begin{equation*}
+            \nabla \inprod{F}{G}(\mathbf{x})(\mathbf{y}) = (D F(\mathbf{x}))^{*} G(\mathbf{x}) + (D G(\mathbf{x}))^{*} F(\mathbf{x}).
+        \end{equation*}
+    \end{thm}
+    \begin{proofing}
+        Define $T: H_{1} \to H_{2} \times H_{2}$ and $M: H_{2} \times H_{2} \to \mathbb{R}$ by:
+        \begin{align*}
+            T(\mathbf{x}) &= (F(\mathbf{x}), G(\mathbf{x})), & \text{for } & \mathbf{x} \in H_{1},\\
+            M(\mathbf{u}, \mathbf{v}) &= \inprod{\mathbf{u}}{\mathbf{v}}_{H_{2}}, & \text{for } & \mathbf{u}, \mathbf{v} \in H_{2},\\
+            \inprod{F}{G} &= M \circ T.
+        \end{align*}
+        We check the differentiability of $M$. For $\mathbf{h}, \mathbf{k} \in H_{2}$, since $M$ is bilinear,
+        \begin{equation*}
+            M(\mathbf{u}+\mathbf{h}, \mathbf{v}+\mathbf{k}) = M(\mathbf{u}, \mathbf{v}) + \inprod{\mathbf{u}}{\mathbf{k}}_{H_{2}} + \inprod{\mathbf{h}}{\mathbf{v}}_{H_{2}} + \inprod{\mathbf{h}}{\mathbf{k}}_{H_{2}}.
+        \end{equation*}
+        By the Cauchy-Schwarz inequality, $\abs{\inprod{\mathbf{h}}{\mathbf{k}}}_{H_{2}} \leq \pnorm[H_{2}]{\mathbf{h}}\pnorm[H_{2}]{\mathbf{k}}$. As $(\mathbf{h}, \mathbf{k}) \to (\mathbf{0}, \mathbf{0})$,
+        \begin{align*}
+            &\frac{\pnorm[H_{2}]{\mathbf{h}}\pnorm[H_{2}]{\mathbf{k}}}{\sqrt{\pnorm[H_{2}]{\mathbf{h}}^{2}+\pnorm[H_{2}]{\mathbf{k}}^{2}}} \leq \frac{\pnorm[H_{2}]{\mathbf{h}}\pnorm[H_{2}]{\mathbf{k}}}{\pnorm[H_{2}]{\mathbf{h}}} = \pnorm[H_{2}]{\mathbf{k}} \to 0,\\
+            &\frac{\pnorm[H_{2}]{\mathbf{h}}\pnorm[H_{2}]{\mathbf{k}}}{\sqrt{\pnorm[H_{2}]{\mathbf{h}}^{2}+\pnorm[H_{2}]{\mathbf{k}}^{2}}} \leq \pnorm[H_{2}]{\mathbf{h}} \to 0,\\
+            \implies & \frac{\pnorm[H_{2}]{\mathbf{h}}\pnorm[H_{2}]{\mathbf{k}}}{\sqrt{\pnorm[H_{2}]{\mathbf{h}}^{2}+\pnorm[H_{2}]{\mathbf{k}}}} \leq \min(\pnorm[H_{2}]{\mathbf{h}}, \pnorm[H_{2}]{\mathbf{k}}) \to 0.
+        \end{align*}
+        As $(\mathbf{h}, \mathbf{k}) \to (\mathbf{0}, \mathbf{0})$, $\min(\pnorm[H_{2}]{\mathbf{h}}, \pnorm[H_{2}]{\mathbf{k}}) \to 0$. Thus, $\abs{\inprod{\mathbf{h}}{\mathbf{k}}}_{H_{2}} = o(\sqrt{\pnorm[H_{2}]{\mathbf{h}}^{2}+\pnorm[H_{2}]{\mathbf{k}}})$ and:
+        \begin{equation*}
+            D M(\mathbf{u}, \mathbf{v})(\mathbf{h}, \mathbf{k}) = \inprod{\mathbf{u}}{\mathbf{k}}_{H_{2}} + \inprod{\mathbf{h}}{\mathbf{v}}_{H_{2}}.
+        \end{equation*}
+        By the chain rule,
+        \begin{align*}
+            D \inprod{F}{G}(\mathbf{x})(\mathbf{y}) &=  D M(F(\mathbf{x}), G(\mathbf{x}))(D F(\mathbf{x})(\mathbf{y}), D G(\mathbf{x})(\mathbf{y}))\\
+            &= \inprod{F(\mathbf{x})}{D G(\mathbf{x})(\mathbf{y})}_{H_{2}} + \inprod{D F(\mathbf{x})(\mathbf{y})}{G(\mathbf{x})}_{H_{2}}\\
+            &= \inprod{(D G(\mathbf{x}))^{*} F(\mathbf{x}) + (D F(\mathbf{x}))^{*} G(\mathbf{x})}{\mathbf{y}}_{H_{1}}.
+        \end{align*}
+        Therefore, $\nabla \inprod{F}{G}(\mathbf{x}) = (D G(\mathbf{x}))^{*} F(\mathbf{x}) + (D F(\mathbf{x}))^{*} G(\mathbf{x})$.
+    \end{proofing}
+    \begin{rem}
+        There are other bilinear mappings that satisfy a similar differentiation rule, e.g., convolution.
+    \end{rem}
+    \newpage
+    
 \appendix
 \renewcommand{\thechapter}{\Alph{chapter}}
 \chapter{Clustering, K-means, K-medians}
