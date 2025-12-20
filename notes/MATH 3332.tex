@@ -3414,4 +3414,159 @@
             \end{equation*}
         \end{itemize}
     \end{proofing}
+
+\chapter{Gradient Descent}
+    \label{Case Study H: Gradient Descent}
+    This case study assumes that you have already read Chapter \ref{Chapter 4: Linear Functions and Differentiation} and Appendix \ref{Case Study G: Solvability and Optimality}.
+
+    Suppose we have a function $f: H \to \mathbb{R}$. We aim to find:
+    \begin{equation*}
+        \mathbf{x}^{*} = \argmin_{\mathbf{x} \in H} f(\mathbf{x}),
+    \end{equation*}
+    where $H$ is a Hilbert space. How can we find the solution numerically? Assume we have an estimate $\mathbf{x}^{(k)}$ of $\mathbf{x}^{*}$. How can we find a better estimate $\mathbf{x}^{(k+1)}$? We can use an affine approximation:
+    \begin{equation*}
+        f(\mathbf{x}) \approx f(\mathbf{x}^{(k)}) + \inprod{\nabla f(\mathbf{x}^{(k)})}{\mathbf{x}-\mathbf{x}^{(k)}}.
+    \end{equation*}
+    This approximation is accurate only if $\snorm{\mathbf{x}-\mathbf{x}^{(k)}}$ is small. Once $\mathbf{x}^{(k)} = \mathbf{x}^{*}$, we have $f(\mathbf{x}) \approx f(\mathbf{x}^{*})$. Instead of finding $\mathbf{x}^{(k+1)}$ globally, we can focus locally:
+    \begin{equation*}
+        \mathbf{x}^{(k+1)} = \argmin_{\mathbf{x} \in H} \left(f(\mathbf{x}^{(k)}) + \inprod{\nabla f(\mathbf{x}^{(k)})}{\mathbf{x}-\mathbf{x}^{(k)}}\right) \text{ such that } \snorm{\mathbf{x}-\mathbf{x}^{(k)}} \leq \alpha_{k}\snorm{\nabla f(\mathbf{x}^{(k)})},
+    \end{equation*}
+    where $\alpha_{k} > 0$ is a small number. The idea is that $\snorm{\nabla f(\mathbf{x}^{(k)})}$ will slowly approach $0$ as $\mathbf{x}^{(k)}$ gets closer to $\mathbf{x}^{*}$, requiring smaller steps to converge gradually with a sufficiently small $\alpha_{k}$. This is equivalent to solving:
+    \begin{equation*}
+        \min_{\mathbf{x} \in H} \inprod{\nabla f(\mathbf{x}^{(k)})}{\mathbf{x}-\mathbf{x}^{(k)}} \text{ such that } \snorm{\mathbf{x}-\mathbf{x}^{(k)}} \leq \alpha_{k}\snorm{\nabla f(\mathbf{x}^{(k)})}.
+    \end{equation*}
+    By the Cauchy-Schwarz inequality,
+    \begin{equation*}
+        \inprod{\nabla f(\mathbf{x}^{(k)})}{\mathbf{x}-\mathbf{x}^{(k)}} \geq -\snorm{\nabla f(\mathbf{x}^{(k)})}\snorm{\mathbf{x}-\mathbf{x}^{(k)}} \geq -\alpha_{k}\snorm{\nabla f(\mathbf{x}^{(k)})}^{2}.
+    \end{equation*}
+    To attain equality, we require:
+    \begin{equation*}
+        \mathbf{x} - \mathbf{x}^{(k)} = -\alpha_{k} \nabla f(\mathbf{x}^{(k)}).
+    \end{equation*}
+    Therefore, we can rewrite the formula as:
+    \begin{equation*}
+        \mathbf{x}^{(k+1)} = \mathbf{x}^{(k)} - \alpha_{k} \nabla f(\mathbf{x}^{(k)}).
+    \end{equation*}
+    We have the following algorithm:
+    \begin{defn}
+        The \textbf{Gradient Descent algorithm} is a method to minimize a function $f: H \to \mathbb{R}$. The steps of the algorithm are as follows:
+        \begin{itemize}
+            \item[0:] Initialize $\mathbf{x}^{(0)}$.
+            \item[1:] For $k = 0, 1, \cdots$,
+            \begin{enumerate}
+                \item Choose the step size $\alpha_{k}$.
+                \item Update $\mathbf{x}^{(k+1)}$ by:
+                \begin{equation*}
+                    \mathbf{x}^{(k+1)} = \mathbf{x}^{(k)} - \alpha_{k} \nabla f(\mathbf{x}^{(k)}).
+                \end{equation*}
+            \end{enumerate}
+            \item[] Repeat until convergence is achieved.
+        \end{itemize}
+    \end{defn}
+    If it converges, then $\nabla f(\mathbf{x}^{(\infty)}) = \mathbf{0}$. From Appendix \ref{Case Study G: Solvability and Optimality},
+    \begin{enumerate}
+        \item If $f$ is convex, then $\mathbf{x}^{(\infty)}$ is the solution.
+        \item If $f$ is non-convex, then $\mathbf{x}^{(\infty)}$ may not be a global minimizer.
+    \end{enumerate}
+    \newpage
+
+    We can focus on a prominent example: optimization in least squares:
+    \begin{equation*}
+        \tag{LS}
+        \min_{\mathbf{x} \in \mathbb{R}^{n}} \frac{1}{2}\pnorm[2]{\mathbf{A}\mathbf{x}-\mathbf{b}}^{2},
+    \end{equation*}
+    where $\mathbf{A} \in \mathbb{R}^{m \times n}$ and $\mathbf{b} \in \mathbb{R}^{m}$ are given. This problem often arises in regressions (Appendix \ref{Case Study D: Linear Regression}), such as:
+    \begin{enumerate}
+        \item Linear regression: For given $\mathbf{X} \in \mathbb{R}^{N \times (n+1)}$ and $\mathbf{y} \in \mathbb{R}^{N}$,
+        \begin{equation*}
+            \min_{\boldsymbol{\beta} \in \mathbb{R}^{n+1}} \pnorm[2]{\mathbf{X}\boldsymbol{\beta} - \mathbf{y}}^{2}.
+        \end{equation*}
+        \item Ridge regression: For given $\mathbf{X} \in \mathbb{R}^{N \times (n+1)}$, $\mathbf{y} \in \mathbb{R}^{N}$, and $\lambda > 0$,
+        \begin{equation*}
+            \min_{\boldsymbol{\beta} = \begin{pmatrix}
+                    \mathbf{a}\\
+                    b
+                \end{pmatrix} \in \mathbb{R}^{n+1}} \left(\pnorm[2]{\mathbf{X}\boldsymbol{\beta} - \mathbf{y}}^{2} + \lambda \pnorm[2]{\mathbf{a}}^{2}\right).
+        \end{equation*}
+    \end{enumerate}
+    Let $f(\mathbf{x}) = \frac{1}{2}\pnorm[2]{\mathbf{A}\mathbf{x} - \mathbf{b}}^{2}$ for $\mathbf{x} \in \mathbb{R}^{n}$. For any $\mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}$ and $\alpha \in [0,1]$,
+    \begin{align*}
+        f(\alpha \mathbf{x} + (1-\alpha) \mathbf{y}) &= \frac{1}{2}\pnorm[2]{\mathbf{A}(\alpha \mathbf{x} + (1-\alpha) \mathbf{y}) - \mathbf{b}}^{2}\\
+        &= \frac{1}{2}\pnorm[2]{\alpha(\mathbf{A}\mathbf{x} - \mathbf{b}) + (1-\alpha)(\mathbf{A}\mathbf{y} - \mathbf{b})}^{2}\\
+        &\leq \frac{\alpha}{2}\pnorm[2]{\mathbf{A}\mathbf{x} - \mathbf{b}}^{2} + \frac{1-\alpha}{2}\pnorm[2]{\mathbf{A}\mathbf{y} - \mathbf{b}}^{2} = \alpha f(\mathbf{x}) + (1-\alpha) f(\mathbf{y}).
+    \end{align*}
+    Therefore, $f$ is convex. Before proving that $f$ is differentiable, we must first prove the following theorem.
+    \begin{thm}
+        Let $g: \mathbb{R}^{m} \to \mathbb{R}$ be a differentiable function, and let $\mathbf{A} \in \mathbb{R}^{m \times n}$. Define $h: \mathbb{R}^{n} \to \mathbb{R}$ by:
+        \begin{equation*}
+            h(\mathbf{x}) = g(\mathbf{A}\mathbf{x}), \qquad \text{for } \mathbf{x} \in \mathbb{R}^{n}.
+        \end{equation*}
+        Then, for any $\mathbf{x} \in \mathbb{R}^{n}$:
+        \begin{equation*}
+            \nabla h(\mathbf{x}) = \mathbf{A}^{T}\nabla g(\mathbf{A}\mathbf{x}).
+        \end{equation*}
+    \end{thm}
+    \begin{proofing}
+        We have $\pnorm[2]{\mathbf{A}\mathbf{y} - \mathbf{A}\mathbf{x}} \leq \pnorm[2]{\mathbf{A}}\pnorm[2]{\mathbf{y} - \mathbf{x}}$. As $\pnorm[2]{\mathbf{y}-\mathbf{x}} \to 0$, by the Squeeze Theorem, $\pnorm[2]{\mathbf{A}\mathbf{y} - \mathbf{A}\mathbf{x}} \to 0$. Therefore,
+        \begin{align*}
+            0 &\leq \lim_{\pnorm[2]{\mathbf{y} - \mathbf{x}} \to 0} \frac{\abs{h(\mathbf{y}) - (h(\mathbf{x}) + \inprod{\mathbf{A}^{T}\nabla g(\mathbf{A}\mathbf{x})}{\mathbf{y}-\mathbf{x}})}}{\pnorm[2]{\mathbf{y} - \mathbf{x}}}\\
+            &\leq \lim_{\pnorm[2]{\mathbf{A}\mathbf{y} - \mathbf{A}\mathbf{x}} \to 0} \frac{\abs{g(\mathbf{A}\mathbf{y}) - (g(\mathbf{A}\mathbf{x}) + \inprod{\mathbf{A}^{T}\nabla g(\mathbf{A}\mathbf{x})}{\mathbf{y}-\mathbf{x}})}}{\pnorm[2]{\mathbf{y} - \mathbf{x}}}\\
+            &\leq \pnorm[2]{\mathbf{A}}\lim_{\pnorm[2]{\mathbf{A}\mathbf{y} - \mathbf{A}\mathbf{x}} \to 0} \frac{\abs{g(\mathbf{A}\mathbf{y}) - (g(\mathbf{A}\mathbf{x}) + \inprod{\mathbf{A}^{T}\nabla g(\mathbf{A}\mathbf{x})}{\mathbf{y}-\mathbf{x}})}}{\pnorm[2]{\mathbf{A}\mathbf{y} - \mathbf{A}\mathbf{x}}} = 0.
+        \end{align*}
+        Thus, by definition, $\nabla h(\mathbf{x}) = \mathbf{A}^{T} \nabla g(\mathbf{A}\mathbf{x})$.
+    \end{proofing}
+
+    Based on this theorem, let $g(\mathbf{y}) = \frac{1}{2}\pnorm[2]{\mathbf{y}-\mathbf{b}}^{2}$ for any $\mathbf{y} \in \mathbb{R}^{m}$. We have:
+    \begin{equation*}
+        \nabla f(\mathbf{x}) = \mathbf{A}^{T}\nabla g(\mathbf{A}\mathbf{x}) = \mathbf{A}^{T}(\mathbf{A}\mathbf{x} - \mathbf{b}).
+    \end{equation*}
+    Thus, $f$ is differentiable. By the 1st order optimality condition,
+    \begin{equation*}
+        \mathbf{x}^{*} = \argmin_{\mathbf{x} \in \mathbb{R}^{n}} \frac{1}{2}\pnorm[2]{\mathbf{A}\mathbf{x} - \mathbf{b}}^{2} \iff \nabla f(\mathbf{x}^{*}) = \mathbf{0} \iff \mathbf{A}^{T}\mathbf{A}\mathbf{x} = \mathbf{A}^{T}\mathbf{b}.
+    \end{equation*}
+    \newpage
+
+    If we apply the gradient descent algorithm to least squares, for $k = 0, 1, 2, \cdots$,
+    \begin{equation*}
+        \mathbf{x}^{(k+1)} = \mathbf{x}^{(k)} - \alpha_{k}\mathbf{A}^{T}(\mathbf{A}\mathbf{x}^{(k)} - \mathbf{b}).
+    \end{equation*}
+    How do we choose the step sizes $\alpha_{k}$? By substituting the gradient descent formula into $f$, we get:
+    \begin{equation*}
+        \alpha_{k} = \argmin_{\alpha \in \mathbb{R}} \frac{1}{2}\spnorm[2]{\mathbf{A}(\mathbf{x}^{(k)} - \alpha \mathbf{A}^{T}(\mathbf{A}\mathbf{x}^{(k)} - \mathbf{b})) - \mathbf{b}}^{2},
+    \end{equation*}
+    which finds the optimal step size such that $f$ is minimized in the next step of the gradient descent. Denote:
+    \begin{align*}
+        g(\alpha) &= \frac{1}{2}\spnorm[2]{\mathbf{A}(\mathbf{x}^{(k)} - \alpha \mathbf{A}^{T}(\mathbf{A}\mathbf{x}^{(k)} - \mathbf{b})) - \mathbf{b}}^{2}\\
+        &= \frac{1}{2}\spnorm[2]{\mathbf{A}\mathbf{x}^{(k)} - \mathbf{b}}^{2} - \alpha (\mathbf{A}\mathbf{x}^{(k)} - \mathbf{b})^{T}\mathbf{A}\mathbf{A}^{T}(\mathbf{A}\mathbf{x}^{(k)} - \mathbf{b}) + \frac{\alpha^{2}}{2} \spnorm[2]{\mathbf{A}\mathbf{A}^{T}(\mathbf{A}\mathbf{x}^{(k)} - \mathbf{b})}^{2}\\
+        &= \frac{1}{2}\spnorm[2]{\mathbf{A}\mathbf{x}^{(k)} - \mathbf{b}}^{2} - \alpha \spnorm[2]{\mathbf{A}^{T}(\mathbf{A}\mathbf{x}^{(k)} - \mathbf{b})}^{2} + \frac{\alpha^{2}}{2} \spnorm[2]{\mathbf{A}\mathbf{A}^{T}(\mathbf{A}\mathbf{x}^{(k)} - \mathbf{b})}^{2},\\
+        g'(\alpha) &= -\spnorm[2]{\mathbf{A}^{T}(\mathbf{A}\mathbf{x}^{(k)} - \mathbf{b})}^{2} + \alpha \spnorm[2]{\mathbf{A}\mathbf{A}^{T}(\mathbf{A}\mathbf{x}^{(k)} - \mathbf{b})}^{2}.
+    \end{align*}
+    By substituting $g'(\alpha_{k}) = 0$,
+    \begin{align*}
+        0 &= g'(\alpha_{k}) = -\spnorm[2]{\mathbf{A}^{T}(\mathbf{A}\mathbf{x}^{(k)} - \mathbf{b})}^{2} + \alpha_{k} \spnorm[2]{\mathbf{A}\mathbf{A}^{T}(\mathbf{A}\mathbf{x}^{(k)} - \mathbf{b})}^{2},\\
+        \alpha_{k} &= \frac{\spnorm[2]{\mathbf{A}^{T}(\mathbf{A}\mathbf{x}^{(k)} - \mathbf{b})}^{2}}{\spnorm[2]{\mathbf{A}\mathbf{A}^{T}(\mathbf{A}\mathbf{x}^{(k)} - \mathbf{b})}^{2}}.
+    \end{align*}
+    We have the following algorithm:
+    \begin{defn}
+        The \textbf{Steepest Descent algorithm} is a method to find the solution of $\mathbf{A}\mathbf{x} = \mathbf{b}$ for given $\mathbf{A} \in \mathbb{R}^{m \times n}$ and $\mathbf{b} \in \mathbb{R}^{m}$. The steps of the algorithm are as follows:
+        \begin{itemize}
+            \item[0:] Initialize $\mathbf{x}^{(0)}$.
+            \item[1:] For $k = 0, 1, \cdots$,
+            \begin{enumerate}
+                \item Compute $\mathbf{g}^{(k)}$ by:
+                \begin{equation*}
+                    \mathbf{g}^{(k)} = \mathbf{A}^{T}(\mathbf{A}\mathbf{x}^{(k)} - \mathbf{b}).
+                \end{equation*}
+                \item Compute $\alpha_{k}$ by:
+                \begin{equation*}
+                    \alpha_{k} = \frac{\pnorm[2]{\mathbf{g}^{(k)}}^{2}}{\pnorm[2]{\mathbf{A}\mathbf{g}^{(k)}}^{2}}.
+                \end{equation*}
+                \item Update $\mathbf{x}^{(k+1)}$ by:
+                \begin{equation*}
+                    \mathbf{x}^{(k+1)} = \mathbf{x}^{(k)} - \alpha_{k}\mathbf{g}^{(k)}.
+                \end{equation*}
+            \end{enumerate}
+            \item[] Repeat until convergence is achieved.
+        \end{itemize}
+    \end{defn}
 \end{document}
