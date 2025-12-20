@@ -2142,6 +2142,418 @@
     \end{defn} 
     We will continue discussing this differentiation in the next chapter. Read Appendix \ref{Case Study D: Linear Regression} (Linear Regression), \ref{Case Study E: Kernel Ridge Regression} (Kernel Ridge Regression), \ref{Case Study F: Linear Classification} (Linear Classification), \ref{Case Study G: Solvability and Optimality} (Solvability and Optimality), and \ref{Case Study H: Gradient Descent} (Gradient Descent) to see the case studies for Chapter \ref{Chapter 4: Linear Functions and Differentiation}.
 
+\chapter{Linear Transformations or Linear Operators}
+    \label{Chapter 5: Linear Transformations or Linear Operators}
+    In the last chapter, we discussed linear functions $f: V \to \mathbb{R}$ in more detail. What about operators that map from one vector space to another? This chapter focuses on such operators, allowing us to generalize the differentiation of functions.
+
+\section{Linear Transformations or Linear Operators}
+    \begin{defn}
+        Let $V, W$ be two vector spaces. A map $L: V \to W$ is a \textbf{linear transformation / linear operator} if, for all $\mathbf{x}, \mathbf{y} \in V$ and $\alpha, \beta \in \mathbb{R}$,
+        \begin{equation*}
+            L(\alpha \mathbf{x} + \beta \mathbf{y}) = \alpha L \mathbf{x} + \beta L \mathbf{y}.
+        \end{equation*}
+    \end{defn}
+    \begin{rem}
+        Parentheses are often omitted. For example, $L \mathbf{x}$ means $L(\mathbf{x})$.
+    \end{rem}
+    \begin{eg}
+        Let $f: V \to \mathbb{R}$ be a linear function. Then $f$ is a linear transformation.
+    \end{eg}
+    \begin{eg}
+        \label{Chapter 5 (Example) Linear Transformation to Matrix}
+        Let $\mathbf{A} \in \mathbb{R}^{m \times n}$. Define $L: \mathbb{R}^{n} \to \mathbb{R}^{m}$ by:
+        \begin{equation*}
+            L \mathbf{x} = \mathbf{A}\mathbf{x}, \qquad \text{for } \mathbf{x} \in \mathbb{R}^{n}.
+        \end{equation*}
+        It is a linear transformation because, for $\mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}$ and $\alpha, \beta \in \mathbb{R}$,
+        \begin{equation*}
+            \mathbf{A}(\alpha \mathbf{x} + \beta \mathbf{y}) = \alpha \mathbf{A}\mathbf{x} + \beta \mathbf{A}\mathbf{y}.
+        \end{equation*}
+        In fact, for any linear transformation $L: \mathbb{R}^{n} \to \mathbb{R}^{m}$, there exists $\mathbf{A} \in \mathbb{R}^{m \times n}$ such that:
+        \begin{equation*}
+            L \mathbf{x} = \mathbf{A}\mathbf{x}, \qquad \text{for } \mathbf{x} \in \mathbb{R}^{n}.
+        \end{equation*}
+    \end{eg}
+    \begin{eg}
+        Let $\mathbf{a}_{1}, \cdots, \mathbf{a}_{k} \in H$. Define $L: H \to \mathbb{R}^{k}$ by:
+        \begin{equation*}
+            L \mathbf{x} = \begin{pmatrix}
+                \inprod{\mathbf{a}_{1}}{\mathbf{x}}\\
+                \vdots\\
+                \inprod{\mathbf{a}_{k}}{\mathbf{x}}
+            \end{pmatrix} \in \mathbb{R}^{k}, \qquad \text{for } \mathbf{x} \in H.
+        \end{equation*}
+        Then $L$ is a linear transformation.
+    \end{eg}
+    \newpage
+
+    \begin{eg}
+        Let:
+        \begin{align*}
+            V &= \{f: f \text{ and } f' \text{ are continuous on } [a,b]\},\\ 
+            W &= \{f: f \text{ is continuous on } [a,b]\}.
+        \end{align*}
+        Define $D: V \to W$ by:
+        \begin{equation*}
+            D f = f', \qquad \text{for } f \in V.
+        \end{equation*}
+        Then $D$ is a linear transformation.
+    \end{eg}
+    \begin{eg}
+        Consider $\mathcal{C}[-1,1]$ and $\mathcal{C}[0,2]$. Define $T: \mathcal{C}[-1,1] \to \mathcal{C}[0,2]$ by:
+        \begin{equation*}
+            (T f)(t) = f(t-1), \qquad \text{for any } t \in [0,2], \qquad \text{for } f \in \mathcal{C}[-1,1].
+        \end{equation*}
+        Then $T$ is linear.
+    \end{eg}
+    We have the following properties:
+    \begin{thm}
+        Let $V, W$ be two non-trivial vector spaces. If $V$ and $W$ are finite-dimensional, then for any linear transformation $T: V \to W$, there exists a unique matrix $\mathbf{A}$ such that:
+        \begin{equation*}
+            T \mathbf{v} = \mathbf{A}\mathbf{v}, \qquad \text{for } \mathbf{v} \in V.
+        \end{equation*}
+    \end{thm}
+    \begin{rem}
+        Due to this fact, matrices are often used to represent linear transformations.
+    \end{rem}
+
+    \begin{defn}
+        Let $V, W$ be two vector spaces, and let $\mathbf{A}, \mathbf{B}: V \to W$ be linear operators. We define $\mathbf{A}+\mathbf{B}: V \to W$ by:
+        \begin{equation*}
+            (\mathbf{A}+\mathbf{B})\mathbf{x} = \mathbf{A}\mathbf{x} + \mathbf{B}\mathbf{x}, \qquad \text{for } \mathbf{x} \in V.
+        \end{equation*}
+        For any $\alpha \in \mathbb{R}$, we define $\alpha \mathbf{A}: V \to W$ by:
+        \begin{equation*}
+            (\alpha \mathbf{A})\mathbf{x} = \alpha \mathbf{A}\mathbf{x}.
+        \end{equation*}
+    \end{defn}
+
+    We may define some norms for the linear operators.
+    \begin{thm}
+        For any linear operator $\mathbf{A}: V \to W$,
+        \begin{equation*}
+            \norm{\mathbf{A}} = \sup_{\pnorm[V]{\mathbf{x}} = 1} \pnorm[W]{\mathbf{A}\mathbf{x}}.
+        \end{equation*}
+        This is a norm. If $\norm{\mathbf{A}} < +\infty$, then $\mathbf{A}$ is said to be bounded.
+    \end{thm}
+    \begin{proofing}
+        \begin{enumerate}
+            \item We can easily find that:
+            \begin{equation*}
+                \norm{\mathbf{A}} = \sup_{\pnorm[V]{\mathbf{x}} = 1} \pnorm[W]{\mathbf{A}\mathbf{x}} \geq 0.
+            \end{equation*}
+            Moreover,
+            \begin{align*}
+                \norm{\mathbf{A}} = 0 &\Longleftrightarrow \sup_{\pnorm[V]{\mathbf{x}} = 1} \pnorm[W]{\mathbf{A}\mathbf{x}} = 0\\
+                &\Longleftrightarrow \pnorm[W]{\mathbf{A}\mathbf{x}} = 0, \qquad \text{for } \mathbf{x} \in V \text{ satisfying } \pnorm[V]{\mathbf{x}} = 1\\
+                &\Longleftrightarrow \pnorm[W]{\mathbf{A}\frac{\mathbf{y}}{\pnorm[V]{\mathbf{y}}}} = 0 \Longleftrightarrow \mathbf{A}\mathbf{y} = \mathbf{0}, \qquad \text{for } \mathbf{y} \in V\\
+                &\Longleftrightarrow \mathbf{A} = \mathbf{O}.
+            \end{align*}
+            \item For any $\mathbf{A}: V \to W$, $\alpha \in \mathbb{R}$,
+            \begin{equation*}
+                \norm{\alpha \mathbf{A}} = \sup_{\pnorm[V]{\mathbf{x}} = 1} \pnorm[W]{(\alpha \mathbf{A})\mathbf{x}} = \abs{\alpha} \sup_{\pnorm[V]{\mathbf{x}} = 1} \pnorm[W]{\mathbf{A}\mathbf{x}} = \abs{\alpha} \norm{\mathbf{A}}.
+            \end{equation*}
+            \item For any linear operators $\mathbf{A}, \mathbf{B}: V \to W$,
+            \begin{equation*}
+                \norm{\mathbf{A} + \mathbf{B}} = \sup_{\pnorm[V]{\mathbf{x}} = 1} \pnorm[W]{\mathbf{A}\mathbf{x} + \mathbf{B}\mathbf{x}} \leq \sup_{\pnorm[V]{\mathbf{x}} = 1} (\pnorm[W]{\mathbf{A}\mathbf{x}} + \pnorm[W]{\mathbf{B}\mathbf{x}}) \leq \sup_{\pnorm[V]{\mathbf{x}} = 1} \pnorm[W]{\mathbf{A}\mathbf{x}} + \sup_{\pnorm[V]{\mathbf{x}} = 1} \pnorm[W]{\mathbf{B}\mathbf{x}} = \norm{\mathbf{A}} + \norm{\mathbf{B}}.
+            \end{equation*}
+        \end{enumerate}
+        Therefore, it is a norm.
+    \end{proofing}
+    \newpage
+
+    In addition, it satisfies additional properties.
+    \begin{thm}
+        \label{Chapter 5 (Theorem) Consistent Matrix Norm}
+        For any linear operator $\mathbf{A}: V \to W$,
+        \begin{equation*}
+            \pnorm[W]{\mathbf{A}\mathbf{x}} \leq \norm{\mathbf{A}}\pnorm[V]{\mathbf{x}}, \qquad \text{for } \mathbf{x} \in V.
+        \end{equation*}
+    \end{thm}
+    \begin{proofing}
+        If $\mathbf{x} = \mathbf{0}$, then:
+        \begin{equation*}
+            \pnorm[W]{\mathbf{A}\mathbf{x}} = 0 \leq 0 = \norm{\mathbf{A}}\pnorm[V]{\mathbf{x}}.
+        \end{equation*}
+        If $\mathbf{x} \neq 0$, then:
+        \begin{equation*}
+            \norm{\mathbf{A}} = \sup_{\pnorm[V]{\mathbf{z}} = 1} \pnorm[W]{\mathbf{A}\mathbf{z}} \geq \pnorm[W]{\mathbf{A}\frac{\mathbf{x}}{\pnorm[V]{\mathbf{x}}}} = \frac{1}{\pnorm[V]{\mathbf{x}}}\pnorm[W]{\mathbf{A}\mathbf{x}}.
+        \end{equation*}
+        After rearranging, we have $\norm{\mathbf{A}}\pnorm[V]{\mathbf{x}} \geq \pnorm[W]{\mathbf{A}\mathbf{x}}$.
+    \end{proofing}
+    \begin{thm}
+        For any linear operators $\mathbf{A}: V_{2} \to V_{3}$ and $\mathbf{B}: V_{1} \to V_{2}$,
+        \begin{equation*}
+            \norm{\mathbf{A}\mathbf{B}} \leq \norm{\mathbf{A}}\norm{\mathbf{B}}.
+        \end{equation*}
+    \end{thm}
+    \begin{proofing}
+        By Theorem \ref{Chapter 5 (Theorem) Consistent Matrix Norm},
+        \begin{equation*}
+            \norm{\mathbf{A}\mathbf{B}} = \sup_{\pnorm[V_{1}]{\mathbf{x}} = 1} \pnorm[V_{3}]{\mathbf{A}\mathbf{B}\mathbf{x}} = \norm{\mathbf{A}}\sup_{\pnorm[V_{1}]{\mathbf{x}} = 1} \pnorm[V_{2}]{\mathbf{B}\mathbf{x}} = \norm{\mathbf{A}}\norm{\mathbf{B}}.
+        \end{equation*}
+    \end{proofing}
+    \begin{eg}
+        Consider $V = \mathbb{R}^{n}$ and $W = \mathbb{R}^{m}$. We endow them with the $2$-norm. For any $\mathbf{A} \in \mathbb{R}^{m \times n}$, we call the corresponding operator norm the \textbf{$2$-norm}, defined by:
+        \begin{equation*}
+            \pnorm[2]{\mathbf{A}} = \sup_{\pnorm[2]{\mathbf{x}} = 1} \pnorm[2]{\mathbf{A}\mathbf{x}} = \sqrt{\sup_{\pnorm[2]{\mathbf{x}} = 1} \pnorm[2]{\mathbf{A}\mathbf{x}}^{2}} = \sqrt{\sup_{\mathbf{x}^{T}\mathbf{x} = 1} \mathbf{x}^{T}\mathbf{A}^{T}\mathbf{A}\mathbf{x}} = \sqrt{\text{Max eigenvalue of } \mathbf{A}^{T}\mathbf{A}}.
+        \end{equation*}
+    \end{eg}
+    \begin{eg}
+        Consider $\mathbf{A} \in \mathbb{R}^{m \times n}$ as a linear operator from $\mathbb{R}^{n}$ to $\mathbb{R}^{m}$. Let $\mathbb{R}^{n}$ and $\mathbb{R}^{m}$ be endowed with $1$-norms. We call the resulting operator norm the \textbf{$1$-norm}, defined by:
+        \begin{equation*}
+        \pnorm[1]{\mathbf{A}} = \sup_{\pnorm[1]{\mathbf{x}} = 1} \pnorm[1]{\mathbf{A}\mathbf{x}}.
+        \end{equation*}
+    \end{eg}
+    \begin{thm}
+        Let $\mathbf{A} = (\mathbf{a}_{1}, \cdots, \mathbf{a}_{n}) \in \mathbb{R}^{m \times n}$. Then:
+        \begin{equation*}
+            \pnorm[1]{\mathbf{A}} = \max_{1 \leq i \leq n} \pnorm[1]{\mathbf{a}_{i}}.
+        \end{equation*}
+    \end{thm}
+    \begin{proofing}
+        For any $\mathbf{x} \in \mathbb{R}^{n}$ satisfying $\pnorm[1]{\mathbf{x}} = 1$,
+        \begin{equation*}
+            \pnorm[1]{\mathbf{A}\mathbf{x}} = \pnorm[1]{\sum_{i=1}^{n}x_{i}\mathbf{a}_{i}} \leq \sum_{i=1}^{n}\pnorm[1]{x_{i}\mathbf{a}_{i}} = \sum_{i=1}^{n}\abs{x_{i}}\pnorm[1]{\mathbf{a}_{i}} \leq \sum_{j=1}^{n}\abs{x_{j}} \max_{1 \leq i \leq n}\pnorm[1]{\mathbf{a}_{i}} = \pnorm[1]{\mathbf{x}}\max_{1 \leq i \leq n}\pnorm[1]{\mathbf{a}_{i}} = \max_{1 \leq i \leq n}\pnorm[1]{\mathbf{a}_{i}}.
+        \end{equation*}
+        By taking the supremum over $\mathbf{x}$, we get $\pnorm[1]{\mathbf{A}} \leq \max_{1 \leq i \leq n} \pnorm[1]{\mathbf{a}_{i}}$.
+        
+        Let $i_{m} = \argmax_{1 \leq i \leq n} \pnorm[1]{\mathbf{a}_{i}}$. Then:
+        \begin{equation*}
+            \max_{1 \leq i \leq n}\pnorm[1]{\mathbf{a}_{i}} = \pnorm[1]{\mathbf{a}_{i_{m}}} = \pnorm[1]{\mathbf{A}\mathbf{e}_{i_{m}}} \leq \sup_{\pnorm[1]{\mathbf{x}}} \pnorm[1]{\mathbf{A}\mathbf{x}} = \pnorm[1]{\mathbf{A}}.
+        \end{equation*}
+        Therefore, $\pnorm[1]{\mathbf{A}} = \max_{1 \leq i \leq n} \pnorm[1]{\mathbf{a}_{i}}$.
+    \end{proofing}
+    \newpage
+
+    \begin{eg}
+        Consider $\mathbf{A} \in \mathbb{R}^{m \times n}$ as a linear operator from $\mathbb{R}^{n}$ to $\mathbb{R}^{m}$. Let $\mathbb{R}^{n}$ and $\mathbb{R}^{m}$ be endowed with infinity norms. We call the resulting operator norm the \textbf{$\infty$-norm}, defined by:
+        \begin{equation*}
+            \pnorm[\infty]{\mathbf{A}} = \sup_{\pnorm[\infty]{\mathbf{x}} = 1} \pnorm[\infty]{\mathbf{A}\mathbf{x}}.
+        \end{equation*}
+    \end{eg}
+    \begin{thm}
+        Let $\mathbf{A} = (\mathbf{a}^{(1)}, \cdots, \mathbf{a}^{(m)})^{T} \in \mathbb{R}^{m \times n}$. Then:
+        \begin{equation*}
+            \pnorm[\infty]{\mathbf{A}} = \max_{1 \leq i \leq m} \spnorm[1]{\mathbf{a}^{(i)}}.
+        \end{equation*}
+    \end{thm}
+    \begin{proofing}
+        For any $\mathbf{x} \in \mathbb{R}^{n}$ satisfying $\pnorm[\infty]{\mathbf{x}}=1$,
+        \begin{align*}
+            \pnorm[\infty]{\mathbf{A}\mathbf{x}} &= \max_{1 \leq i \leq m} \abs{\inprod{\mathbf{a}^{(i)}}{\mathbf{x}}}\\
+            &= \max_{1 \leq i \leq m} \abs{\sum_{j=1}^{n} a_{j}^{(i)}x_{j}}\\
+            &\leq \max_{1 \leq i \leq m} \sum_{j=1}^{n} \abs{a_{j}^{(i)}}\abs{x_{j}}\\
+            &\leq \max_{1 \leq j \leq n} \abs{x_{j}} \max_{1 \leq i \leq m} \sum_{j=1}^{n}\abs{a_{j}^{(i)}} = \pnorm[\infty]{\mathbf{x}} \max_{1 \leq i \leq m} \spnorm[1]{\mathbf{a}^{(i)}} = \max_{1 \leq i \leq m} \spnorm[1]{\mathbf{a}^{(i)}}.
+        \end{align*}
+        By taking the supremum over $\mathbf{x}$, we get $\pnorm[\infty]{\mathbf{A}} \leq \max_{1 \leq i \leq m} \spnorm[1]{\mathbf{a}^{(i)}}$.
+        
+        Without loss of generality, assume that:
+        \begin{equation*}
+            \spnorm[1]{\mathbf{a}^{(1)}} = \max_{1 \leq i \leq m} \spnorm[1]{\mathbf{a}^{(i)}}.
+        \end{equation*}
+        We construct $\mathbf{x}$ such that $x_{i} = \sgn(a_{i}^{(1)})$, which has $\pnorm[\infty]{\mathbf{x}} = 1$. Then $\abs{\inprod{\mathbf{a}^{(1)}}{\mathbf{x}}} = \spnorm[1]{\mathbf{a}^{(1)}}$.
+        
+        Therefore, $\pnorm[\infty]{\mathbf{A}} = \max_{1 \leq i \leq m} \spnorm[1]{\mathbf{a}^{(i)}}$.
+    \end{proofing}
+    \begin{eg}
+        Let $T: \mathcal{C}[-1,1] \to \mathcal{C}[0,2]$ be the translation operator defined by:
+        \begin{equation*}
+            (T f)(t) = f(t-1), \qquad \text{for any } t \in [0,2], \qquad \text{for } f \in \mathcal{C}[-1,1].
+        \end{equation*}
+        We have found that $T$ is linear. The norm on $\mathcal{C}[a,b]$ is:
+        \begin{equation*}
+            \pnorm[\infty]{f} = \max_{t \in [a,b]} \abs{f(t)}.
+        \end{equation*}
+        Then the norm of $T$ is:
+        \begin{equation*}
+            \norm{T} = \sup_{\pnorm[\infty]{f} = 1} \pnorm[\infty]{T f} = \sup_{\max_{t \in [-1,1]}\abs{f(t)} = 1} \max_{t \in [0,2]} \abs{f(t-1)} = 1.
+        \end{equation*}
+    \end{eg}
+    \begin{eg}
+        Let:
+        \begin{align*}
+            V &= \{f: f \text{ and } f' \text{ are continuous on } [a,b]\}, & W &= \{f: f \text{ is continuous on } [a,b]\}
+        \end{align*}
+        both equipped with the norm $\pnorm[\infty]{\cdot}$. Consider the differentiation operator $D: V \to W$ defined by:
+        \begin{equation*}
+            D f = f', \qquad \text{for } f \in V.
+        \end{equation*}
+        For $t \in [0,1]$, consider $f_{k}(t) = \sin(2\pi kt)$, where $k \in \mathbb{N}$. Then $f_{k}'(t) = 2\pi k \cos(2\pi kt)$. We have $f_{k} \in V$ and:
+        \begin{equation*}
+            \pnorm[\infty]{D f_{k}} = 2\pi k\pnorm[\infty]{\cos(2\pi kt)} = 2\pi k.
+        \end{equation*}
+        Hence:
+        \begin{equation*}
+            \norm{D} = \sup_{\pnorm[\infty]{f} = 1} \pnorm[\infty]{D f} \geq \lim_{k \to \infty} \pnorm[\infty]{D f_{k}} = \lim_{k \to \infty} 2\pi k = \infty.
+        \end{equation*}
+        Therefore, $\norm{D} = +\infty$.
+    \end{eg}
+    \newpage
+
+    We can group all linear operators from one vector space to another into a set.
+    \begin{defn}
+        Let $V, W$ be two normed vector spaces with $\pnorm[V]{\cdot}$ and $\pnorm[W]{\cdot}$, respectively. The normed vector space of all linear and bounded operators is defined as:
+        \begin{equation*}
+            \mathscr{L}(V, W) = \{\mathbf{A}: \mathbf{A} \text{ is linear from } V \to W \text{ and } \norm{\mathbf{A}} < +\infty\}.
+        \end{equation*}
+    \end{defn}
+    \begin{rem}
+        If both $V$ and $W$ are Banach spaces, then $\mathscr{L}(V, W)$ is also a Banach space.
+    \end{rem}
+    \begin{eg}
+        If $V = \mathbb{R}^{n}$ and $W = \mathbb{R}^{m}$ with any norm, then $\mathscr{L}(\mathbb{R}^{n}, \mathbb{R}^{m}) = \mathbb{R}^{m \times n}$.
+    \end{eg}
+    \begin{eg}
+        \label{Chapter 5 (Example) Inner Product Vector Operator is Bounded}
+        Let $\mathbf{a}_{1}, \cdots, \mathbf{a}_{k} \in H$, where $H$ is a Hilbert space. Define $L: H \to \mathbb{R}^{k}$ by:
+        \begin{equation*}
+            L \mathbf{x} = \begin{pmatrix}
+                \inprod{\mathbf{a}_{1}}{\mathbf{x}}\\
+                \vdots\\
+                \inprod{\mathbf{a}_{k}}{\mathbf{x}}
+            \end{pmatrix}, \qquad \text{for } \mathbf{x} \in H.
+        \end{equation*}
+        We know $L$ is linear, but is it bounded?
+        \begin{equation*}
+            \norm{L} = \sup_{\norm{\mathbf{x}} = 1} \norm{L \mathbf{x}} = \sup_{\norm{\mathbf{x}} = 1} \sqrt{\sum_{i=1}^{k}(\inprod{\mathbf{a}_{i}}{\mathbf{x}})^{2}} \leq \sup_{\norm{\mathbf{x}} = 1} \sqrt{\sum_{i=1}^{k}\norm{\mathbf{a}_{i}}^{2}\norm{\mathbf{x}}^{2}} = \sqrt{\sum_{i=1}^{k}\norm{\mathbf{a}_{i}}^{2}} < +\infty.
+        \end{equation*}
+        Therefore, $L \in \mathscr{L}(H, \mathbb{R}^{k})$.
+    \end{eg}
+    \begin{eg}
+        \label{Chapter 5 (Example) Translation Functional Operator is Linear and Bounded}
+        Let $T: L^{2}(-1,1) \to L^{2}(0,2)$ be the translation operator defined by:
+        \begin{equation*}
+            (T f)(t) = f(t-1), \qquad \text{for all } t \in (0,2), \qquad \text{for } f \in L^{2}(-1,1).
+        \end{equation*}
+        We prove that $T$ is linear and bounded.
+        \begin{enumerate}
+            \item For any $f, g \in L^{2}(-1,1)$ and $\alpha, \beta \in \mathbb{R}$,
+            \begin{equation*}
+                T(\alpha f + \beta g)(t) = (\alpha f + \beta g)(t-1) = \alpha f(t-1) + \beta g(t-1) = \alpha (T f)(t) + \beta (T g)(t).
+            \end{equation*}
+            Therefore, $T$ is linear.
+            \item 
+            \begin{equation*}
+                \norm{T} = \sup_{\pnorm[2]{f} = 1} \pnorm[2]{T f} = \sup_{\int_{-1}^{1}\abs{f(t)}^{2}\,dt = 1} \sqrt{\int_{0}^{2}\abs{f(t-1)}^{2}\,dt} = 1.
+            \end{equation*}
+            Therefore, $T$ is bounded.
+        \end{enumerate}
+        Thus, $T \in \mathscr{L}(L^{2}(-1,1), L^{2}(0,2))$.
+    \end{eg}
+    \newpage
+
+    Consider the Hilbert spaces $H_{1}$ and $H_{2}$. Both have an inner product. If there is a linear operator acting on vectors in $H_{1}$ to $H_{2}$, is there a corresponding linear operator acting on vectors in $H_{2}$ to $H_{1}$?
+    \begin{defn}
+        Let $H_{1}, H_{2}$ be two Hilbert spaces with $\inprod{\cdot}{\cdot}_{H_{1}}$ and $\inprod{\cdot}{\cdot}_{H_{2}}$, respectively. Let $\mathbf{A} \in \mathscr{L}(H_{1}, H_{2})$. The \textbf{adjoint operator} $\mathbf{A}^{*}: H_{2} \to H_{1}$ is the unique bounded linear operator satisfying:
+        \begin{equation*}
+            \inprod{\mathbf{A}\mathbf{x}}{\mathbf{y}}_{H_{2}} = \inprod{\mathbf{x}}{\mathbf{A}^{*}\mathbf{y}}_{H_{1}}, \qquad \text{for } \mathbf{x} \in H_{1}, \mathbf{y} \in H_{2}.
+        \end{equation*} 
+    \end{defn}
+    \begin{eg}
+        Consider $\mathbf{A} \in \mathbb{R}^{m \times n} = \mathscr{L}(\mathbb{R}^{n}, \mathbb{R}^{m})$. Then for all $\mathbf{x} \in \mathbb{R}^{n}$ and $\mathbf{y} \in \mathbb{R}^{m}$,
+        \begin{equation*}
+            \inprod{\mathbf{A}\mathbf{x}}{\mathbf{y}} = \mathbf{y}^{T}\mathbf{A}\mathbf{x} = (\mathbf{A}^{T}\mathbf{y})^{T}\mathbf{x} = \inprod{\mathbf{x}}{\mathbf{A}^{T}\mathbf{y}}.
+        \end{equation*}
+        We know that $\mathbf{A}^{T} \in \mathscr{L}(\mathbb{R}^{m}, \mathbb{R}^{n})$. Therefore, the adjoint of $\mathbf{A}$ is $\mathbf{A}^{T}$.
+    \end{eg}
+    \begin{rem}
+        The adjoint is an extension of the matrix transpose.
+    \end{rem}
+    \begin{eg}
+        Let $H$ be a Hilbert space. Let $f: H \to \mathbb{R}$ be linear and bounded. We have:
+        \begin{equation*}
+            f(\mathbf{x}) = \inprod{\mathbf{a}}{\mathbf{x}}_{H}, \qquad \text{for } \mathbf{a} \in H.
+        \end{equation*}
+        For all $\mathbf{x} \in H$ and $y \in \mathbb{R}$,
+        \begin{equation*}
+            \inprod{f(\mathbf{x})}{y}_{\mathbb{R}} = f(\mathbf{x})y = y\inprod{\mathbf{a}}{\mathbf{x}}_{H} = \inprod{\mathbf{x}}{y\mathbf{a}}_{H}.
+        \end{equation*}
+        We may check whether $g(y) = y\mathbf{a}$ is linear and bounded for all $y \in \mathbb{R}$.
+        \begin{enumerate}
+            \item For any $y_{1}, y_{2}, \alpha, \beta \in \mathbb{R}$,
+            \begin{align*}
+                g(\alpha y_{1} + \beta y_{2}) &= (\alpha y_{1} + \beta y_{2})\mathbf{a}\\
+                &= \alpha y_{1}\mathbf{a} + \beta y_{2}\mathbf{a}\\
+                &= \alpha g(y_{1}) + \beta g(y_{2}).
+            \end{align*}
+            \item
+            \begin{equation*}
+                \norm{g} = \sup_{\abs{y} = 1} \pnorm[H]{g(y)} = \sup_{\abs{y} = 1} \pnorm[H]{y\mathbf{a}} = \pnorm[H]{\mathbf{a}} < \infty.
+            \end{equation*}
+        \end{enumerate}
+        Thus, $g \in \mathscr{L}(\mathbb{R}, H)$ and $f^{*}(y) = y\mathbf{a}$.
+    \end{eg}
+    \newpage
+
+    \begin{eg}
+        Let $\mathbf{a}_{1}, \cdots, \mathbf{a}_{k} \in H$, where $H$ is a Hilbert space. Define $L: H \to \mathbb{R}^{k}$ by:
+        \begin{equation*}
+            L \mathbf{x} = \begin{pmatrix}
+                \inprod{\mathbf{a}_{1}}{\mathbf{x}}\\
+                \vdots\\
+                \inprod{\mathbf{a}_{k}}{\mathbf{x}}
+            \end{pmatrix}, \qquad \text{for } \mathbf{x} \in H.
+        \end{equation*}
+        From Example \ref{Chapter 5 (Example) Inner Product Vector Operator is Bounded}, $L \in \mathscr{L}(H, \mathbb{R}^{k})$. For all $\mathbf{x} \in H$ and $\mathbf{y} \in \mathbb{R}^{k}$,
+        \begin{equation*}
+            \inprod{L \mathbf{x}}{\mathbf{y}}_{\mathbb{R}^{k}} = \sum_{i=1}^{k}\inprod{\mathbf{a}_{i}}{\mathbf{x}}_{H} y_{i} = \sum_{i=1}^{k} \inprod{y_{i}\mathbf{a}_{i}}{\mathbf{x}}_{H} = \inprod{\mathbf{x}}{\sum_{i=1}^{k}y_{i}\mathbf{a}_{i}}_{H}.
+        \end{equation*}
+        Therefore, we can define $L^{*}: \mathbb{R}^{k} \to H$ by:
+        \begin{equation*}
+            L^{*} \mathbf{y} = \sum_{i=1}^{k}y_{i}\mathbf{a}_{i}, \qquad \text{for } \mathbf{y} \in \mathbb{R}^{k}.
+        \end{equation*}
+        It remains to show that $L^{*} \in \mathscr{L}(\mathbb{R}^{k}, H)$.
+        \begin{enumerate}
+            \item For any $\mathbf{u}, \mathbf{v} \in \mathbb{R}^{k}$ and $\alpha, \beta \in \mathbb{R}$,
+            \begin{equation*}
+                L^{*}(\alpha \mathbf{u} + \beta \mathbf{v}) = \sum_{i=1}^{k}(\alpha u_{i} + \beta v_{i})\mathbf{a}_{i} = \alpha \sum_{i=1}^{k} u_{i}\mathbf{a}_{i} + \beta \sum_{i=1}^{k} v_{i}\mathbf{a}_{i} = \alpha L^{*}(\mathbf{u}) + \beta L^{*}(\mathbf{v}).
+            \end{equation*}
+            Therefore, $L^{*}$ is linear.
+            \item 
+            \begin{align*}
+                \norm{L^{*}} &= \sup_{\norm{\mathbf{y}} = 1} \norm{L^{*}\mathbf{y}} = \sup_{\norm{\mathbf{y}} = 1} \norm{\sum_{i=1}^{k}y_{i}\mathbf{a}_{i}}\\
+                &\leq \sup_{\norm{\mathbf{y}} = 1} \sum_{i=1}^{k}\abs{y_{i}}\norm{\mathbf{a}_{i}} = \sup_{\norm{\mathbf{y}} = 1} \inprod{\begin{pmatrix}
+                    \abs{y_{1}}\\
+                    \vdots\\
+                    \abs{y_{k}}
+                \end{pmatrix}}{\begin{pmatrix}
+                    \norm{\mathbf{a}_{1}}\\
+                    \vdots\\
+                    \norm{\mathbf{a}_{k}}
+                \end{pmatrix}}\\
+                &\leq \sup_{\norm{\mathbf{y}} = 1} \norm{\begin{pmatrix}
+                        \abs{y_{1}}\\
+                        \vdots\\
+                        \abs{y_{k}}
+                \end{pmatrix}}\norm{\begin{pmatrix}
+                        \norm{\mathbf{a}_{1}}\\
+                        \vdots\\
+                        \norm{\mathbf{a}_{k}}
+                \end{pmatrix}} = \norm{\begin{pmatrix}
+                    \norm{\mathbf{a}_{1}}\\
+                    \vdots\\
+                    \norm{\mathbf{a}_{k}}
+                \end{pmatrix}} = \sqrt{\sum_{i=1}^{k}\norm{\mathbf{a}_{i}}^{2}} < \infty.
+            \end{align*}
+            Therefore, $L^{*} \in \mathscr{L}(\mathbb{R}^{k},H)$ and thus $L^{*}$ is the adjoint of $L$.
+        \end{enumerate}
+    \end{eg}
+    \begin{eg}
+        Let $T: L^{2}(-1,1) \to L^{2}(0,2)$ be the translation operator defined by:
+        \begin{equation*}
+            (T f)(t) = f(t-1), \qquad \text{for all } t \in (0,2), \qquad \text{for } f \in L^{2}(-1,1).
+        \end{equation*}
+        From Example \ref{Chapter 5 (Example) Translation Functional Operator is Linear and Bounded}, we have $T \in \mathscr{L}(L^{2}(-1,1), L^{2}(0,2))$. Let $f \in L^{2}(-1,1)$ and $g \in L^{2}(0,2)$. We have:
+        \begin{equation*}
+            \inprod{T f}{g} = \int_{0}^{2}(T f)(t)g(t)\,dt = \int_{0}^{2}f(t-1)g(t)\,dt = \int_{-1}^{1}f(s)g(s+1)\,ds.
+        \end{equation*}
+        We may define $T^{*} g(t) = g(t+1)$ for any $t \in (-1,1)$ and $g \in L^{2}(0,2)$.
+        
+        Similarly, $T^{*} \in \mathscr{L}(L^{2}(0,2), L^{2}(-1,1))$, and thus $T^{*} g(t) = g(t+1)$.
+    \end{eg}
+    \newpage
+    
 \appendix
 \renewcommand{\thechapter}{\Alph{chapter}}
 \chapter{Clustering, K-means, K-medians}
