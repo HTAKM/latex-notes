@@ -2553,7 +2553,7 @@
         Similarly, $T^{*} \in \mathscr{L}(L^{2}(0,2), L^{2}(-1,1))$, and thus $T^{*} g(t) = g(t+1)$.
     \end{eg}
     \newpage
-    
+
 \section{Linear Approximation and Differentiation of Transformations}
     Recall the definition of differentiation in the previous chapter. We can generalize it to linear transformations. Let $V, W$ be two Banach spaces with norms $\pnorm[V]{\cdot}$ and $\pnorm[W]{\cdot}$, respectively. Let $F: V \to W$ be a map (not necessarily linear). At $\mathbf{x} \in V$, the linear approximation passing through $(\mathbf{x}, F(\mathbf{x}))$ is given by:
     \begin{equation*}
@@ -3035,6 +3035,394 @@
         There are other bilinear mappings that satisfy a similar differentiation rule, e.g., convolution.
     \end{rem}
     \newpage
+    
+\section{Hessian of functions}
+    Similar to standard derivatives, what are the second-order derivatives of the Fr\'echet differentiation?
+
+    Let $H$ be a Hilbert space, and let $f: H \to \mathbb{R}$. We can consider $\nabla f$ as a mapping $\nabla f: H \to H$.
+    \begin{defn}
+        Let $H$ be a Hilbert space, and $f: H \to \mathbb{R}$. The \textbf{Hessian} of $f$ is defined as:
+        \begin{equation*}
+            \nabla^{2} f(\mathbf{x}) = D(\nabla f)(\mathbf{x}), \qquad \text{for } \mathbf{x} \in H.
+        \end{equation*}
+    \end{defn}
+    \begin{rem}
+        $\nabla^{2} f \in \mathscr{L}(H, H)$.
+    \end{rem}
+    \begin{rem}
+        By Theorem \ref{Chapter 4 (Theorem) Elementwise Gradient} and \ref{Chapter 5 (Theorem) Jacobian Matrix}, for $f: \mathbb{R}^{n} \to \mathbb{R}$,
+        \begin{equation*}
+            \nabla^{2} f(\mathbf{x}) = D(\nabla f)(\mathbf{x}) = \left(\pdv{f}{x_{i},x_{j}}\right)_{i=1,j=1}^{n,n} \in \mathbb{R}^{n \times n}.
+        \end{equation*}
+    \end{rem}
+    \begin{eg}
+        Let $\mathbf{A} \in \mathscr{L}(H_{1}, H_{2})$, where $H_{1}, H_{2}$ are Hilbert spaces. Let $f: H_{1} \to \mathbb{R}$ be defined as:
+        \begin{equation*}
+            f(\mathbf{x}) = \frac{1}{2}\pnorm[H_{2}]{\mathbf{A}\mathbf{x}-\mathbf{b}}^{2}, \qquad \text{for } \mathbf{x} \in H_{1},
+        \end{equation*}
+        where $\mathbf{b} \in H_{2}$. We have found that $\nabla f(\mathbf{x}) = \mathbf{A}^{*}(\mathbf{A}\mathbf{x} - \mathbf{b}) = \mathbf{A}^{*}\mathbf{A}\mathbf{x} - \mathbf{A}^{*}\mathbf{b}$. Then,
+        \begin{equation*}
+            \nabla^{2} f(\mathbf{x}) = D(\nabla f)(\mathbf{x}) = \mathbf{A}^{*}\mathbf{A}.
+        \end{equation*}
+    \end{eg}
+    \begin{eg}
+        Let $\mathbf{A} \in \mathscr{L}(H_{1}, H_{2})$, where $H_{1}, H_{2}$ are Hilbert spaces. Let $f: H_{1} \to \mathbb{R}$ and $F: H_{2} \to \mathbb{R}$ be defined as:
+        \begin{equation*}
+            f(\mathbf{x}) = F(\mathbf{A}\mathbf{x}), \text{for } \mathbf{x} \in H_{1}.
+        \end{equation*}
+        By the chain rule,
+        \begin{equation*}
+            \nabla f(\mathbf{x}) = \mathbf{A}^{*}\nabla F(\mathbf{A}\mathbf{x}).
+        \end{equation*}
+        We have that for $\mathbf{y} \in H_{1}$,
+        \begin{align*}
+            D \mathbf{A}^{*}(\nabla F(\mathbf{A}\mathbf{x})) &= \mathbf{A}^{*},\\
+            D(\nabla F)(\mathbf{A}\mathbf{x}) &= \nabla^{2} F(\mathbf{A}\mathbf{x}),\\
+            D \mathbf{A}(\mathbf{x})(\mathbf{y}) &= \mathbf{A}\mathbf{y},\\
+            \nabla^{2} f(\mathbf{x})(\mathbf{y}) = D(\nabla f)(\mathbf{x})(\mathbf{y}) &= D(\mathbf{A}^{*}\nabla F(\mathbf{A}\mathbf{x}))(\mathbf{y})\\
+            &= D \mathbf{A}^{*}(\nabla F(\mathbf{A}\mathbf{x}))(D(\nabla F)(\mathbf{A}\mathbf{x})(D \mathbf{A}(\mathbf{x})(\mathbf{y})))\\
+            &= \mathbf{A}^{*} \nabla^{2} F(\mathbf{A}\mathbf{x})\mathbf{A}\mathbf{y}.
+        \end{align*}
+    \end{eg}
+    \begin{eg}
+        Let $f: \mathbb{R}^{n} \to \mathbb{R}$ be defined as:
+        \begin{equation*}
+            f(\mathbf{x}) = \sum_{i=1}^{m} f_{i}(\inprod{\mathbf{a}_{i}}{\mathbf{x}}),
+        \end{equation*}
+        where $\mathbf{a}_{i} \in \mathbb{R}^{n}$, $\mathbf{x} \in \mathbb{R}^{n}$, and $f_{i}: \mathbb{R} \to \mathbb{R}$. How do we find $\nabla^{2} f(\mathbf{x})$? Let:
+        \begin{align*}
+            \mathbf{A} &= \begin{pmatrix}
+                \mathbf{a}_{1}^{T}\\
+                \vdots\\
+                \mathbf{a}_{m}^{T}
+            \end{pmatrix}, & F(\mathbf{y}) &= \sum_{i=1}^{m} f_{i}(y_{i}), \qquad \text{for } \mathbf{y} \in \mathbb{R}^{m}.
+        \end{align*}
+        Then we have $f(\mathbf{x}) = F(\mathbf{A}\mathbf{x})$. Therefore,
+        \begin{align*}
+            \nabla^{2} f(\mathbf{x}) &= \mathbf{A}^{T}\nabla F(\mathbf{A}\mathbf{x}) = \sum_{i=1}^{m}f_{i}'(\mathbf{a}_{i}^{T}\mathbf{x})\mathbf{a}_{i}, & \nabla^{2} f(\mathbf{x}) &= \mathbf{A}^{T} \nabla^{2} F(\mathbf{A}\mathbf{x})\mathbf{A} = \sum_{i=1}^{m} f_{i}''(\mathbf{a}_{i}^{T}\mathbf{x})\mathbf{a}_{i}\mathbf{a}_{i}^{T}.
+        \end{align*}
+    \end{eg}
+    \newpage
+
+    \begin{eg}
+        Let $H$ be a Hilbert space, and $f(\mathbf{x}) = \norm{\mathbf{x}}$, where $\mathbf{x} \in H$. What is $\nabla^{2} f(\mathbf{x})$? We know that when $\mathbf{x} \neq \mathbf{0}$,
+        \begin{equation*}
+            \nabla f(\mathbf{x}) = \frac{\mathbf{x}}{\norm{\mathbf{x}}}.
+        \end{equation*}
+        Let $g: V \to \mathbb{R}$ and $I: V \to V$ be defined as:
+        \begin{align*}
+            g(\mathbf{x}) &= \frac{1}{\norm{\mathbf{x}}}, & I(\mathbf{x}) &= \mathbf{x}, & \nabla f &= gI.
+        \end{align*}
+        Let $g_{1}(t) = \frac{1}{\sqrt{t}}$ and $g_{2}(\mathbf{x}) = \norm{\mathbf{x}}^{2}$. Then $g = g_{1} \circ g_{2}$. We have:
+        \begin{align*}
+            g_{1}'(t) &= -\frac{1}{2}t^{-\frac{3}{2}}, & \nabla g_{2}(\mathbf{x}) &= 2\mathbf{x}.
+        \end{align*}
+        Therefore, by the chain rule, since $g_{1}$ is continuous for $t>0$ and $\mathbf{x} \neq \mathbf{0}$,
+        \begin{equation*}
+            \nabla g(\mathbf{x}) = g_{1}'(g_{2}(\mathbf{x})) \cdot \nabla g_{2}(\mathbf{x}) = -\frac{\mathbf{x}}{\norm{\mathbf{x}}^{3}}.
+        \end{equation*}
+        By the scalar multiplication rule,
+        \begin{align*}
+            \nabla^{2} f(\mathbf{x})(\mathbf{y}) &= D(\nabla f)(\mathbf{x})(\mathbf{y})\\
+            &= D g(\mathbf{x})(\mathbf{y}) \cdot I(\mathbf{x}) + g(\mathbf{x}) \cdot D I(\mathbf{x})(\mathbf{y})\\
+            &= \inprod{-\frac{1}{\norm{\mathbf{x}}^{3}}\mathbf{x}}{\mathbf{y}}\mathbf{x} + \frac{\mathbf{y}}{\norm{\mathbf{x}}}.
+        \end{align*}
+        If $H = \mathbb{R}^{n}$, then:
+        \begin{align*}
+            \nabla^{2} f(\mathbf{x})(\mathbf{y}) &= -\frac{\mathbf{x}\mathbf{x}^{T}\mathbf{y}}{\norm{\mathbf{x}}^{3}} + \frac{\mathbf{y}}{\norm{\mathbf{x}}}, & \nabla^{2} f(\mathbf{x}) &= -\frac{1}{\norm{\mathbf{x}}^{3}}\mathbf{x}\mathbf{x}^{T} + \frac{1}{\norm{\mathbf{x}}}\mathbf{I}.
+        \end{align*}
+    \end{eg}
+    \newpage
+
+\section{Function Expansion}
+    Let $f: H \to \mathbb{R}$ be a differentiable function, where $H$ is a Hilbert space. From the definition of the gradient at $\mathbf{x}$,
+    \begin{equation*}
+        f(\mathbf{y}) = f(\mathbf{x}) + \inprod{\nabla f(\mathbf{x})}{\mathbf{y}-\mathbf{x}} + o(\norm{\mathbf{y}-\mathbf{x}}).
+    \end{equation*}
+    We aim to derive the expansion up to the second-order derivative. Consider:
+    \begin{equation*}
+        g(t) = f(\mathbf{x} + t\mathbf{u}),
+    \end{equation*}
+    where $\mathbf{x}, \mathbf{u} \in H$ are given, and $t \in \mathbb{R}$. What is the directional derivative?
+    \begin{thm}\named{Theorem \ref{Chapter 4 (Theorem) Derivative on not t=0}}
+        \label{Chapter 5 (Theorem) Derivative on not t=0}
+        Let $H$ be a Hilbert space. Let $f: H \to \mathbb{R}$ and $\mathbf{x} \in H$. For any $\mathbf{u} \in H$,
+        \begin{equation*}
+            \odv*{f(\mathbf{x} + t\mathbf{u})}{t} = \inprod{\nabla f(\mathbf{x} + t\mathbf{u})}{\mathbf{u}},
+        \end{equation*}
+        if $f$ is differentiable at $\mathbf{x} + t\mathbf{u}$.
+    \end{thm}
+    \begin{proofing}[Alternative Proof]
+        Let $G: \mathbb{R} \to H$ be defined as:
+        \begin{align*}
+            G(t) &= \mathbf{x} + t\mathbf{u}, & f(\mathbf{x} + t\mathbf{u}) &= f(G(t)).
+        \end{align*}
+        Since $D G(t)(s) = s\mathbf{u}$ for $s \in \mathbb{R}$ and $D f(\mathbf{z})(\mathbf{y}) = \inprod{\nabla f(\mathbf{z})}{\mathbf{y}}$ for $\mathbf{y} \in H$, by the chain rule,
+        \begin{equation*}
+            \odv*{f(\mathbf{x} + t\mathbf{u})}{t}(s) = D f(G(t))(D G(t)(s)) = \inprod{\nabla f(\mathbf{x} + t\mathbf{u})}{s\mathbf{u}} = s\inprod{\nabla f(\mathbf{x} + t\mathbf{u})}{\mathbf{u}}.
+        \end{equation*}
+        Therefore, $\odv*{f(\mathbf{x} + t\mathbf{u})}{t} = \inprod{\nabla f(\mathbf{x} + t\mathbf{u})}{\mathbf{u}}$.
+    \end{proofing}
+    \begin{cor}
+        \label{Chapter 5 (Corollary) Double Derivative on not t=0}
+        Let $H$ be a Hilbert space. Let $f: H \to \mathbb{R}$ and $\nabla f$ be differentiable at $\mathbf{x} \in H$. For any $\mathbf{u} \in H$,
+        \begin{equation*}
+            \left.\odv*[order=2]{f(\mathbf{x} + t\mathbf{u})}{t}\right|_{t=0} = \inprod{\nabla^{2} f(\mathbf{x})(\mathbf{u})}{\mathbf{u}}.
+        \end{equation*}
+    \end{cor}
+    \begin{proofing}
+        By Theorem \ref{Chapter 5 (Theorem) Derivative on not t=0},
+        \begin{equation*}
+            \odv*[order=2]{f(\mathbf{x} + t\mathbf{u})}{t} = \odv*{\inprod{\nabla f(\mathbf{x} + t\mathbf{u})}{\mathbf{u}}}{t} = \inprod{\odv*{\nabla f(\mathbf{x} + t\mathbf{u})}{t}}{\mathbf{u}} = \inprod{\nabla^{2} f(\mathbf{x} + t\mathbf{u})(\mathbf{u})}{\mathbf{u}}.
+        \end{equation*}
+        Setting $t=0$,
+        \begin{equation*}
+            \left.\odv*[order=2]{f(\mathbf{x} + t\mathbf{u})}{t}\right|_{t=0} = \inprod{\nabla^{2} f(\mathbf{x})(\mathbf{u})}{\mathbf{u}}.
+        \end{equation*}
+    \end{proofing}
+    \newpage
+
+    \begin{thm}
+        Let $H$ be a Hilbert space. Let $f: H \to \mathbb{R}$ and $\nabla f$ be differentiable at $\mathbf{x} \in H$. For any $\mathbf{u}, \mathbf{v} \in H$,
+        \begin{equation*}
+            \left.\pdv*{f(\mathbf{x} + s\mathbf{u} + t\mathbf{v})}{s,t}\right|_{s=t=0} = \inprod{\nabla^{2} f(\mathbf{x})(\mathbf{v})}{\mathbf{u}} = \inprod{\nabla^{2} f(\mathbf{x})(\mathbf{u})}{\mathbf{v}}.
+        \end{equation*}
+    \end{thm}
+    \begin{proofing}
+        By Theorem \ref{Chapter 5 (Theorem) Derivative on not t=0},
+        \begin{equation*}
+            \pdv*{f(\mathbf{x} + s\mathbf{u} + t\mathbf{v})}{s,t} = \pdv*{\inprod{\nabla f(\mathbf{x} + s\mathbf{u} + t\mathbf{v})}{\mathbf{u}}}{t} = \inprod{\pdv*{\nabla f(\mathbf{x} + s\mathbf{u} + t\mathbf{v})}{t}}{\mathbf{u}} = \inprod{\nabla^{2} f(\mathbf{x} + s\mathbf{u} + t\mathbf{v})(\mathbf{v})}{\mathbf{u}}.
+        \end{equation*}
+        Similarly, 
+        \begin{equation*}
+            \pdv*{f(\mathbf{x} + s\mathbf{u} + t\mathbf{v})}{s,t} = \pdv*{\inprod{\nabla f(\mathbf{x} + s\mathbf{u} + t\mathbf{v})}{\mathbf{v}}}{s} = \inprod{\pdv*{\nabla f(\mathbf{x} + s\mathbf{u} + t\mathbf{v})}{s}}{\mathbf{v}} = \inprod{\nabla^{2} f(\mathbf{x} + s\mathbf{u} + t\mathbf{v})(\mathbf{u})}{\mathbf{v}}.
+        \end{equation*}
+        Setting $s=t=0$,
+        \begin{equation*}
+            \left.\pdv*{f(\mathbf{x} + s\mathbf{u} + t\mathbf{v})}{s,t}\right|_{s=t=0} = \inprod{\nabla^{2} f(\mathbf{x})(\mathbf{v})}{\mathbf{u}} = \inprod{\nabla^{2} f(\mathbf{x})(\mathbf{u})}{\mathbf{v}}.
+        \end{equation*}
+    \end{proofing}
+    \begin{rem}
+        This shows that $(\nabla^{2} f(\mathbf{x}))^{*} = \nabla^{2} f(\mathbf{x})$ (self-adjoint).
+    \end{rem}
+
+    We can present the second-order expansion of $f: H \to \mathbb{R}$.
+    \begin{thm}
+        Assume that $f: H \to \mathbb{R}$ and $\nabla f$ is differentiable at $\mathbf{x} \in H$. The \textbf{second-order Taylor expansion} of $f$ is:
+        \begin{equation*}
+            f(\mathbf{y}) = f(\mathbf{x}) + \inprod{\nabla f(\mathbf{x})}{\mathbf{y}-\mathbf{x}} + \frac{1}{2}\inprod{\nabla^{2}f(\mathbf{x})(\mathbf{y}-\mathbf{x})}{\mathbf{y}-\mathbf{x}} + o(\norm{\mathbf{y}-\mathbf{x}}^{2}), \qquad \text{for } \mathbf{y} \in H.
+        \end{equation*}
+    \end{thm}
+    \begin{proofing}
+        Let $g(t) = f(\mathbf{x} + t\mathbf{u})$, where $\mathbf{x}, \mathbf{u} \in H$, $t \in \mathbb{R}$. By the Taylor expansion on $g(t)$,
+        \begin{align*}
+            g(t) = g(t_{0}) + g'(t_{0})(t-t_{0}) + \frac{1}{2}g''(t_{0})(t-t_{0})^{2} + o(\abs{t-t_{0}}^{2}).
+        \end{align*}
+        By Theorem \ref{Chapter 5 (Theorem) Derivative on not t=0} and Corollary \ref{Chapter 5 (Corollary) Double Derivative on not t=0},
+        \begin{equation*}
+            f(\mathbf{x} + t\mathbf{u}) = f(\mathbf{x} + t_{0}\mathbf{u}) + \inprod{\nabla f(\mathbf{x} + t_{0}\mathbf{u})}{\mathbf{u}}(t-t_{0}) + \frac{1}{2}\inprod{\nabla^{2} f(\mathbf{x} + t_{0}\mathbf{u})(\mathbf{u})}{\mathbf{u}}(t-t_{0})^{2} + o(\abs{t-t_{0}})^{2}.
+        \end{equation*}
+        For all $\mathbf{x} \in H$, we can choose:
+        \begin{align*}
+            \mathbf{u} &= \frac{\mathbf{y}-\mathbf{x}}{\norm{\mathbf{y}-\mathbf{x}}}, & t &= \norm{\mathbf{y}-\mathbf{x}}, & t_{0} &= 0, & \mathbf{x} + t\mathbf{u} &= \mathbf{x} + \norm{\mathbf{y}-\mathbf{x}}\left(\frac{\mathbf{y}-\mathbf{x}}{\norm{\mathbf{y}-\mathbf{x}}}\right) = \mathbf{y}.
+        \end{align*}
+        Therefore, the second-order Taylor expansion is:
+        \begin{equation*}
+            f(\mathbf{y}) = f(\mathbf{x}) + \inprod{\nabla f(\mathbf{x})}{\mathbf{y}-\mathbf{x}} + \frac{1}{2}\inprod{\nabla^{2}f(\mathbf{x})(\mathbf{y}-\mathbf{x})}{\mathbf{y}-\mathbf{x}} + o(\norm{\mathbf{y}-\mathbf{x}}^{2}).
+        \end{equation*}
+    \end{proofing}
+    \newpage
+
+\section{Matrix Differentiation}
+    It is straightforward to compute the derivatives of vectors in Euclidean space. However, in many machine learning tasks, matrix differentiation is also required for operations such as backpropagation. Assume we have a Hilbert space $\mathbb{R}^{m \times n}$ with the inner product defined as:
+    \begin{equation*}
+        \inprod{\mathbf{X}}{\mathbf{Y}} = \sum_{i=1}^{m}\sum_{j=1}^{n}x_{ij}y_{ij} = \Tr(\mathbf{X}^{T}\mathbf{Y}) = \Tr(\mathbf{Y}^{T}\mathbf{X}), \qquad \text{for } \mathbf{X}, \mathbf{Y} \in \mathbb{R}^{m \times n}.
+    \end{equation*}
+    The induced norm is defined as:
+    \begin{equation*}
+        \pnorm[F]{\mathbf{X}} = \sqrt{\inprod{\mathbf{X}}{\mathbf{X}}} = \sqrt{\sum_{i=1}^{m}\sum_{j=1}^{n}x_{ij}^{2}}.
+    \end{equation*}
+    \begin{eg}\named{Linear matrix multiplications}
+        Let $\mathbf{A} \in \mathbb{R}^{p \times m}$ and $\mathbf{B} \in \mathbb{R}^{n \times q}$. Consider the mapping $F: \mathbb{R}^{m \times n} \to \mathbb{R}^{p \times q}$ defined as:
+        \begin{equation*}
+            F(\mathbf{X}) = \mathbf{A}\mathbf{X}\mathbf{B}, \qquad \text{for } \mathbf{X} \in \mathbb{R}^{m \times n}.
+        \end{equation*}
+        Since $F$ is linear, by Theorem \ref{Chapter 5 (Theorem) Differentiation of Linear Map}, for $\mathbf{X}, \mathbf{Y} \in \mathbb{R}^{m \times n}$,
+        \begin{equation*}
+            D F(\mathbf{X})(\mathbf{Y}) = \mathbf{A}\mathbf{Y}\mathbf{B}.
+        \end{equation*}
+    \end{eg}
+    \begin{eg}\named{Quadratic matrix multiplications}
+        Let $\mathbf{A} \in \mathbb{R}^{n \times n}$ be given. Consider the mapping $F: \mathbb{R}^{n \times n} \to \mathbb{R}^{n \times n}$ defined as:
+        \begin{equation*}
+            F(\mathbf{X}) = \mathbf{X}\mathbf{A}\mathbf{X}, \qquad \text{for } \mathbf{X} \in \mathbb{R}^{n \times n}.
+        \end{equation*}
+        By the matrix multiplication rule, for $\mathbf{X}, \mathbf{Y} \in \mathbb{R}^{n \times n}$,
+        \begin{align*}
+            D F(\mathbf{X})(\mathbf{Y}) &= D(\mathbf{X})(\mathbf{Y}) \mathbf{A}\mathbf{X} + \mathbf{X} D(\mathbf{A}\mathbf{X})(\mathbf{Y})\\
+            &= \mathbf{Y}\mathbf{A}\mathbf{X} + \mathbf{X}\mathbf{A}\mathbf{Y}.
+        \end{align*}
+    \end{eg}
+    \begin{eg}\named{Transpose}
+        Consider the mapping $F: \mathbb{R}^{m \times n} \to \mathbb{R}^{n \times m}$ defined as:
+        \begin{equation*}
+            F(\mathbf{X}) = \mathbf{X}^{T}.
+        \end{equation*}
+        Since $F$ is linear, by Theorem \ref{Chapter 5 (Theorem) Differentiation of Linear Map}, for $\mathbf{X}, \mathbf{Y} \in \mathbb{R}^{m \times n}$,
+        \begin{equation*}
+            D F(\mathbf{X})(\mathbf{Y}) = \mathbf{Y}^{T}.
+        \end{equation*}
+    \end{eg}
+    \begin{eg}\named{Inversion}
+        Consider the mapping $F: \mathbb{R}^{n \times n} \to \mathbb{R}^{n \times n}$ defined as:
+        \begin{equation*}
+            F(\mathbf{X}) = \mathbf{X}^{-1}, \qquad \text{for } \mathbf{X} \in \mathbb{R}^{n \times n} \text{ and invertible}.
+        \end{equation*}
+        Note that $\mathbf{X}\mathbf{X}^{-1} = \mathbf{I}$. By the matrix multiplication rule, for invertible $\mathbf{X}, \mathbf{Y} \in \mathbb{R}^{n \times n}$,
+        \begin{align*}
+            \mathbf{O} = D(\mathbf{I})(\mathbf{Y}) &= D(\mathbf{X})(\mathbf{Y}) \mathbf{X}^{-1} + \mathbf{X} D(\mathbf{X}^{-1})(\mathbf{Y})\\
+            \mathbf{O} &= \mathbf{Y}\mathbf{X}^{-1} + \mathbf{X} D(\mathbf{X}^{-1})(\mathbf{Y})\\
+            -\mathbf{X}^{-1}\mathbf{Y}\mathbf{X}^{-1} &= D(\mathbf{X}^{-1})(\mathbf{Y}).
+        \end{align*}
+        Therefore, $D F(\mathbf{X})(\mathbf{Y}) = -\mathbf{X}^{-1}\mathbf{Y}\mathbf{X}^{-1}$ for invertible $\mathbf{X}, \mathbf{Y} \in \mathbb{R}^{n \times n}$.
+    \end{eg}
+    \begin{eg}\named{Trace}
+        Consider the mapping $\Tr: \mathbb{R}^{n \times n} \to \mathbb{R}$ defined as:
+        \begin{equation*}
+            \Tr(\mathbf{X}) = \sum_{i=1}^{n} \lambda_{i}(\mathbf{X}), \qquad \text{for } \mathbf{X} \in \mathbb{R}^{n \times n},
+        \end{equation*}
+        where $\lambda_{i}(\mathbf{X})$ is the $i$-th eigenvalue of $\mathbf{X}$. Since $\Tr(\mathbf{X}) = \inprod{\mathbf{X}}{\mathbf{I}}$, it is linear. By Theorem \ref{Chapter 5 (Theorem) Differentiation of Linear Map}, for $\mathbf{X}, \mathbf{Y} \in \mathbb{R}^{n \times n}$,
+        \begin{equation*}
+            D \Tr(\mathbf{X})(\mathbf{Y}) = \inprod{\mathbf{Y}}{\mathbf{I}}.
+        \end{equation*}
+        Thus, $\nabla \Tr(\mathbf{X}) = \mathbf{I}$.
+    \end{eg}
+    \newpage
+
+    \begin{thm}
+        \label{Chapter 5 (Theorem) Jacobi's Formula First Lemma}
+        For any $\mathbf{Y} \in \mathbb{R}^{n \times n}$,
+        \begin{equation*}
+            D F(\mathbf{I})(\mathbf{Y}) = \Tr(\mathbf{Y}).
+        \end{equation*}
+    \end{thm}
+    \begin{proofing}
+        We may find that:
+        \begin{equation*}
+            \det(\mathbf{X}) = \prod_{i=1}^{n}\lambda_{i}(\mathbf{X}), \qquad \text{for } \mathbf{X} \in \mathbb{R}^{n \times n},
+        \end{equation*}
+        where $\lambda_{i}(\mathbf{X})$ is the $i$-th eigenvalue of $\mathbf{X}$. For $\mathbf{Y} \in \mathbb{R}^{n \times n}$,
+        \begin{align*}
+            \det(\mathbf{I} + \mathbf{Y}) &= \prod_{i=1}^{n}(1 + \lambda_{i}(\mathbf{Y}))\\
+            &= \prod_{i=1}^{n}1 + \sum_{i=1}^{n}\lambda_{i}(\mathbf{Y}) + \sum_{i<j}\lambda_{i}(\mathbf{Y})\lambda_{j}(\mathbf{Y}) + \sum_{i<j<k}\lambda_{i}(\mathbf{Y})\lambda_{j}(\mathbf{Y})\lambda_{k}(\mathbf{Y}) + \cdots\\
+            &= \det(\mathbf{I}) + \Tr(\mathbf{Y}) + \sum_{i<j}\lambda_{i}(\mathbf{Y})\lambda_{j}(\mathbf{Y}) + \sum_{i<j<k}\lambda_{i}(\mathbf{Y})\lambda_{j}(\mathbf{Y})\lambda_{k}(\mathbf{Y}) + \cdots.
+        \end{align*}
+        Therefore, by using the fact that $\max_{i}\abs{\lambda_{i}(\mathbf{Y})} \leq \pnorm[2]{\mathbf{Y}} \leq \pnorm[F]{\mathbf{Y}}$,
+        \begin{align*}
+            0 &\leq \lim_{\pnorm[F]{\mathbf{Y}} \to 0} \frac{\abs{\det(\mathbf{I} + \mathbf{Y}) - (\det(\mathbf{I}) + \Tr(\mathbf{Y}))}}{\pnorm[F]{\mathbf{Y}}}\\
+            &\leq \lim_{\pnorm[F]{\mathbf{Y}} \to 0} \frac{\sum_{i<j}\abs{\lambda_{i}(\mathbf{Y})\lambda_{j}(\mathbf{Y})} + \sum_{i<j<k}\abs{\lambda_{i}(\mathbf{Y})\lambda_{j}(\mathbf{Y})\lambda_{k}(\mathbf{Y})} + \cdots}{\pnorm[F]{\mathbf{Y}}}\\
+            &\leq \lim_{\pnorm[F]{\mathbf{Y}} \to 0} \frac{\sum_{i<j}\pnorm[F]{\mathbf{Y}}^{2} + \sum_{i<j<k}\pnorm[F]{\mathbf{Y}}^{3} + \cdots}{\pnorm[F]{\mathbf{Y}}} = 0.
+        \end{align*}
+        Therefore, by the Squeeze Theorem, $D \det(\mathbf{I})(\mathbf{Y}) = \Tr(\mathbf{Y})$.
+    \end{proofing}
+    \begin{eg}\named{Determinant}
+        \label{Chapter 5 (Example) Jacobi's Formula Second Lemma}
+        Consider the mapping $\det: \mathbb{R}^{n \times n} \to \mathbb{R}$ be defined as:
+        \begin{equation*}
+        	\det(\mathbf{X}) = \prod_{i=1}^{n}\lambda_{i}(\mathbf{X}), \qquad \text{for } \mathbf{X} \in \mathbb{R}^{n \times n},
+        \end{equation*}
+        where $\lambda_{i}(\mathbf{X})$ is the $i$-th eigenvalue of $\mathbf{X}$. For any invertible $\mathbf{X}, \mathbf{Z} \in \mathbb{R}^{n \times n}$,
+        \begin{align*}
+            \tag{Theorem \ref{Chapter 5 (Theorem) Derivative on not t=0}}
+            D \det(\mathbf{X})(\mathbf{Z}) &= \left.\odv*{\det(\mathbf{X} + t\mathbf{Z})}{t}\right|_{t=0}\\
+            &= \det(\mathbf{X}) \left.\odv*{\det(\mathbf{I} + t\mathbf{X}^{-1}\mathbf{Z})}{t}\right|_{t=0}\\
+            &= \det(\mathbf{X}) D \det(\mathbf{I})(\mathbf{X}^{-1}\mathbf{Z})\\
+            \tag{Theorem \ref{Chapter 5 (Theorem) Jacobi's Formula First Lemma}}
+            &= \det(\mathbf{X})\Tr(\mathbf{X}^{-1}\mathbf{Z})\\
+            &= \inprod{\det(\mathbf{X})(\mathbf{X}^{-1})^{T}}{\mathbf{Z}}.
+        \end{align*}
+        Therefore, $D \det(\mathbf{X})(\mathbf{Y}) = \det(\mathbf{X})\Tr(\mathbf{X}^{-1}\mathbf{Y})$ and $\nabla \det(\mathbf{X}) = \det(\mathbf{X})(\mathbf{X}^{-1})^{T}$.
+    \end{eg}
+    \begin{thm}\named{Jacobi's Formula}
+        Let $f: \mathbb{R} \to \mathbb{R}$ be defined as:
+        \begin{equation*}
+            f(t) = \det(\mathbf{A}(t)), \qquad \text{for } t \in \mathbb{R},
+        \end{equation*}
+        where $\mathbf{A}: \mathbb{R} \to \mathbb{R}^{n \times n}$ is differentiable and invertible. We have:
+        \begin{equation*}
+            \odv*{f(t)}{t} = \det(\mathbf{A}(t))\Tr\left(\mathbf{A}^{-1}\left(\odv*{\mathbf{A}(t)}{t}\right)\right).
+        \end{equation*}
+    \end{thm}
+    \begin{proofing}
+        By the chain rule,
+        \begin{equation*}
+            \odv*{\det(\mathbf{A}(t))}{t} = D \det(\mathbf{A}(t))\left(\odv*{\mathbf{A}(t)}{t}\right) = \det(\mathbf{A}(t))\Tr\left(\mathbf{A}^{-1}\left(\odv*{\mathbf{A}(t)}{t}\right)\right).
+        \end{equation*}
+    \end{proofing}
+    \newpage
+
+    \begin{eg}
+        Let $F: \mathbb{R}^{n \times n} \to \mathbb{R}$ be defined by:
+        \begin{equation*}
+            F(\mathbf{X}) = \ln(\det(\mathbf{X})), \qquad \text{for symmetric positive definite } \mathbf{X} \in \mathbb{R}^{n \times n}.
+        \end{equation*}
+        By the chain rule, for any symmetric positive definite $\mathbf{X}, \mathbf{Y} \in \mathbb{R}^{n \times n}$,
+        \begin{align*}
+            D F(\mathbf{X})(\mathbf{Y}) &= D \ln(\det(\mathbf{X}))(D \det(\mathbf{X})(\mathbf{Y}))\\
+            \tag{Example \ref{Chapter 5 (Example) Jacobi's Formula Second Lemma}}
+            &= \frac{\det(\mathbf{X})\Tr(\mathbf{X}^{-1}\mathbf{Y})}{\det(\mathbf{X})}\\
+            &= \Tr(\mathbf{X}^{-1}\mathbf{Y}) = \inprod{(\mathbf{X}^{-1})^{T}}{\mathbf{Y}}.
+        \end{align*}
+        Therefore, $\nabla F(\mathbf{X}) = (\mathbf{X}^{-1})^{T}$.
+    \end{eg}
+    \begin{eg}\named{Eigenvalues and eigenvectors}
+        Let $\lambda_{i}: \mathbb{R}^{n \times n} \to \mathbb{R}$ and $\mathbf{v}_{i}: \mathbb{R}^{n \times n} \to \mathbb{R}$ be defined by:
+        \begin{equation*}
+            \mathbf{X}\mathbf{v}_{i}[\mathbf{X}] = (\lambda_{i}\mathbf{v}_{i})[\mathbf{X}], \qquad \text{for symmetric and real } \mathbf{X} \in \mathbb{R}^{n \times n},
+        \end{equation*}
+        where $\lambda_{i}[\mathbf{X}]$ is the $i$-th eigenvalue of $\mathbf{X}$ with the corresponding unit eigenvector $\mathbf{v}_{i}[\mathbf{X}]$. By the matrix multiplication rule, for any symmetric and real $\mathbf{X}, \mathbf{Y} \in \mathbb{R}^{n \times n}$,
+        \begin{align*}
+            D(\mathbf{X}\mathbf{v}_{i}[\mathbf{X}])(\mathbf{Y}) &= D(\lambda_{i}\mathbf{v}_{i})[\mathbf{X}](\mathbf{Y})\\
+            D(\mathbf{X})(\mathbf{Y})\mathbf{v}_{i}[\mathbf{X}] + \mathbf{X}D \mathbf{v}_{i}[\mathbf{X}](\mathbf{Y}) &= D \lambda_{i}[\mathbf{X}](\mathbf{Y})\mathbf{v}_{i}[\mathbf{X}] + \lambda_{i}[\mathbf{X}]D \mathbf{v}_{i}[\mathbf{X}](\mathbf{Y})\\
+            \tag{1}
+            \mathbf{Y}\mathbf{v}_{i}[\mathbf{X}] + \mathbf{X}D \mathbf{v}_{i}[\mathbf{X}](\mathbf{Y}) &= D \lambda_{i}[\mathbf{X}](\mathbf{Y})\mathbf{v}_{i}[\mathbf{X}] + \lambda_{i}[\mathbf{X}]D \mathbf{v}_{i}[\mathbf{X}](\mathbf{Y}).
+        \end{align*} 
+        Since $\mathbf{v}_{i}[\mathbf{X}]$ is a unit vector, by the matrix multiplication rule,
+        \begin{align*}
+            (\mathbf{v}_{i}^{T}\mathbf{v}_{i})[\mathbf{X}] &= 1, & (D \mathbf{v}_{i}[\mathbf{X}])^{T}\mathbf{v}_{i}[\mathbf{X}] + \mathbf{v}_{i}^{T}[\mathbf{X}]D \mathbf{v}_{i}[\mathbf{X}] &= 2\mathbf{v}_{i}^{T}[\mathbf{X}]D \mathbf{v}_{i}[\mathbf{X}] = 0.
+        \end{align*}
+        Therefore, $\mathbf{v}_{i}^{T}[\mathbf{X}]D \mathbf{v}_{i}[\mathbf{X}] = 0$. Multiplying $\mathbf{v}_{i}^{T}[\mathbf{X}]$ to (1),
+        \begin{align*}
+            \tag{$\mathbf{X}$ is symmetric}
+            \mathbf{v}_{i}^{T}[\mathbf{X}]\mathbf{Y}\mathbf{v}_{i}[\mathbf{X}] + \mathbf{v}_{i}^{T}[\mathbf{X}]\mathbf{X}D \mathbf{v}_{i}[\mathbf{X}](\mathbf{Y}) &= \mathbf{v}_{i}^{T}[\mathbf{X}]\mathbf{Y}\mathbf{v}_{i}[\mathbf{X}] + (\lambda_{i}\mathbf{v}_{i}^{T})[\mathbf{X}]D \mathbf{v}_{i}[\mathbf{X}](\mathbf{Y})\\
+            &= \mathbf{v}_{i}^{T}[\mathbf{X}]\mathbf{Y}\mathbf{v}_{i}[\mathbf{X}],\\
+            D \lambda_{i}[\mathbf{X}](\mathbf{Y})(\mathbf{v}_{i}^{T}\mathbf{v}_{i})[\mathbf{X}] + (\lambda_{i}\mathbf{v}_{i}^{T})[\mathbf{X}]D \mathbf{v}_{i}[\mathbf{X}](\mathbf{Y}) &= D \lambda_{i}[\mathbf{X}](\mathbf{Y}).
+        \end{align*}
+        Thus, we can find that:
+        \begin{align*}
+            D \lambda_{i}[\mathbf{X}](\mathbf{Y}) &= \mathbf{v}_{i}^{T}[\mathbf{X}]\mathbf{Y}\mathbf{v}_{i}[\mathbf{X}] = \inprod{(\mathbf{v}_{i}\mathbf{v}_{i}^{T})[\mathbf{X}]}{\mathbf{Y}}, & \nabla \lambda_{i}[\mathbf{X}] &= (\mathbf{v}_{i}\mathbf{v}_{i}^{T})[\mathbf{X}].
+        \end{align*}
+        Moreover, substituting $D \lambda_{i}[\mathbf{X}](\mathbf{Y})$ into (1),
+        \begin{align*}
+            \mathbf{Y}\mathbf{v}_{i}[\mathbf{X}] + \mathbf{X}D \mathbf{v}_{i}[\mathbf{X}](\mathbf{Y}) &= (\mathbf{v}_{i}\mathbf{v}_{i}^{T})[\mathbf{X}]\mathbf{Y}\mathbf{v}_{i}[\mathbf{X}] + \lambda_{i}[\mathbf{X}]D \mathbf{v}_{i}[\mathbf{X}](\mathbf{Y})\\
+            \tag{2}
+            (\mathbf{X}-\lambda_{i}[\mathbf{X}]\mathbf{I})D \mathbf{v}_{i}[\mathbf{X}](\mathbf{Y}) &= ((\mathbf{v}_{i}\mathbf{v}_{i}^{T})[\mathbf{X}] - \mathbf{I})\mathbf{Y}\mathbf{v}_{i}[\mathbf{X}].
+        \end{align*}
+        The matrix $\mathbf{X}-\lambda_{i}[\mathbf{X}]\mathbf{I}$ is not invertible. Consider when $\mathbf{X}$ is non-singular and $\lambda_{i}[\mathbf{X}]$ is a simple (unique) eigenvalue. We have:
+        \begin{equation*}
+            \mathbf{X} - \lambda_{i}[\mathbf{X}]\mathbf{I} = \sum_{j=1}^{n}(\lambda_{j}\mathbf{v}_{j}\mathbf{v}_{j}^{T})[\mathbf{X}] - \sum_{j=1}^{n}(\lambda_{i}\mathbf{v}_{j}\mathbf{v}_{j}^{T})[\mathbf{X}] = \sum_{j \neq i}((\lambda_{j}-\lambda_{i})\mathbf{v}_{j}\mathbf{v}_{j}^{T})[\mathbf{X}].
+        \end{equation*}
+        Note that $(\mathbf{v}_{i}\mathbf{v}_{i}^{T})[\mathbf{X}] - \mathbf{I} = -\sum_{j \neq i}(\mathbf{v}_{j}\mathbf{v}_{j}^{T})[\mathbf{X}]$. If we consider each term of the summation by applying to (2),
+        \begin{equation*}
+            ((\lambda_{j} - \lambda_{i})\mathbf{v}_{j}\mathbf{v}_{j}^{T})[\mathbf{X}]D \mathbf{v}_{i}[\mathbf{X}](\mathbf{Y}) = -(\mathbf{v}_{j}\mathbf{v}_{j}^{T})[\mathbf{X}]\mathbf{Y}\mathbf{v}_{i}[\mathbf{X}].
+        \end{equation*}
+        Therefore,
+        \begin{align*}
+            D \mathbf{v}_{i}[\mathbf{X}](\mathbf{Y}) = \sum_{j=1}^{n}(\mathbf{v}_{j}\mathbf{v}_{j}^{T})[\mathbf{X}]D \mathbf{v}_{i}[\mathbf{X}](\mathbf{Y}) = \sum_{j \neq i}(\mathbf{v}_{j}\mathbf{v}_{j}^{T})[\mathbf{X}]D \mathbf{v}_{i}[\mathbf{X}](\mathbf{Y}) &= -\sum_{j \neq i}\frac{(\mathbf{v}_{j}\mathbf{v}_{j}^{T})[\mathbf{X}]\mathbf{Y}\mathbf{v}_{i}[\mathbf{X}]}{(\lambda_{j}-\lambda_{i})[\mathbf{X}]}\\
+            &= \sum_{j \neq i}\frac{\mathbf{v}_{j}^{T}[\mathbf{X}]\mathbf{Y}\mathbf{v}_{i}[\mathbf{X}]}{(\lambda_{i}-\lambda_{j})[\mathbf{X}]}\mathbf{v}_{j}.
+        \end{align*}
+    \end{eg}
+    Read Appendix \ref{Case Study I: Newton's Method} (Newton's Method) and \ref{Case Study J: Deep Neural Network Training in Deep Learning} (Deep Neural Network Training in Deep Learning) to see the case studies for Chapter \ref{Chapter 5: Linear Transformations or Linear Operators}.
     
 \appendix
 \renewcommand{\thechapter}{\Alph{chapter}}
