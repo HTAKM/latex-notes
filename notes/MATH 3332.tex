@@ -3165,7 +3165,7 @@
     \end{proofing}
     \begin{cor}
         \label{Chapter 5 (Corollary) Double Derivative on not t=0}
-        Let $H$ be a Hilbert space. Let $f: H \to \mathbb{R}$ and $\nabla f$ be differentiable at $\mathbf{x} \in H$. For any $\mathbf{u} \in H$,
+        Let $H$ be a Hilbert space, and let $f: H \to \mathbb{R}$. Let $f$ and $\nabla f$ be differentiable at $\mathbf{x} \in H$. For any $\mathbf{u} \in H$,
         \begin{equation*}
             \left.\odv*[order=2]{f(\mathbf{x} + t\mathbf{u})}{t}\right|_{t=0} = \inprod{\nabla^{2} f(\mathbf{x})(\mathbf{u})}{\mathbf{u}}.
         \end{equation*}
@@ -3183,7 +3183,7 @@
     \newpage
 
     \begin{thm}
-        Let $H$ be a Hilbert space. Let $f: H \to \mathbb{R}$ and $\nabla f$ be differentiable at $\mathbf{x} \in H$. For any $\mathbf{u}, \mathbf{v} \in H$,
+        Let $H$ be a Hilbert space, and let $f: H \to \mathbb{R}$. Let $f$ and $\nabla f$ be differentiable at $\mathbf{x} \in H$. For any $\mathbf{u}, \mathbf{v} \in H$,
         \begin{equation*}
             \left.\pdv*{f(\mathbf{x} + s\mathbf{u} + t\mathbf{v})}{s,t}\right|_{s=t=0} = \inprod{\nabla^{2} f(\mathbf{x})(\mathbf{v})}{\mathbf{u}} = \inprod{\nabla^{2} f(\mathbf{x})(\mathbf{u})}{\mathbf{v}}.
         \end{equation*}
@@ -3208,7 +3208,7 @@
 
     We can present the second-order expansion of $f: H \to \mathbb{R}$.
     \begin{thm}
-        Assume that $f: H \to \mathbb{R}$ and $\nabla f$ is differentiable at $\mathbf{x} \in H$. The \textbf{second-order Taylor expansion} of $f$ is:
+        Let $H$ be a Hilbert space, and let $f: H \to \mathbb{R}$. Assume that $f$ and $\nabla f$ are differentiable at $\mathbf{x} \in H$. The \textbf{second-order Taylor expansion} of $f$ is:
         \begin{equation*}
             f(\mathbf{y}) = f(\mathbf{x}) + \inprod{\nabla f(\mathbf{x})}{\mathbf{y}-\mathbf{x}} + \frac{1}{2}\inprod{\nabla^{2}f(\mathbf{x})(\mathbf{y}-\mathbf{x})}{\mathbf{y}-\mathbf{x}} + o(\norm{\mathbf{y}-\mathbf{x}}^{2}), \qquad \text{for } \mathbf{y} \in H.
         \end{equation*}
@@ -4705,7 +4705,7 @@
     \begin{equation*}
         \mathbf{x}^{*} = \argmin_{\mathbf{x} \in H} f(\mathbf{x}).
     \end{equation*}
-    How can we find the solution numerically? Assume we have an estimate $\mathbf{x}^{(k)}$ of $\mathbf{x}^{*}$. How can we find a better estimate $\mathbf{x}^{(k+1)}$? We can use an affine approximation:
+    How can we find the solution numerically? Assume we have an estimate $\mathbf{x}^{(k)}$ of $\mathbf{x}^{*}$. How can we find a better estimate $\mathbf{x}^{(k+1)}$? If $f$ is differentiable at $\mathbf{x}^{(k)}$, we can use an affine approximation:
     \begin{equation*}
         f(\mathbf{x}) \approx f(\mathbf{x}^{(k)}) + \inprod{\nabla f(\mathbf{x}^{(k)})}{\mathbf{x}-\mathbf{x}^{(k)}}.
     \end{equation*}
@@ -4731,7 +4731,7 @@
     \end{equation*}
     We have the following algorithm:
     \begin{defn}
-        The \textbf{Gradient Descent algorithm} is a method to minimize a function $f: H \to \mathbb{R}$. The steps of the algorithm are as follows:
+        The \textbf{Gradient Descent algorithm} is a method to minimize a differentiable function $f: H \to \mathbb{R}$. The steps of the algorithm are as follows:
         \begin{itemize}
             \item[0:] Initialize $\mathbf{x}^{(0)}$.
             \item[1:] For $k = 0, 1, \cdots$,
