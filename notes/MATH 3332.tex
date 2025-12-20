@@ -1,7 +1,10 @@
 \documentclass{huhtakm-template-book-v2}
-\usepackage{tikz}
+\usepackage{tikz, pgfplots}
 \DeclareMathOperator{\dist}{dist}
 \DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator*{\argmax}{argmax}
 \DeclareMathOperator*{\argmin}{argmin}
 \DeclareMathOperator*{\median}{median}
 \setlength{\parindent}{0pt}
@@ -1618,6 +1621,7 @@
     \end{defn}
     We can also derive the following properties from the definition.
     \begin{thm}
+        \label{Chapter 4 (Theorem) Properties of affine functions}
         An affine function $f$ has the following properties:
         \begin{enumerate}
             \item For any $\alpha,\beta\in\mathbb{R}$ such that $\alpha+\beta=1$,
@@ -1829,6 +1833,7 @@
         \end{align*}
         This results in a contradiction. Therefore, the solution $\mathbf{z}$ is unique.
     \end{proofing}
+	\newpage
 
 \section{Linear approximation and Differentiation}
     Recall that for a function $f:\mathbb{R} \to \mathbb{R}$, its derivative at $x$ is defined as:
@@ -2049,13 +2054,13 @@
     \newpage
 
     Based on the last theorem, we used $\mathbf{y} = \mathbf{x}+t\mathbf{e}_{i}$. Can we extend $\mathbf{e}_{i}$ to any vector?
-    \begin{thm}
-        Let $f:H \to \mathbb{R}$. Assume that $f$ is differentiable at $\mathbf{x} \in \mathbb{R}^{n}$. For any $\mathbf{u} \in \mathbb{R}^{n}$ that satisfies $\norm{\mathbf{u}} = 1$,
+    \begin{lem}
+    	\label{Chapter 4 (Lemma) Derivative on t=0}
+        Let $f:H \to \mathbb{R}$. Assume that $f$ is differentiable at $\mathbf{x} \in H$. For any $\mathbf{u} \in H$,
         \begin{equation*}
-            \inprod{\nabla f(\mathbf{x})}{\mathbf{u}} = \left.\odv*{f(\mathbf{x} + t\mathbf{u})}{t}\right|_{t=0}.
+            \left.\odv*{f(\mathbf{x} + t\mathbf{u})}{t}\right|_{t=0} = \inprod{\nabla f(\mathbf{x})}{\mathbf{u}}.
         \end{equation*}
-        $\inprod{\nabla f(\mathbf{x})}{\mathbf{u}}$ is the \textbf{directional derivative} along the $\mathbf{u}$ direction.
-    \end{thm}
+    \end{lem}
     \begin{proofing}
         The proof is similar to the last theorem. Since $f$ is differentiable at $\mathbf{x}$,
         \begin{equation*}
@@ -2069,6 +2074,32 @@
         Therefore, by definition, $g'(0) = \inprod{\nabla f(\mathbf{x})}{\mathbf{u}}$. Moreover,
         \begin{equation*}
             \inprod{\nabla f(\mathbf{x})}{\mathbf{u}} = \left.\odv*{g(t)}{t}\right|_{t=0} = \left.\odv*{f(\mathbf{x}+t\mathbf{u})}{t}\right|_{t=0}.
+        \end{equation*}
+    \end{proofing}
+    \begin{rem}
+        If $\norm{\mathbf{u}} = 1$, then $\inprod{\nabla f(\mathbf{x})}{\mathbf{u}}$ is the \textbf{directional derivative} along the $\mathbf{u}$ direction.
+    \end{rem}
+    We can generalize this to all $t$.
+    \begin{thm}
+        \label{Chapter 4 (Theorem) Derivative on not t=0}
+        Let $f: H \to \mathbb{R}$. For any $\mathbf{x}, \mathbf{u} \in H$ and $t \in \mathbb{R}$,
+        \begin{equation*}
+            \odv*{f(\mathbf{x} + t\mathbf{u})}{t} = \inprod{\nabla f(\mathbf{x} + t\mathbf{u})}{\mathbf{u}},
+        \end{equation*}
+        if $f$ is differentiable at $\mathbf{x} + t\mathbf{u}$.
+    \end{thm}
+    \begin{proofing}
+        Let $g(t) = f(\mathbf{x} + t\mathbf{u})$. Fix an arbitrary $t_{0}$, we have:
+        \begin{equation*}
+            g(t_{0} + t) = f(\mathbf{x} + t_{0}\mathbf{u} + t\mathbf{u}).
+        \end{equation*} 
+        From Lemma \ref{Chapter 4 (Lemma) Derivative on t=0}, if $f$ is differentiable at $\mathbf{z} \in H$, then:
+        \begin{equation*}
+            \odv*{g'(t_{0})}{t} = \left.\odv*{f(\mathbf{x} + t_{0}\mathbf{u} + t\mathbf{u})}{t}\right|_{t=0} = \inprod{\nabla f(\mathbf{x} + t_{0}\mathbf{u})}{\mathbf{u}}.
+        \end{equation*}
+        Therefore, since $t_{0}$ is arbitrary,
+        \begin{equation*}
+            \odv*{f(\mathbf{x} + t\mathbf{u})}{t} = \inprod{\nabla f(\mathbf{x} + t\mathbf{u})}{\mathbf{u}}.
         \end{equation*}
     \end{proofing}
     Recall the Taylor expansion for functions $f:\mathbb{R} \to \mathbb{R}$:
@@ -2109,7 +2140,7 @@
             D f(\mathbf{x}) = L.
         \end{equation*}
     \end{defn} 
-    We will continue discussing this differentiation in the next chapter. Read Appendix \ref{Case Study D: Linear Regression} (Linear Regression), \ref{Case Study E: Kernel Ridge Regression} (Kernel Ridge Regression), and \ref{Case Study F: Linear Classification} (Linear Classification) to see the case studies for Chapter \ref{Chapter 4: Linear Functions and Differentiation}.
+    We will continue discussing this differentiation in the next chapter. Read Appendix \ref{Case Study D: Linear Regression} (Linear Regression), \ref{Case Study E: Kernel Ridge Regression} (Kernel Ridge Regression), \ref{Case Study F: Linear Classification} (Linear Classification), \ref{Case Study G: Solvability and Optimality} (Solvability and Optimality), and \ref{Case Study H: Gradient Descent} (Gradient Descent) to see the case studies for Chapter \ref{Chapter 4: Linear Functions and Differentiation}.
 
 \appendix
 \renewcommand{\thechapter}{\Alph{chapter}}
@@ -2184,10 +2215,13 @@
     \end{align*}
     We only need to consider each cluster separately to find the corresponding representative vector.
 
-    At this point, we haven't defined which norms we use to construct the clusters. In $\mathbb{R}^{n}$, one of the most commonly used norms for clustering is the $2$-norm. For $j = 1, \cdots, K$:
+    At this point, we have not specified which norms are used to construct the clusters. In $\mathbb{R}^{n}$, one of the most commonly used norms for clustering is the $2$-norm. For $j = 1, \cdots, K$:    
+    \begin{equation*}
+        \min_{\mathbf{z}_{j}}\sum_{i \in G_{j}}\pnorm[2]{\mathbf{x}_{i} - \mathbf{z}_{j}}^{2} \Longleftrightarrow \min_{z_{j1}, \cdots, z_{jn}}\sum_{i \in G_{j}}\sum_{k=1}^{n}(x_{ik} - z_{jk})^{2}.
+    \end{equation*}
+    Taking derivatives for each entry of $\mathbf{z}_{j}$, we have:
     \begin{align*}
-        \min_{\mathbf{z}_{j}}\sum_{i \in G_{j}}\pnorm[2]{\mathbf{x}_{i} - \mathbf{z}_{j}}^{2} &\Longleftrightarrow \min_{z_{j1}, \cdots, z_{jn}}\sum_{i \in G_{j}}\sum_{k=1}^{n}(x_{ik} - z_{jk})^{2}\\
-        &\Longleftrightarrow 2\sum_{i \in G_{j}}(z_{jk} - x_{ik}) = 0 \Longleftrightarrow z_{jk} = \frac{1}{\abs{G_{j}}}\sum_{i \in G_{j}}x_{ik}, \qquad \text{for } k = 1, \cdots, n,\\
+        2\sum_{i \in G_{j}}(z_{jk} - x_{ik}) = 0 &\Longleftrightarrow z_{jk} = \frac{1}{\abs{G_{j}}}\sum_{i \in G_{j}}x_{ik}, \qquad \text{for } k = 1, \cdots, n,\\
         &\Longleftrightarrow \mathbf{z}_{j} = \frac{1}{\abs{G_{j}}}\sum_{i \in G_{j}}\mathbf{x}_{i}.
     \end{align*}
     This is called the K-means algorithm.
@@ -2677,7 +2711,7 @@
         \abs{\supp(\mathbf{a})} << n
     \end{equation*}
     This allows for more interpretable predictions.
-    
+
 \chapter{Kernel Ridge Regression}
     \label{Case Study E: Kernel Ridge Regression}
     This case study assumes that you have already read Chapter \ref{Chapter 4: Linear Functions and Differentiation} and Appendices \ref{Case Study B: Kernel K-means/Kernel Trick} and \ref{Case Study D: Linear Regression}.
