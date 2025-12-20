@@ -2237,7 +2237,7 @@
             \begin{equation*}
                 \mathbf{z}_{j} = \frac{1}{\abs{G_{j}}}\sum_{i \in G_{j}}\mathbf{x}_{i}, \qquad \text{for } j = 1, \cdots, K.
             \end{equation*}
-            \item[] Repeat until convergence is achieved.
+            \item[] Repeat Step 1-2 until convergence is achieved.
         \end{itemize}
     \end{defn}
     \newpage
@@ -2255,7 +2255,7 @@
             \begin{equation*}
                 \mathbf{z}_{j} = \median\{\mathbf{x}_{i} : i \in G_{j}\}, \qquad \text{for } j = 1, \cdots, K.
             \end{equation*}
-            \item[] Repeat until convergence is achieved.
+            \item[] Repeat Step 1-2 until convergence is achieved.
         \end{itemize}
     \end{defn}
     \begin{rem}
@@ -2331,7 +2331,7 @@
                 c_{i}&=\argmin_{j \in \{1, \cdots, K\}} \left(\kappa(\mathbf{x}_{i},\mathbf{x}_{i})-\frac{2}{\abs{G_{j}}}\sum_{k\in G_{j}}\kappa(\mathbf{x}_{i},\mathbf{x}_{k})+\frac{1}{\abs{G_{j}}^{2}}\sum_{k\in G_{j}}\sum_{\ell\in G_{j}}\kappa(\mathbf{x}_{k},\mathbf{x}_{\ell})\right), & &\text{for }i=1,\cdots,N\\
                 G_{j}&=\{i:c_{i}=j\}, & &\text{for }j=1,\cdots,K.
             \end{align*}
-            \item[] Repeat until convergence is achieved.
+            \item[] Repeat Step 1 until convergence is achieved.
         \end{itemize}
     \end{defn}
     Now the problem switches to determining which kernel function we can choose. We have some necessary conditions.
@@ -2555,7 +2555,7 @@
         \end{equation*}
         which has $N$ equations and $n+1$ unknowns, we would need $N \geq n+1$ for a unique solution. 
         
-        However, in practice, we may also have cases when $N << n$. For example, in image recognition. Therefore, we need to perform some regularizations to further shrink the set of candidate functions. We will discuss this later.
+        However, in practice, we may also have cases when $N << n$. For example, in image recognition. Therefore, we need to perform some regularizations to further shrink the set of candidate functions. We will discuss this later. The method on how to find the solution numerically can be found in Appendix \ref{Case Study H: Gradient Descent}.
     \end{enumerate}
     The method is called the least squares.
     \begin{defn}
@@ -3419,11 +3419,11 @@
     \label{Case Study H: Gradient Descent}
     This case study assumes that you have already read Chapter \ref{Chapter 4: Linear Functions and Differentiation} and Appendix \ref{Case Study G: Solvability and Optimality}.
 
-    Suppose we have a function $f: H \to \mathbb{R}$. We aim to find:
+    Let $H$ be a Hilbert space. Suppose we have a function $f: H \to \mathbb{R}$. We aim to find:
     \begin{equation*}
-        \mathbf{x}^{*} = \argmin_{\mathbf{x} \in H} f(\mathbf{x}),
+        \mathbf{x}^{*} = \argmin_{\mathbf{x} \in H} f(\mathbf{x}).
     \end{equation*}
-    where $H$ is a Hilbert space. How can we find the solution numerically? Assume we have an estimate $\mathbf{x}^{(k)}$ of $\mathbf{x}^{*}$. How can we find a better estimate $\mathbf{x}^{(k+1)}$? We can use an affine approximation:
+    How can we find the solution numerically? Assume we have an estimate $\mathbf{x}^{(k)}$ of $\mathbf{x}^{*}$. How can we find a better estimate $\mathbf{x}^{(k+1)}$? We can use an affine approximation:
     \begin{equation*}
         f(\mathbf{x}) \approx f(\mathbf{x}^{(k)}) + \inprod{\nabla f(\mathbf{x}^{(k)})}{\mathbf{x}-\mathbf{x}^{(k)}}.
     \end{equation*}
