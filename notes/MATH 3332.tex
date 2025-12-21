@@ -4851,4 +4851,117 @@
             \item[] Repeat until convergence is achieved.
         \end{itemize}
     \end{defn}
+
+\chapter{Newton's Method}
+    \label{Case Study I: Newton's Method}
+    This case study assumes that you have already read Chapter \ref{Chapter 5: Linear Transformations or Linear Operators} and Appendix \ref{Case Study H: Gradient Descent}.
+
+    Let $H$ be a Hilbert space. Suppose we have a function $f: H \to \mathbb{R}$. We aim to find the solution of:
+    \begin{equation*}
+        \mathbf{x}^{*} = \argmin_{\mathbf{x} \in H} f(\mathbf{x}).
+    \end{equation*}
+    Given an estimate $\mathbf{x}^{(k)}$ of $\mathbf{x}^{*}$, instead of using an affine approximation as in Appendix \ref{Case Study H: Gradient Descent}, we can use the second-order Taylor expansion:
+    \begin{equation*}
+        f(\mathbf{x}) \approx f(\mathbf{x}^{(k)}) + \inprod{\nabla f(\mathbf{x}^{(k)})}{\mathbf{x} - \mathbf{x}^{(k)}} + \frac{1}{2}\inprod{\nabla^{2} f(\mathbf{x}^{(k)})(\mathbf{x}-\mathbf{x}^{(k)})}{\mathbf{x}-\mathbf{x}^{(k)}}
+    \end{equation*}
+    if $f$ and $\nabla f$ are differentiable at $\mathbf{x} \in H$ and $\snorm{\mathbf{x}^{(0)} - \mathbf{x}^{*}}$ is small. We may denote $F_{k}: H \to \mathbb{R}$ as:
+    \begin{equation*}
+        F_{k}(\mathbf{x}) = f(\mathbf{x}^{(k)}) + \inprod{\nabla f(\mathbf{x}^{(k)})}{\mathbf{x} - \mathbf{x}^{(k)}} + \frac{1}{2}\inprod{\nabla^{2} f(\mathbf{x}^{(k)})(\mathbf{x}-\mathbf{x}^{(k)})}{\mathbf{x}-\mathbf{x}^{(k)}}.
+    \end{equation*}
+    Therefore, by the first-order optimality condition, our problem can be rewritten as:
+    \begin{equation*}
+        \mathbf{x}^{(k+1)} = \argmin_{\mathbf{x} \in H} F_{k}(\mathbf{x}) \iff \nabla F_{k}(\mathbf{x}^{(k+1)}) = \mathbf{0}.
+    \end{equation*}
+    Since $\nabla^{2} f(\mathbf{x})$ is linear and self-adjoint,
+    \begin{align*}
+        \nabla F_{k}(\mathbf{x}) &= \nabla f(\mathbf{x}^{(k)}) + \frac{1}{2}((\nabla^{2} f(\mathbf{x}^{(k)}))^{*}(\mathbf{x}-\mathbf{x}^{(k)}) + \nabla^{2} f(\mathbf{x}^{(k)})(\mathbf{x}-\mathbf{x}^{(k)}))\\
+        &= \nabla f(\mathbf{x}^{(k)}) + \nabla^{2} f(\mathbf{x}^{(k)})(\mathbf{x}-\mathbf{x}^{(k)}),\\
+        \mathbf{0} = \nabla F_{k}(\mathbf{x}^{(k+1)}) &= \nabla f(\mathbf{x}^{(k)}) + \nabla^{2} f(\mathbf{x}^{(k)})(\mathbf{x}^{(k+1)}-\mathbf{x}^{(k)}),\\
+        \mathbf{x}^{(k+1)} &= \mathbf{x}^{(k)} - (\nabla^{2} f(\mathbf{x}^{(k)}))^{-1}\nabla f(\mathbf{x}^{(k)}).
+    \end{align*}
+    Therefore, we have the following method:
+    \begin{defn}
+        The \textbf{Newton's method} is a technique to minimize a twice-differentiable function $f: H \to \mathbb{R}$. The steps of the algorithm are as follows:
+        \begin{itemize}
+            \item[0:] Initialize $\mathbf{x}^{(0)}$.
+            \item[1:] For $k = 0, 1, \cdots$, update $\mathbf{x}^{(k+1)}$ by:
+            \begin{equation*}
+                \mathbf{x}^{(k+1)} = \mathbf{x}^{(k)} - (\nabla^{2} f(\mathbf{x}^{(k)}))^{-1} \nabla f(\mathbf{x}^{(k)}).
+            \end{equation*}
+            \item[] Repeat until convergence is achieved.
+        \end{itemize}
+    \end{defn}
+    \begin{rem}
+        Newton's method usually requires fewer iterations than gradient descent if it converges, because the second-order approximation $F_{k}$ is more accurate than the first-order approximation used in gradient descent.
+    \end{rem}
+    \newpage
+
+    There are some main concerns in Newton's method:
+    \begin{itemize}
+        \item[1.] It converges to $\mathbf{x}^{*}$ only if $\snorm{\mathbf{x}^{(0)} - \mathbf{x}^{*}}$ is sufficiently small. We can add a step size to the algorithm, similar to gradient descent.
+        \begin{defn}
+            The \textbf{Newton's method with a step size} is a technique to minimize a twice-differentiable function $f: H \to \mathbb{R}$. The steps of the algorithm are as follows:
+            \begin{itemize}
+                \item[0:] Initialize $\mathbf{x}^{(0)}$.
+                \item[1:] For $k = 0, 1, \cdots$,
+                \begin{enumerate}
+                    \item Choose the step size $\alpha_{k}$.
+                    \item Update $\mathbf{x}^{(k+1)}$ by:
+                    \begin{equation*}
+                        \mathbf{x}^{(k+1)} = \mathbf{x}^{(k)} - \alpha_{k}(\nabla^{2} f(\mathbf{x}^{(k)}))^{-1}\nabla f(\mathbf{x}^{(k)}).
+                    \end{equation*}
+                \end{enumerate}
+                \item[] Repeat until convergence is achieved.
+            \end{itemize}
+        \end{defn}
+        We can also modify the problem as follows:
+        \begin{equation*}
+            \mathbf{x}^{(k+1)} = \argmin_{\mathbf{x} \in H} F_{k}(\mathbf{x}) \text{ such that } \snorm{\mathbf{x}-\mathbf{x}^{(k)}} \leq \alpha_{k}\snorm{\nabla f(\mathbf{x}^{(k)})},
+        \end{equation*}
+        where $\alpha_{k} > 0$ is the step size. The derivation is omitted, but we obtain the following algorithm:
+        \begin{defn}
+            The \textbf{damped Newton's method} is a technique to minimize a twice-differentiable function $f: H \to \mathbb{R}$. The steps of the algorithm are as follows:
+            \begin{itemize}
+                \item[0:] Initialize $\mathbf{x}^{(0)}$.
+                \item[1:] For $k = 0, 1, \cdots$,
+                \begin{enumerate}
+                    \item Choose the regularization parameter $\lambda_{k}$.
+                    \item Update $\mathbf{x}^{(k+1)}$ by:
+                    \begin{equation*}
+                        \mathbf{x}^{(k+1)} = \mathbf{x}^{(k)} - (\nabla^{2} f(\mathbf{x}^{(k)}) + \lambda_{k}\mathbf{I})^{-1} \nabla f(\mathbf{x}^{(k)}).
+                    \end{equation*}
+                \end{enumerate}
+                \item[] Repeat until convergence is achieved.
+            \end{itemize}
+        \end{defn}
+        There are many variations of this damped Newton's method that adaptively adjust the regularization parameter, such as the trust-region algorithm and the Levenberg-Marquardt algorithm.
+        \item[2.] The computation of the inversion of the Hessian is too expensive. We need to approximate $\nabla^{2} f(\mathbf{x}^{(k)})$ by some simple linear operators $\mathbf{B}_{k}$ so that finding $\mathbf{B}_{k}^{-1}$ is much easier than finding $(\nabla^{2} f(\mathbf{x}^{(k)}))^{-1}$. Therefore,
+        \begin{equation*}
+            \mathbf{x}^{(k+1)} = \mathbf{x}^{(k)} - \mathbf{B}_{k}^{-1} \nabla f(\mathbf{x}^{(k)}).
+        \end{equation*}
+        \begin{defn}
+            The \textbf{quasi-Newton method} is a technique to minimize a twice-differentiable function $f: H \to \mathbb{R}$ without the need to find the inverse of the Hessian. The steps of the algorithm are as follows:
+            \begin{itemize}
+                \item[0:] Initialize $\mathbf{x}^{(0)}$.
+                \item[1:] For $k = 0, 1, \cdots$,
+                \begin{enumerate}
+                    \item Find the approximation $\mathbf{B}_{k}$ of $\nabla^{2} f(\mathbf{x}^{(k)})$.
+                    \item Update $\mathbf{x}^{(k+1)}$ by:
+                    \begin{equation*}
+                        \mathbf{x}^{(k+1)} = \mathbf{x}^{(k)} - \mathbf{B}_{k}^{-1} \nabla f(\mathbf{x}^{(k)}).
+                    \end{equation*}
+                \end{enumerate}
+                \item[] Repeat until convergence is achieved.
+            \end{itemize}
+        \end{defn}
+        \begin{rem}
+            If $\mathbf{B}_{k}$ is diagonal, then it is a scaled gradient descent.
+        \end{rem}
+        There are many methods to find $\mathbf{B}_{k}$, such as:
+        \begin{enumerate}
+            \item Broyden-Fletcher-Goldfarb-Shanno algorithm (BFGS),
+            \item Davidon-Fletcher-Powell formula (DFP).
+        \end{enumerate}
+        The inverse is calculated using the Sherman-Morrison formula.
+    \end{itemize}
 \end{document}
