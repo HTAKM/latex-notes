@@ -66,6 +66,16 @@ const notesData = [
         class: "huhtakm-template-book-v2",
         pdfLink: "https://htakm.github.io/latex-notes/notes/MATH 3332.pdf",
         texLink: "https://htakm.github.io/latex-notes/notes/MATH 3332.tex"
+    },
+    {
+        title: "HKUST ISOM 3320 Cheat Sheet",
+        class: "article",
+        pdfLink: "https://htakm.github.io/latex-notes/notes/ISOM 3320 Cheat Sheet.pdf",
+        texLink: "https://htakm.github.io/latex-notes/notes/ISOM 3320 Cheat Sheet.tex",
+        others: {
+            name: "Images used",
+            link: "https://htakm.github.io/latex-notes/notes/ISOM 3320 Cheat Sheet Images.zip"
+        }
     }
 ];
 

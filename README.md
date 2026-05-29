@@ -41,9 +41,13 @@ The following notes are available in this repository:
   - `Constraint Satisfaction Problem.tex`
   - `Constraint Satisfaction Problem.pdf`
   - **Images Used**: `Constraint Satisfaction Problem Images.zip`
-- **HKUST MATH 3332 (Working in Progress)**
+- **HKUST MATH 3332**
   - `MATH 3332.tex`
   - `MATH 3332.pdf`
+- **HKUST ISOM 3320 Cheat Sheet**
+  - `ISOM 3320 Cheat Sheet.tex`
+  - `ISOM 3320 Cheat Sheet.pdf`
+  - **Images Used**: `ISOM 3320 Cheat Sheet Images.zip`
 
 #### Templates
 The following LaTeX template classes are included:

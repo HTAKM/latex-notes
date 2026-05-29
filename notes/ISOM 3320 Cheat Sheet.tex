@@ -1,0 +1,2602 @@
+\documentclass{article}
+\frenchspacing
+\usepackage{subcaption}
+\usepackage{amsthm, amsmath, amssymb, gensymb}
+\usepackage{nicematrix}
+\usepackage[margin=0.5in]{geometry}
+\setlength{\parindent}{0pt}
+\begin{document}
+\section{Java Basics}
+\textbf{Programming}: Process of creating software\\
+\textbf{Programming languages}: Tools to write software
+\begin{enumerate}
+	\item \textbf{Machine language}: Primitive\\
+	Hard to understand by humans; Machine dependent
+	\item \textbf{High-level language} (C, C++, C\#, Java, JavaScript, Pascal, Python, Visual Basic):\\
+	Easy to understand by humans; Machine independent
+\end{enumerate}
+\textbf{Java}: Object-Oriented, Reliable, Secure, Portable, Multithreaded\\
+\textbf{Statement}: One instruction given to the computer\\
+\textbf{Source program (Source code)}: Collection of statements\\
+\textbf{Source file}: The file containing the source code\\
+\textbf{Interpreter / Compiler}: Translate high-level language into (virtual) machine language\\ 
+High-level languages are not native languages of computers.\\
+Source program written in high-level languages cannot be understood by computer.
+\begin{itemize}
+	\item \textbf{Compiler}: Translate the whole source code before execution
+	\item \textbf{Interpreter}: Translate the source code line-by-line
+\end{itemize}
+Java:
+\begin{enumerate}
+	\item Write the source code: Generate Java source code file (\texttt{.java})
+	\item Compiler source code using the compiler "\textbf{javac}": Generate Java bytecode file (\texttt{.class})
+	\item Execute the bytecode using \textbf{Java Virtual Machine (JVM)}: Generate algorithm execution results
+\end{enumerate}
+\textbf{Java Development Toolkit (JDK)}: A toolbox providing the environment to develop and execute Java programs, includes:
+\begin{itemize}
+	\item \textbf{Java Development Tools}: Package to develop a Java program
+	\item \textbf{Java Runtime Environment (JRE)}: Package to run a Java program
+\end{itemize}
+\textbf{Integrated development environments (IDE)}: Integrates editing, compiling, building, debugging, and online help\\
+JDK can write Java program using text editor.\\
+IDE simplifies programming by providing functionalities such as error detection. E.g. NetBeans, Eclipse, DrJava, IDEA, etc.\\
+\textbf{Package}: We can divide project into multiple segments (package)\\
+\textbf{Console}: Text entry and display device of a computer\\
+\textbf{Block}: A pair of braces \{\} with the inside statements (Nested, not intersected)\\
+If a block has only one statement, the braces can be ignored.\\
+\textbf{Class}: A block with the header class.
+
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}[h]{.3\textwidth}
+		\begin{verbatim}
+			public class HelloWorld {
+			    ...implementations
+			}
+		\end{verbatim}
+		\caption{\texttt{HelloWorld.java}}
+	\end{subfigure}
+	\begin{subfigure}[h]{.6\textwidth}
+		Each Java source file must have a same-name class block.\\
+		By convention, first letter of each word in the class name is capitalized.
+	\end{subfigure}
+\end{figure}
+\newpage
+
+\textbf{Component / Member}: A building block that define the class structure and behaviour\\
+Except import and package, statements have to be placed inside a class but not necessarily in the main method.\\
+\textbf{Main method}: The method being executed when executing a Java class. One of the components of the class.\\
+\textbf{One-line comment}: Text starting from \texttt{//} until the end of the line. Ignored when program is running.\\
+\textbf{Multi-line comment}: Text between \texttt{/*} and \texttt{*/}\\
+\texttt{System.out.println()} method prints something on the console and start a new line after the output.\\
+Every statement in Java \textbf{ends with a semicolon} (;)
+
+\begin{figure}[h!]
+	\centering
+	\begin{subfigure}[h]{.5\textwidth}
+		\begin{verbatim}
+			public class HelloWorld {
+			    ...components
+			    
+			    // This is the main method.
+			    void main() {
+			        /* This method
+			           prints the sentence
+			           on the console */
+			        System.out.println("Hello World");
+			    }
+			}
+		\end{verbatim}
+		\caption{\texttt{HelloWorld.java}}
+	\end{subfigure}
+	\begin{subfigure}[h]{.45\textwidth}
+		Traditionally, the main method is a block with a header:
+		\begin{equation*}
+			\texttt{public static void main(String[] args)}
+		\end{equation*}
+		Now, we can simplify the header to:
+		\begin{equation*}
+			\texttt{void main(String[] args)}
+		\end{equation*}
+		The method is called \texttt{main} not \texttt{Main}.
+	\end{subfigure}
+\end{figure}
+
+Exercise: Personal Finance Management (PFM) Application
+
+\begin{figure}[h!]
+	\centering
+	\begin{verbatim}
+		package financeMgmt;
+		
+		public class HomePage {
+		    void main() {
+		        System.out.println("Welcome, please select the service");
+		        System.out.println("1. display transactions");
+		        System.out.println("2. display accounts");
+		        System.out.println("3. display categories");
+		    }
+		}
+	\end{verbatim}
+\end{figure}
+\newpage
+
+\section{Variable}
+\textbf{Variable}: Container to store a value. Creating a variable is called \textbf{declare a variable} or \textbf{variable declaration}.\\
+Syntax: \texttt{\textit{variableType} \textit{variableName} = \textit{variableValue};}
+\begin{itemize}
+	\item \texttt{\textit{variableType}}: Type of the value to be stored in the variable
+	\item \texttt{\textit{variableName}}: Name of the variable
+	\item \texttt{=}: Assignment operator
+	\item \texttt{\textit{variableValue}}: Value to be stored
+\end{itemize}
+\textbf{Literal}: The text whose value can be inferred literally. E.g. 0, "Welcome"\\
+\textbf{Initialization}: First value assignment after declaration
+
+\begin{figure}[h]
+	\begin{verbatim}
+		String username = "HTAKM"; // Assign a literal to a variable (initialization)
+		String name = username;    // Assign a variable's value to another variable (initialization)
+		String address;
+		address = "Earth";         // Assign a literal to an uninitialized variable (initialization)
+		name = "HU";               // Assign another literal to a variable (not initialization)
+	\end{verbatim}
+\end{figure}
+
+\textbf{Identifier}: Name of an element in the Java program. E.g. Class name, variable name, method name, etc.\\
+Identifiers can contain letters (A-Z, a-z), digits (0-9), underscore (\_), and \$. First character cannot be a digit.\\
+No reserved keywords (E.g. \texttt{public}, \texttt{class}, etc.)\\
+Identifiers are case-sensitive. No limit on the length of an identifier.\\
+Naming conventions:
+\begin{itemize}
+	\item Class name: PascalCase style (Capitalize the first letter of each word)
+	\item Methods/Variable/Package name: camelCase style (Capitalize the first letter of each word except the first word)
+	\item Constant name: Capitalize all letters and use underscore to separate words. E.g. \texttt{NUM\_THREADS}
+\end{itemize}
+\textbf{Primitive types}:
+\begin{enumerate}
+	\item Integral data: By default, integer literal is \texttt{int}. If the literal is too large, then \texttt{long}. \texttt{0} is stored by default.
+	
+	\begin{table}[h]
+		\centering
+		\begin{NiceTabular}{||c|l||}
+			\hline
+			\RowStyle{\bfseries} Data Type & Range\\
+			\hline
+			\texttt{byte} & Integers from $-128$ ($-2^{7}$) to $127$ ($2^{7}-1$).\\
+			\hline
+			\texttt{short} & Integers from $-32768$ ($-2^{15}$) to $32767$ ($2^{15}-1$).\\
+			\hline
+			\texttt{int} & Integers from $-2^{31}$ to $2^{31}-1$.\\
+			\hline
+			\texttt{long} & Integers from $-2^{63}$ to $2^{63}-1$.\\
+			\hline
+		\end{NiceTabular}
+	\end{table}
+	
+	We can specify the type by: \texttt{(long) 0} as Java to create a value $0$ using \texttt{long} format.
+	\item Decimal data: Integer followed by a decimal part (\texttt{7.0} is decimal and \texttt{7} is integer) Also called \textbf{floating-point values}\\
+	\textbf{Scientific notation}: Mathematical format is in form: $a \times 10^{b}$. E.g. $0.0123 = 1.23 \times 10^{-2} = 0.123 \times 10^{-1}$\\
+	Java uses \texttt{E} or \texttt{e} for exponent. E.g. $0.0123$ becomes \texttt{1.23e-2} or \texttt{1.23E-2}\\
+	By default, decimal type is \texttt{double}.
+	
+	\begin{table}[h]
+		\centering
+		\begin{NiceTabular}{||c|l|l||}
+			\hline
+			\RowStyle{\bfseries}Data Type & Range & Precision\\
+			\hline
+			\texttt{float} & Values from $-3.4 \times 10^{38}$ to $3.4 \times 10^{38}$ & Limited to $6$ to $7$ significant decimal digits.\\
+			\hline
+			\texttt{double} & Values from $-1.79 \times 10^{308}$ to $1.79 \times 10^{308}$ & Limited to $15$ to $16$ significant decimal digits.\\
+			\hline
+		\end{NiceTabular}
+	\end{table}
+	
+	\item Character data: Single character enclosed by single quotation marks. E.g. \texttt{'a'}, \texttt{'A'}, \texttt{''}\\
+	\textbf{Escape sequence}: Character after the backslash.\\
+	E.g. \texttt{`{\textbackslash}t'} (Tab space), \texttt{`{\textbackslash}n'} (End of line), \texttt{`{\textbackslash}''} (Single quote), \texttt{`{\textbackslash\textbackslash}'} (Backslash)\\
+	The backslash is the \textbf{escape character}.
+	\item Boolean data: Only two Boolean values: \texttt{true} and \texttt{false}
+\end{enumerate}
+\newpage
+
+Storage space of a computer is measured in the number of \textbf{bit}.
+\begin{itemize}
+	\item 1 \textbf{byte} (B) = 8 bits
+	\item 1 \textbf{kilobyte} (KB) = 1024 B
+	\item 1 \textbf{megabyte} (MB) = 1024 KB
+	\item 1 \textbf{gigabyte} (GB) = 1024 MB
+	\item 1 \textbf{terabyte} (TB) = 1024 GB
+\end{itemize}
+Different data types use different space amounts:
+\begin{itemize}
+	\item \texttt{byte}: 1 B, \texttt{short}: 2 B, \texttt{int}: 4 B, \texttt{long}: 8 B
+	\item \texttt{float}: 4 B, \texttt{double}: 8 B
+	\item \texttt{char}: 2 B
+	\item \texttt{boolean}: 1 B typically, changes with JVM 
+\end{itemize}
+Value can be assigned to a variable when they have the same type.\\
+\textbf{Implicit type casting}: Value is automatically converted to the variable's type, with following conditions:
+\begin{enumerate}
+	\item For integers and decimals, the value type's range is no larger than the variable type's range.
+	\item Character can be assigned to numerical variables based on ASCII code.
+	\item Integer literals and integer variables below 65536 can be assigned to character variables.
+\end{enumerate}
+\textbf{Explicit type casting}: Explicitly specify the value's type so that the assignment can be executed.
+
+\begin{figure}[h]
+	\centering
+	\begin{verbatim}
+		/* 1.9 is double, whose range is larger than int. It cannot be assigned directly.
+		 * We explicitly case 1.9 into int.
+		 * The value of w is 1 after type casting. Java directly drop the decimal part.
+		 */
+		int w = (int) 1.9;
+	\end{verbatim}
+\end{figure}
+
+\textbf{Operator}: Denotes an operation on values, variables, and objects. E.g. assignment operator \texttt{=}\\
+\textbf{Operands}: Values, variables and objects processed by an operator. E.g. \texttt{x} and \texttt{1} in \texttt{x = 1}\\
+\textbf{Arithmetic operators}:
+
+\begin{table}[h]
+	\centering
+	\begin{subtable}{.5\textwidth}
+		\begin{NiceTabular}{||llll||}[hvlines]
+			\RowStyle{\bfseries}Operator & Meaning & Example & Output\\
+			\texttt{+} & Addition & \texttt{33 + 5} & \texttt{38}\\
+			\texttt{-} & Subtraction & \texttt{15.4 - 0.3} & \texttt{15.1}\\
+			\texttt{*} & Multiplication & \texttt{250 * 10} & \texttt{2500}\\
+			\texttt{/} & Division & \texttt{1.0 / 2.0} & \texttt{0.5}\\
+			\texttt{\%} & Remainder & \texttt{23 \% 3} & \texttt{2}
+		\end{NiceTabular}
+	\end{subtable}
+	\begin{subtable}{.45\textwidth}
+		Arithmetic result depends on the operand types. E.g.\\
+		\begin{NiceTabular}{||cc||}[hvlines]
+			\RowStyle{\bfseries}Operand types & Result type\\
+			Integer, Integer & Integer\\
+			Floating-point, Floating-point & Floating-point\\
+			Integer, Floating-point & Floating-point
+		\end{NiceTabular}
+	\end{subtable}
+\end{table}
+
+\textbf{Augmented Assignment Operators}:
+
+\begin{table}[h]
+	\centering
+	\begin{NiceTabular}{||llll||}[hvlines]
+		\RowStyle{\bfseries}Operator & Name & Example & Equivalent\\
+		\texttt{+=} & Addition assignment & \texttt{a += 3} & \texttt{a = a + 3}\\
+		\texttt{-=} & Subtraction assignment & \texttt{a -= 3} & \texttt{a = a - 3}\\
+		\texttt{*=} & Multiplication assignment & \texttt{a *= 3} & \texttt{a = a * 3}\\
+		\texttt{/=} & Division assignment & \texttt{a /= 3} & \texttt{a = a / 3}\\
+		\texttt{\%=} & Remainder assignment & \texttt{a \%= 3} & \texttt{a = a \% 3}
+	\end{NiceTabular}
+\end{table}
+Augmented assignment operators use implicit casting.
+\newpage
+
+\textbf{Increment and Decrement Operators}:
+
+\begin{table}[h]
+	\centering
+	\begin{NiceTabular}{||llllcc||}[hvlines]
+		\RowStyle{\bfseries} Operator & Name & Description & Example & \texttt{a} (Initial \texttt{a=1}) & \texttt{b}\\
+		\texttt{++var} & Preincrement & Increment \texttt{var} by 1, and use new \texttt{var} & \texttt{int b = ++a} & 2 & 2\\
+		\texttt{var++} & Postincrement & Increment \texttt{var} by 1, and use original \texttt{var} & \texttt{int b = a++} & 2 & 1\\
+		\texttt{--var} & Predecrement & Decrement \texttt{var} by 1, and use new \texttt{var} & \texttt{int b = --a} & 0 & 0\\
+		\texttt{var--} & Postdecrement & Decrement \texttt{var} by 1, and use original \texttt{var} & \texttt{int b = a--} & 0 & 1
+	\end{NiceTabular}
+\end{table}
+
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}[h]{\textwidth}
+		\centering
+		\begin{subfigure}[h]{.3\textwidth}
+			\centering
+			\begin{verbatim}
+				int i = 10;
+				int j = 10 * (i++);
+			\end{verbatim}
+		\end{subfigure}
+		$\Longleftrightarrow$
+		\begin{subfigure}[h]{.3\textwidth}
+			\centering
+			\begin{verbatim}
+				int i = 10;
+				int j = 10 * i;
+				i += 1;
+			\end{verbatim}
+		\end{subfigure}
+	\end{subfigure}
+	\begin{subfigure}[h]{\textwidth}
+		\centering
+		\begin{subfigure}[h]{.3\textwidth}
+			\centering
+			\begin{verbatim}
+				int i = 10;
+				int j = 10 * (++i);
+			\end{verbatim}
+		\end{subfigure}
+		$\Longleftrightarrow$
+		\begin{subfigure}[h]{.3\textwidth}
+			\centering
+			\begin{verbatim}
+				int i = 10;
+				i += 1;
+				int j = 10 * i;
+			\end{verbatim}
+		\end{subfigure}
+	\end{subfigure}
+\end{figure}
+
+\textbf{Class}: Block of statements defining a group of similar real-world entities, which includes:
+\begin{itemize}
+	\item \textbf{Properties}, \textbf{attributes}, or \textbf{data fields}: describe how the entities look like
+	\item \textbf{Action}, \textbf{Method}: describe what the entities can do
+\end{itemize}
+Data fields are defined as variables outside any method or constructor.
+
+\begin{figure}[h]
+	\centering
+	\begin{verbatim}
+		public class Dog {
+		    String name;
+		    int age;
+		    void bark() {
+		        System.out.println("The dog " + name + " barks.")
+		    }
+		} // No main method, so you cannot run it.
+	\end{verbatim}
+\end{figure}
+
+Java usually divides the computer memory into three parts: Metaspace, Stack, Heap\\
+\textbf{Class instantiation}: Java creates a memory segment in Heap and create variables inside it following the data field definitions.\\
+\textbf{Object}: The memory segment with created class elements.\\
+An object is an \textbf{instance} of the class. You can create multiple objects of the same class.\\
+\textbf{Reference variable}: A variable to store the object address. They are stored in Stack.\\
+Syntax: \texttt{\textit{refVariableType} \textit{refVariableName} = new \textit{className}();}
+\begin{itemize}
+	\item \texttt{\textit{refVariableType}}: Should be same as \textit{className}
+	\item \texttt{new}: A keyword of class initialization, which tells Java to create an object.
+	\item \texttt{()}: Cannot be omitted
+\end{itemize}
+Assign values to data fields:\\
+Syntax: \texttt{\textit{refVariableName}.\textit{dataFieldName} = \textit{valueTobeAssigned};}
+\begin{itemize}
+	\item \texttt{.}: \textbf{Dot operator}, which connects the container and its element.
+\end{itemize}
+
+\begin{figure}[h!]
+	\centering
+	\begin{verbatim}
+		Dog myDog = new Dog();
+		myDog.name = "John";
+		System.out.println("My dog is called " + myDog.name);
+	\end{verbatim}
+\end{figure}
+\newpage
+
+\textbf{Scanner class}: Provides methods to read the values input by users on the console. Defined in the package called \texttt{java.util}\\
+Before using Scanner class, we need to import the package at the top of the file first.
+
+\begin{figure}[h!]
+	\centering
+	\begin{verbatim}
+		import java.util.*; // Imports all classes in the package
+		import java.util.Scanner; // Only imports the Scanner class
+	\end{verbatim}
+\end{figure}
+
+To use the methods in the Scanner class, we need to create an object of it.\\
+The Scanner class defines a \texttt{nextInt()} method to read an \texttt{int} input. It can be used repetitively.
+
+\begin{figure}[h!]
+	\centering
+	\begin{verbatim}
+		Scanner input = new Scanner(System.in);
+		System.out.print("Please input an integer: ");
+		int userInput1 = input.nextInt();
+		System.out.println("The user input is " + userInput);
+		System.out.print("Please input another integer: ");
+		int userInput2 = input.nextInt();
+		System.out.println("The user input is " + userInput);
+	\end{verbatim}
+\end{figure}
+
+Methods of the Scanner object:
+
+\begin{table}[h!]
+	\centering
+	\begin{NiceTabular}{||ll||}[hvlines]
+		\RowStyle{\bfseries}Method & Description\\
+		\texttt{nextByte()} & Reads an integer of the \texttt{byte} type\\
+		\texttt{nextShort()} & Reads an integer of the \texttt{short} type\\
+		\texttt{nextInt()} & Reads an integer of the \texttt{int} type\\
+		\texttt{nextLong()} & Reads an integer of the \texttt{long} type\\
+		\texttt{nextFloat()} & Reads an integer of the \texttt{float} type\\
+		\texttt{nextDouble()} & Reads an integer of the \texttt{double} type\\
+		\texttt{next()} & Reads a String (till a whitespace)\\
+		\texttt{nextLine()} & Reads a String (till the Enter key or next line)
+	\end{NiceTabular}
+\end{table}
+
+Do not use \texttt{nextLine()} after other console-reading methods to avoid errors.\\
+There are no methods to read a char value.\\
+\textbf{Null type}: This variable does not reference to any object.\\
+\textbf{Garbage collection}: If an object is not referenced by any variable, it will be cleared.
+
+\begin{figure}[h!]
+	\centering
+	\begin{verbatim}
+		myDog = null;
+	\end{verbatim}
+\end{figure}
+\newpage
+
+\section{Method Basics}
+Recall:\\
+\textbf{Class}: Describes a group of similar real-word entities.
+\begin{itemize}
+	\item Properties, attributes, or data fields: describe how the entities look like
+	\item Action, or method: describe what the entities can do
+\end{itemize}
+\textbf{Method}: A block describing a task that can be done by this class' objects.\\
+\textbf{Method header}: Statement before the block\\
+\textbf{Method body}: The block (two braces and the statements inside them)
+
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}[h]{.4\textwidth}
+		\centering
+		\begin{verbatim}
+			void sayHello() {
+			    System.out.println("Hello");
+			}
+		\end{verbatim}
+	\end{subfigure}
+	\begin{subfigure}[h]{.55\textwidth}
+		Method header: \texttt{void sayHello()}\\
+		Method body:\\
+		\texttt{\{\\
+			\hspace*{2em} System.out.println("Hello");\\
+		\}}
+	\end{subfigure}
+\end{figure}
+
+Method header syntax: \texttt{\textit{returnValueType} \textit{methodName}\textit{parameterList}}
+\begin{itemize}
+	\item \texttt{\textit{methodName}}: By convention, should use camelCase style
+	\item \texttt{\textit{parameterList}}: Defines all the parameters surrounded with \texttt{()}
+\end{itemize} 
+\textbf{Parameter}: Input required to invoke the method.\\
+We declare parameters (parameter type and name) in the parentheses.\\
+If multiple parameters are needed, use a comma to separate them.\\
+\textbf{Parameter list}: Combination of all parameters in the parentheses.
+
+\begin{figure}[h!]
+	\begin{subfigure}[h]{.6\textwidth}
+		\centering
+		\begin{verbatim}
+			void printSum(double number1, double number2) {
+			    double sum = number1 + number2;
+			    System.out.println("The sum is " + sum);
+			}
+		\end{verbatim}
+	\end{subfigure}
+	\begin{subfigure}[h]{.3\textwidth}
+		Parameters:
+		\begin{align*}
+			\texttt{double number1}\\
+			\texttt{double number2}
+		\end{align*}
+	\end{subfigure}
+\end{figure}
+
+\textbf{Arguments (Actual parameters)}: Specify the values for parameters when invoking a method.\\
+Arguments must match parameters. (Same number, compatible type)\\
+The literals or the values stored in the arguments are passed to parameters.\\
+Argument variables and parameter variables are not interdependent.\\
+Changing the parameter value does not change the argument value.
+
+\begin{figure}[h]
+	\centering
+	\begin{verbatim}
+		void printSum(double number1, double number2) {
+		    ...implementations
+		}
+		double currentNumber = 2.5;
+		printSum(currentNumber, 3);
+	\end{verbatim}
+\end{figure}
+
+\textbf{Method signature}: Combination of method name and parameter list.\\
+In a class, no methods should have the same signature, but they may have the same name.
+
+\begin{figure}[h!]
+	\centering
+	\begin{verbatim}
+		void printSum(double number1, double number2) {
+			...implementations
+		}
+		void printSum(double number, String numberStr) {
+		    ...implementations
+		}
+	\end{verbatim}
+\end{figure}
+\newpage
+
+\textbf{Return value}: Value returned after method invocation.\\
+If a method returns a value, we must specify the return value type before the method name.\\
+Return value type must be compatible with the return value. If no value is returned, the return value type is \texttt{void}.\\
+\textbf{Void Method}: Return value type of the method is \texttt{void}\\
+You can still write return in void methods (which returns but returns nothing)\\
+\textbf{Value-return Methods}: Return value type of the method is not \texttt{void}
+
+\begin{figure}[h!]
+	\centering
+	\begin{verbatim}
+		double getSum(double number1, double number2) {
+		    return number1 + number2;
+		}
+		void main() {
+		    Scanner scanner = new Scanner(System.in);
+		    double userInput1 = input.nextDouble();
+		    double userInput2 = input.nextDouble();
+		    System.out.println("Their sum is " + getSum(userInput1, userInput2));
+		}
+	\end{verbatim}
+\end{figure}
+\newpage
+
+\section{Selection}
+\textbf{Selection} structure: A program executing different statements depending on certain conditions.\\
+Syntax (One-way selection):\\
+\texttt{if (\textit{condition}) \{\\
+	\hspace*{2em} \textit{if-statements}\\
+	\}}
+\begin{itemize}
+	\item When \texttt{\textit{condition}} is true, \texttt{\textit{if-statements}} are executed.
+	\item When \texttt{\textit{condition}} is false, do nothing.
+\end{itemize}
+Syntax (Two-way selection):\\
+\texttt{if (\textit{condition}) \{\\
+\hspace*{2em} \textit{if-statements}\\
+\} else \{\\
+\hspace*{2em} \textit{else-statements}\\
+\}}
+\begin{itemize}
+	\item When \texttt{\textit{condition}} is true, \texttt{\textit{if-statements}} are executed.
+	\item When \texttt{\textit{condition}} is false, \texttt{\textit{else-statements}} are executed.
+\end{itemize}
+You can stack multiple \texttt{if} blocks.
+
+\begin{figure}[h]
+	\centering
+	\begin{verbatim}
+		boolean isGuessCorrect(int guess, int correctGuess) {
+		    if (guess > correctGuess) {
+		        System.out.println("Lower");
+		        return false;
+		    } else if (guess < correctGuess) {
+		        System.out.println("Higher");
+		        return false;
+		    } else
+		        return true;
+		}
+	\end{verbatim}
+\end{figure}
+
+\textbf{Boolean expression}: One expression whose result is true or false.
+
+\begin{figure}[h]
+	\centering
+	\begin{verbatim}
+		boolean isCorrect = guess == correctGuess;
+		if (isCorrect)
+		    System.out.println("Correct");
+		else
+		    System.out.println("Wrong");
+	\end{verbatim}
+\end{figure}
+
+\textbf{Relational operators}: Commonly used to write boolean expressions.
+
+\begin{table}[h!]
+	\centering
+	\begin{NiceTabular}{||lcllc||}[hvlines]
+		\RowStyle{\bfseries}Operator & Mathematical Symbol & Name & Example (radius is \texttt{5}) & Result\\
+		\texttt{<} & $<$ & less than & \texttt{radius < 0} & \texttt{false}\\
+		\texttt{<=} & $\leq$ & less than or equal to & \texttt{radius <= 0} & \texttt{false}\\
+		\texttt{>} & $>$ & greater than & \texttt{radius > 0} & \texttt{true}\\
+		\texttt{>=} & $\geq$ & greater than or equal to & \texttt{radius >= 0} & \texttt{true}\\
+		\texttt{==} & $=$ & equal to & \texttt{radius == 0} & \texttt{false}\\
+		\texttt{!=} & $\neq$ & not equal to & \texttt{radius != 0} & \texttt{true}
+	\end{NiceTabular}
+\end{table}
+
+Due to precision issues, the arithmetic result of double value calculation may not be accurate. Try to avoid using equal to or not equal to operators.
+\newpage
+
+\textbf{Compound condition}: Combination of multiple boolean expressions.
+
+\begin{table}[h!]
+	\centering
+	\begin{NiceTabular}{||ll||}[hvlines]
+		\RowStyle{\bfseries}Operator & Name\\
+		\texttt{!} & not\\
+		\texttt{\&\&} & and\\
+		\texttt{||} & or\\
+		\texttt{\^} & exclusive or
+	\end{NiceTabular}
+\end{table}
+
+\begin{table}[h!]
+	\centering
+	\begin{subtable}[h]{.2\textwidth}
+		\centering
+		\begin{NiceTabular}{||cc||}[hvlines]
+			\RowStyle{\bfseries}\texttt{A} & \texttt{!A}\\
+			\texttt{true} & \texttt{false}\\
+			\texttt{false} & \texttt{true}
+		\end{NiceTabular}
+	\end{subtable}
+	\begin{subtable}[h]{.7\textwidth}
+		\centering
+		\begin{NiceTabular}{||ccccc||}[hvlines]
+			\RowStyle{\bfseries}\texttt{A} & \texttt{B} & \texttt{A \&\& B} & \texttt{A || B} & \texttt{A \^{} B}\\
+			\texttt{true} & \texttt{true} & \texttt{true} & \texttt{true} & \texttt{false}\\
+			\texttt{true} & \texttt{false} & \texttt{false} & \texttt{true} & \texttt{true}\\
+			\texttt{false} & \texttt{true} & \texttt{false} & \texttt{true} & \texttt{true}\\
+			\texttt{false} & \texttt{false} & \texttt{false} & \texttt{false} & \texttt{false}
+		\end{NiceTabular}
+	\end{subtable}
+\end{table}
+
+\textbf{Switch structure}: Simplified selection structure when all conditions depend on the value of one expression.\\
+Syntax:\\
+\texttt{switch (\textit{expression}) \{\\
+\hspace*{2em}case \textit{value1}:\\
+\hspace*{4em}\textit{statements1}\\
+\hspace*{4em}break;\\
+\hspace*{2em}case \textit{value2}:\\
+\hspace*{4em}\textit{statements2}\\
+\hspace*{4em}break;\\
+\hspace*{2em}$\vdots$\\
+\hspace*{2em}default:\\
+\hspace*{4em}\textit{statements0}\\
+\}}
+\begin{itemize}
+	\item When \texttt{\textit{expression}} is equal to \texttt{\textit{value1}}, execute \texttt{\textit{statements1}}.
+	\item When \texttt{\textit{expression}} is not equal to all values, execute \texttt{\textit{statements0}}.
+\end{itemize}
+In a switch selection, Java executes the correct case until break. The default case can be omitted.\\
+The value after the keyword \texttt{case} must be unchangeable (immutable).\\
+If a variable is declared with a modifier \texttt{final}, this variable is called a \textbf{constant}.\\
+Constant cannot be changed after initialization. By convention, a constant's name uses cap letters and underscores.
+
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}[h]{.6\textwidth}
+		\centering
+		\begin{verbatim}
+			final char GRADE_A = `A';
+			switch (letterGrade) {
+				case GRADE_A: System.out.println("Excellent!");
+				case `B': System.out.println("Keep it up!"); break;
+			}
+		\end{verbatim}
+	\end{subfigure}
+	\begin{subfigure}[h]{.3\textwidth}
+		If \texttt{letterGrade} is \texttt{`A'}, this prints:
+		\begin{align*}
+			&\texttt{Excellent!}\\
+			&\texttt{Keep it up!}
+		\end{align*}
+	\end{subfigure}
+\end{figure}
+
+\textbf{Conditional Operator}: Used when a variable is assigned different values depending on a condition.\\
+Syntax: \texttt{\textit{variable} = (\textit{condition}) ? \textit{expressionTrue} : \textit{expressionFalse}}
+\begin{itemize}
+	\item \texttt{\textit{expressionTrue}} is assigned to \texttt{\textit{variableName}} if  \texttt{\textit{condition}} is true.
+	\item \texttt{\textit{expressionFalse}} is assigned to \texttt{\textit{variableName}} if  \texttt{\textit{condition}} is false.
+\end{itemize}
+It is equivalent to:\\
+\texttt{if (\textit{condition})\\
+\hspace*{2em}\textit{variable} = \textit{expressionTrue};\\
+else\\
+\hspace*{2em}\textit{variable} = \textit{expressionFalse};}\\
+
+\begin{figure}[h!]
+	\centering
+	\begin{verbatim}
+		String classStatus = (typhoneSignal < 8) ? "continue" : "cancelled";
+	\end{verbatim}
+\end{figure}
+\newpage
+
+\section{Loops}
+\textbf{Loop}: Repeating similar or same tasks multiple times.\\
+While loop syntax:\\
+\texttt{while (\textit{loop-continuation-condition}) \{\\
+\hspace*{2em}\textit{loop-body}\\
+\}}
+\begin{itemize}
+	\item As long as \texttt{\textit{loop-continuation-condition}} is true, Repeat \texttt{\textit{loop-body}}.
+	\item The \texttt{\textit{loop-continuation-condition}} is evaluated at the start of each loop. The loop body may be executed 0 times.
+\end{itemize}
+
+Do-while loop syntax:\\
+\texttt{do \{\\
+\hspace*{2em}\textit{loop-body}\\
+\} while (\textit{loop-continuation-condition});}
+\begin{itemize}
+	\item Repeat \texttt{\textit{loop-body}} until \texttt{\textit{loop-continuation-condition}} is false.
+	\item The \texttt{\textit{loop-continuation-condition}} is evaluated at the end of each loop. The loop body is executed at least 1 time.
+\end{itemize}
+
+For loop syntax:\\
+\texttt{for (\textit{initial-action}; \textit{loop-continuation-condition}; \textit{action-after-each-iteration}) \{\\
+\hspace*{2em}\textit{loop-body}\\
+\}}\\
+This is equivalent to:\\
+\texttt{\textit{initial-action};\\
+while (\textit{loop-continuation-condition}) \{\\
+\hspace*{2em}\textit{loop-body}\\
+\hspace*{2em}\textit{action-after-each-iteration};\\
+\}}\\
+
+\textbf{Local variable}: Variable declared in a child block of the class block.\\
+A local variable can only be used in the declaring block. A variable declared outside of any child block is a data field.
+
+\begin{figure}[h]
+	\centering
+	\begin{verbatim}
+		for (int i = 0; i < 100; i++) {
+		    System.out.println("Lemons");
+		}
+		System.out.println(i) // This will raise error.
+	\end{verbatim}
+\end{figure}
+
+Recommended:\\
+For loops when number of iterations are known.\\ Do-while loops when number of iterations are not known in advance and at least one iteartion is required.\\
+
+Continuation depends on user input: Terminate loop when user's input does not satisfy the continuation condition.\\
+\textbf{Sentinel value}: Concrete value in a loop continuation condition to compare user input with\\
+\textbf{Sentinel-value-controlled loop}: Loop that uses sentinel value in loop continuation condition\\
+\texttt{break}: When Java encounters \texttt{break}, it jumps to the first statement after the loop.\\
+\texttt{continue}:\\
+When Java encounters \texttt{continue} in a for loop, it jumps to \texttt{\textit{action-after-each-iteration}}.\\
+When Java encounters \texttt{continue} in a while-loop or do-while loop, it jumps to \texttt{\textit{loop-continuation-condition}}.
+
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}{.45\textwidth}
+		\begin{verbatim}
+			for (int i = 0; i < 5; i++) {
+			    if (i % 2 == 1)
+			        continue;
+			    System.out.print(i);
+			}
+			System.out.println("hmm");
+		\end{verbatim}
+		Print: \texttt{024hmm}
+	\end{subfigure}
+	\begin{subfigure}{.45\textwidth}
+		\begin{verbatim}
+			for (int i = 0; i < 5; i++) {
+			    if (i % 2 == 1)
+			        break;
+			    System.out.print(i);
+			}
+			System.out.println("hmm");
+		\end{verbatim}
+		Print: \texttt{0hmm}
+	\end{subfigure}
+\end{figure}
+\newpage
+
+\null
+\newpage
+
+\section{Arrays}
+\textbf{Array}: Collection of data with the same data type inside a pair of braces \texttt{\{\}}\\
+Syntax: \texttt{\textit{elementType}[] \textit{refVariableName} = \{\textit{element1}, ..., \textit{elementN}\};}
+\begin{itemize}
+	\item \texttt{\textit{element1}}, $\cdots$, \texttt{\textit{elementN}} must have the type \texttt{\textit{elementType}}.
+	\item \texttt{\textit{elementType}} can be primitive or reference types.
+	\item \texttt{[]}: This variable stores an array instead of a single value.
+	\item An array is an object, so the variable is a reference variable.
+\end{itemize}
+Syntax: \texttt{\textit{elementType}[] \textit{refVariableName} = new \textit{elementType}[\textit{numOfElements}];}
+\begin{itemize}
+	\item \textit{new}: Create a new array object
+	\item In the array, all elements are \texttt{0} if \texttt{\textit{elementType}} is integer type, \texttt{0.0} for decimal type, \texttt{`\textbackslash u0000'} for \texttt{char}, \texttt{false} for \texttt{bool}, and \texttt{null} for reference type.
+\end{itemize}
+Once an array is created, its size is fixed. You cannot add or delete elements from an array.\\
+Syntax for getting the length of the array: \texttt{\textit{refVariableName}.length}\\
+Syntax for accessing elements through index:
+\texttt{\textit{refVariableName}[\textit{elementIndex}]}
+\begin{itemize}
+	\item The indices start from 0 to \texttt{arrayVariable.length} - 1
+	\item The syntax gives the element at the (\texttt{\textit{elementIndex}} + 1)-th position.
+\end{itemize}
+Arrays are reference-type and created in Heap. The array reference variable stores the Heap address.\\
+Therefore, we need to access the elements first before printing.
+
+\begin{figure}[h!]
+	\centering
+	\begin{verbatim}
+		int[] newArray = {1, 5, 3, 6, 3};
+		System.out.println(newArray); // This prints the reference (Heap address), not the elements
+		for (int i = 0; i < newArray.length; i++)
+		    System.out.print(newArray[i]);
+	\end{verbatim}
+\end{figure}
+
+We can also access the elements via a foreach loop.\\
+Foreach loop syntax:\\
+\texttt{for (\textit{elementType} \textit{variableName} : \textit{refVariableName}) \{\\
+\hspace*{2em}\textit{loop-body}\\
+\}}
+\begin{itemize}
+	\item This sequentially assign elements in \texttt{\textit{refVariableName}} to \texttt{\textit{variableName}} and repeat the loop body.
+	\item It cannot be used to change element values.
+\end{itemize}
+
+\begin{figure}[h!]
+	\centering
+	\begin{verbatim}
+		double[] newArray = {1.2, 5.1, 3.2, 6.5, 3.7};
+		for (double number : newArray)
+		    System.out.print(nunber);
+		for (int i = 0; i < newArray.length; i++)
+		    newArray[i] *= 2;
+	\end{verbatim}
+\end{figure}
+\newpage
+
+Copying arrays:
+Syntax for \texttt{arraycopy()}: \texttt{arraycopy(\textit{srcArray}, \textit{src\_pos}, \textit{destArray}, \textit{dest\_pos}, \textit{length})}
+\begin{itemize}
+	\item \texttt{\textit{src\_pos}}: Starting position of \texttt{\textit{srcArray}} to start copy from
+	\item \texttt{\textit{dest\_pos}}: Starting position of \texttt{\textit{destArray}} to start copy to
+	\item \texttt{\textit{length}}: Number of array elements to be copied
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\begin{verbatim}
+		int[] list1 = {1, 5, 3, 6, 3};
+		// This makes list2 reference to list1.
+		// Change list2 will also change list1.
+		int[] list2 = list1;
+		
+		// Use for loop to copy
+		int[] list3 = new int[list1.length];
+		for (int i = 0; i <= 2; i++)
+		    list3[i] = list1[i];
+		
+		// We can also use arraycopy
+		int[] list4 = new int[list1.length];
+		arraycopy(list1, 0, list4, 0, 3);
+	\end{verbatim}
+\end{figure}
+
+\textbf{Pass-by-reference}: For reference variables like array, the value stored in the argument is the Heap location of the array.\\
+Changing the elements in the array parameter will also change the elements in the array argument.
+
+\begin{figure}[h!]
+	\centering
+	\begin{verbatim}
+		void main() {
+		    int[] array = {1, 2, 3, 4};
+		    doubleTheArrayElements(array); // array is changed as well
+		}
+		void doubleTheArrayElements(int[] array) {
+		    for (int i = 0; i <= array.length; i++)
+		        array[i] *= 2;
+		}
+	\end{verbatim}
+\end{figure}
+
+\textbf{Two-dimensional array}: Nested array or an array of arrays.\\
+\textbf{Ragged array}: The rows or child arrays have different lengths.\\
+Syntax: \texttt{\textit{elementType}[][] \textit{refVariableName} = \{\textit{childArray1}, ..., \textit{childArrayM}\}}
+\begin{itemize}
+	\item \texttt{[][]}: Variable type is a two-dimensional array of elements with type \texttt{\textit{elementType}}.
+	\item \texttt{[][][]} means a three-dimensional array, etc.
+\end{itemize}
+Syntax: \texttt{\textit{elementType}[][] \textit{refVariableName} = new \textit{elementType}[\textit{numOfChildArrays}][\textit{numOfElementsInEachChildArray}]}
+\begin{itemize}
+	\item \texttt{new}: Create a new array object. Default is similar to one-dimensional array.
+	\item Each row or child array must have the same length. Ragged array cannot be created this way.
+\end{itemize}
+Syntax for creating ragged array:\\
+\texttt{\textit{elementType}[][] \textit{refVariableName} = new \textit{elementType}[\textit{numOfChildArrays}][]\\
+\textit{refVariableName}[0] = new \textit{elementType}[numOfElementsInChildArray0];\\
+$\vdots$
+}\\
+Syntax for accessing elements: \texttt{\textit{refVariableName}[\textit{childArrayIndex}][\textit{elementIndexInChildArray}]}\\
+Syntax for getting length:
+\begin{itemize}
+	\item \texttt{\textit{refVariableName}.length}: Size of parent array, which is number of child arrays
+	\item \texttt{\textit{refVariableName}[\textit{childArrayIndex}].length}: Size of child array indexed by \texttt{\textit{childArrayIndex}}
+\end{itemize}
+\newpage
+
+\section{String}
+\textbf{String}: Sequence of characters. It is an object (reference data type) in Java.\\
+Syntax (Two methods are the same):
+\begin{itemize}
+	\item \texttt{String \textit{stringRefVariableName} = new String(\textit{stringLiteral});}
+	\item \texttt{String \textit{stringRefVariableName} = \textit{stringLiteral};}
+\end{itemize}
+\textbf{String literal}: Literal for strings, but not a primitive-type literal. E.g. \texttt{"Hello World"}\\
+Using first method creates a new String, while using second method stores the Heap address of the String literal.\\
+Strings are immutable. Changing any character in the String will cause Java to create a new String.\\
+Therefore, second method is recommended to avoid creating the same String multiple times.\\
+
+Method of the String object:
+
+\begin{table}[h!]
+	\centering
+	\begin{NiceTabular}{||ll||}[hvlines]
+		\RowStyle{\bfseries}Method & Description\\
+		\texttt{length()} & Returns the number of characters in this string\\
+		\texttt{charAt(index)} & Returns the character at the specified index from this string\\
+		\texttt{concat(s1)} & Returns a new string that concatenates this string with string \texttt{s1}\\
+		\texttt{toUpperCase()} & Returns a new string with all letters in uppercase\\
+		\texttt{toLowerCase()} & Returns a new string with all letters in lowercase\\
+		\texttt{trim()} & Returns a new string with whitespace characters trimmed on both sides
+	\end{NiceTabular}
+\end{table}
+
+\begin{enumerate}
+	\item \texttt{\textit{stringRefVariable}.length()}: Number of characters in the string.\\
+	Double quotations are not counted. Escape sequence and whitespace are counted as one characters.\\
+	It is a method, not a data field. Therefore, parentheses are necessary.
+	\item \texttt{\textit{stringRefVariable}.charAt(\textit{index})}:\\
+	First character is indexed by 0 and last character is indexed by \texttt{\textit{stringRefVariable}.length()} - 1\\
+	This can be used to get character from user input after using \texttt{nextLine()} method.
+	\item \texttt{\textit{stringRefVariable1}.concat(\textit{stringRefVariable2})}:\\
+	Equivalent to \texttt{\textit{stringRefVariable1} + \textit{stringRefVariable2}}
+	\item \texttt{\textit{stringRefVariable}.trim()}: Eliminate whitespace characters from both ends of the string.\\
+	Whitespace characters: \texttt{` '}, \texttt{\textbackslash t}, \texttt{\textbackslash f}, \texttt{\textbackslash r}, \texttt{\textbackslash n}, etc.
+\end{enumerate}
+
+Comparing Strings: Do not use relational operators to compare strings. Instead, use following methods.
+
+\begin{table}[h!]
+	\centering
+	\begin{NiceTabular}{||ll||}[hvlines]
+		\RowStyle{\bfseries}Method & Description\\
+		\texttt{equals(s1)} & Returns true if two strings are equal\\
+		\texttt{equalsIgnoreCase(s1)} & Returns true if two strings are equal, case insensitive\\
+		\texttt{compareTo(s1)} & Returns difference in ASCII codes of first indifference\\
+		\texttt{compareToIgnoreCase(s1)} & Returns difference in ASCII codes of first indifference; case insensitive\\
+		\texttt{startsWith()} & Returns true if this string starts with \texttt{s1}\\
+		\texttt{endsWith()} & Returns true if this string ends with \texttt{s1}\\
+		\texttt{contains()} & Returns true if \texttt{s1} is a substring in this string
+	\end{NiceTabular}
+\end{table}
+
+\begin{enumerate}
+	\item \texttt{s0.equals(s1)} / \texttt{s0.equalsIgnoreCase(s1)}: Checks if \texttt{s0} and \texttt{s1} have the same content.\\
+	\texttt{s0 == s1} checks if heap address is the same, not the content.\\
+	It may returns false when two same content string variables have different heap address.
+	\item \texttt{s0.compareTo(s1)} / \texttt{s0.compareToIgnoreCase(s1)}: Identifies minimum index of indifference and returns the offset.\\
+	E.g. \texttt{s0 = "abcne"} and \texttt{s1 = "abxkm"}: \texttt{s0.compareTo(s1)} returns ASCII code of \texttt{`c'} minus the ASCII code of \texttt{`x'}.\\
+	\texttt{s0.compareToIgnoreCase(s1)} converts both \texttt{s0} and \texttt{s1} into lower case first before calculating ASCII difference.
+\end{enumerate}
+\newpage
+
+Methods to find a character or substring in a String (Returns \texttt{-1} if not matched): 
+
+\begin{table}[h!]
+	\centering
+	\begin{NiceTabular}{||ll||}[hvlines]
+		\RowStyle{\bfseries}Method & Description\\
+		\texttt{indexOf(ch)} & Returns index of the first occurrence of character in this string\\
+		\texttt{indexOf(ch, fromIndex)} & Returns index of the first occurrence of character in this string after \texttt{fromIndex}\\
+		\texttt{indexOf(s)} & Returns index of the first occurrence of string in this string\\
+		\texttt{indexOf(s, fromIndex)} & Returns index of the first occurrence of string in this string after \texttt{fromIndex}\\
+		\texttt{lastIndexOf(ch)} & Returns index of the last occurrence of character in this string\\
+		\texttt{lastIndexOf(ch, fromIndex)} & Returns index of the last occurrence of character in this string before \texttt{lastIndex}\\
+		\texttt{lastIndexOf(s)} & Returns index of the last occurrence of string in this string\\
+		\texttt{lastIndexOf(s, fromIndex)} & Returns index of the last occurrence of string in this string before \texttt{lastIndex}
+	\end{NiceTabular}
+\end{table}
+
+Conversion between strings and numbers: Error if not numerical string.\\
+Syntax:\\
+\texttt{\textit{intVariableName} = Integer.parseInt(\textit{intString});\\
+\textit{doubleVariable} = Double.parseDouble(\textit{doubleString});}
+\begin{itemize}
+	\item First line converts a String to an integer.
+	\item Second line converts a String to a double value.
+\end{itemize}
+
+\textbf{Placeholder}: Specify the type of values to be filled later in the string
+
+\begin{table}[h!]
+	\centering
+	\begin{NiceTabular}{||cl||}[hvlines]
+		\RowStyle{\bfseries} Placeholder Specifier & Value to be replaced\\
+		\texttt{{\%}b} & A Boolean\\
+		\texttt{{\%}c} & A character\\
+		\texttt{{\%}d} & A decimal integer\\
+		\texttt{{\%}f} & A floating-point number\\
+		\texttt{{\%}e} & A number in scientific notation\\
+		\texttt{{\%}s} & A string
+	\end{NiceTabular}
+\end{table}
+
+\texttt{System.out.printf()}: Format the output with placeholder\\
+Syntax: \texttt{System.out.printf(\textit{stringWithPlaceholder}, \textit{value1}, ..., \textit{valuek})}
+\begin{itemize}
+	\item Each placeholder is filled by corresponding value. 
+\end{itemize}
+You can also add numbers to specify the output width of the placeholder. E.g.
+\begin{itemize}
+	\item \texttt{{\%}8d}: Right-aligned decimal integer and width is 8
+	\item \texttt{{\%}-9d}: Left-aligned decimal integer and width is 9
+	\item \texttt{{\%}7.1f}: Right-aligned floating-point number with 1 digit after the decimal point and width is 7
+\end{itemize}
+If the specified width is less than the length of the value, the specified width is ignored and the width is expanded to fit the value.
+\newpage
+
+\section{Methods: Advanced}
+\textbf{Method Overloading}: Have two methods with same name but different parameter lists.\\
+Java automatically chooses the method whose parameter list best matches the arguments.\\
+Error will be raised if there are no compatible methods.\\
+Some notes:
+\begin{itemize}
+	\item We cannot overload a method by only changing the return type.
+\end{itemize}
+
+\begin{figure}[h!]
+	\centering
+	\begin{verbatim}
+		void func(int i, int j) { System.out.println("First"); }
+		void func(int i, double j) { System.out.println("Second"); }
+		void func(int i, int j, int k) { System.out.println("Third"); }
+		void main(String[] args) {
+		    func(1, 5);    // First
+		    func(1, 5.2);  // Second
+		    func(2, 5, 2); // Third
+		    func(2.5, 1);  // Error
+		}
+	\end{verbatim}
+\end{figure}
+
+\textbf{Pass-by-value}: Only the value of the arguments are passed to the parameters\\
+Primitive data: Different activation record, value is copied.\\
+Reference data: Different activation record, heap address (reference) is copied (Pass-by-reference)
+
+\textbf{Variable arguments}: A method taking an arbitrary number of arguments (indicate with ellipsis \texttt{...})
+
+\begin{figure}[h!]
+	\centering
+	\begin{verbatim}
+		public static int sum(int... numbers) {
+		    int total = 0;
+		    for (int n : numbers)
+		        total += n;
+		    return total;
+		}
+		void main() {
+		    System.out.println(sum(2, 4, 6));    // 12
+		    System.out.println(sum(2, 4, 6, 8)); // 20
+		    System.out.println(sum());           // 0
+		}
+	\end{verbatim}
+\end{figure}
+
+\textbf{Recursion}: Method invoking itself
+
+\begin{figure}[h!]
+	\centering
+	\begin{verbatim}
+		public static int factorial(int number) {
+		    if (number <= 0)
+		        return 1;
+		    return number * factorial(number - 1);
+		}
+		void main() {
+		    System.out.println(factorial(2));  // 2
+		    System.out.println(factorial(10)); // 3628800
+		}
+	\end{verbatim}
+\end{figure}
+\newpage
+
+\null
+\newpage
+
+\section{Classes}
+\textbf{Constructor}: Special method whose name must be the same as the class name.\\
+Syntax:\\
+\texttt{\textit{className} (\textit{parameterListIfNeeded}) \{\\
+\hspace*{2em}\textit{constructorBody}\\
+\}}
+\begin{itemize}
+	\item Constructors do not have return statements and return value types.
+\end{itemize}
+If no constructors are explicitly defined in the class, java automatically creates a \textbf{default constructor}.\\
+Syntax: \texttt{\textit{className} () \{\}}
+\begin{itemize}
+	\item Default constructor requires no parameters and has no statements.
+\end{itemize}
+A constructor is invoked automatically when an object is instantiated using the \texttt{new} keyword.
+
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}[h!]{.45\textwidth}
+		\begin{verbatim}
+			public class Dog {
+			    String name;
+			    
+			    Dog(String newName) {
+			        name = newName;
+			    }
+			}
+		\end{verbatim}
+	\end{subfigure}
+	\begin{subfigure}[h!]{.45\textwidth}
+		\begin{verbatim}
+			public class Zoo {
+			    void main() {
+			        Dog dog = new Dog();
+			    }
+			}
+		\end{verbatim}
+	\end{subfigure}
+\end{figure}
+
+\textbf{Constructor Overloading}: Constructors can be overloaded by having constructors with different parameter lists.\\
+Java automatically chooses the compatible constructor, and raises an error if no appropriate constructors can be found.\\
+To invoke another constructor, we can use keyword \texttt{this}. Only one constructor can be invoked in another constructor.
+Syntax: \texttt{this(\textit{argumentsIfNeeded})}
+\begin{itemize}
+	\item Similarly, \texttt{this} can be used to reference the data field.
+	\item Only one constructor can be called inside each constructor.
+\end{itemize}
+\textbf{Unified Modeling Language (UML) notation}: Standardized way to illustrate a class and objects.
+
+\begin{figure}[h!]
+	\centering
+	\begin{subfigure}{.5\textwidth}
+		\begin{verbatim}
+			public class Rectangle {
+		    	double w;
+		    	double h;
+		    	
+		    	Rectangle() {
+		        	System.out.println("New Rectangle");
+		    	}
+		    	Rectangle(double w) {
+		        	this(w, w);
+		    	}
+		    	Rectange(double w, double h) {
+		        	this();
+		        	this.w = w;
+		        	this.h = h;
+		    	}
+		    	
+		    	double getArea() {return w * h;}
+		    	double getPerimeter() {return 2 * (w + h);}
+		    	void setWidth(double w) {this.w = w;}
+		    	void setHeight(double h) {this.h = h;}
+			}
+		\end{verbatim}
+		\caption{Code}
+	\end{subfigure}
+	\begin{subfigure}{.49\textwidth}
+		\centering
+		\includegraphics[width=.5\textwidth]{ISOM3320_L9(1).png}
+		\caption{UML Class Diagram}
+		\null
+		
+		\includegraphics[width=.9\textwidth]{ISOM3320_L9(2).png}
+		\caption{UML Object Diagram}
+	\end{subfigure}
+\end{figure}
+\newpage
+
+\textbf{Static data fields}: Shared by all objects of this class. Declared with the \texttt{static} modifier.\\
+Access syntax: \texttt{\textit{className}.\textit{dataField}}, \texttt{\textit{objectName}.\textit{dataField}} (not recommended)
+\begin{itemize}
+	\item Using \texttt{this} to access static data field is also not recommended.
+	\item The variables now can be classified into three categories:
+	\begin{enumerate}
+		\item \textbf{Class/Static data field}: Declared with \texttt{static} in a class yet outside any child blocks\\
+		It is shared by all objects and accessed throughout the entire class.
+		\item \textbf{Member/Instance data field}: Declared without \texttt{static} in a class outside of any child blocks\\
+		It is unique to each object and accessed throughout the entire class.
+		\item \textbf{Local variable}: Declared within a child block\\
+		Accessed from its declaration to the end of its declaring child block.
+	\end{enumerate}
+	\item No two data fields can have the same name, but a data field and a local variable can have the same name.
+	\item Local variables can have the same name as long as their scopes do not overlap.
+\end{itemize}
+\textbf{Static methods}: Methods that do not require the state of a particular object. Declared with the \texttt{static} modifier.\\
+Access syntax: \texttt{\textit{className}.\textit{methodName}(\textit{args})}, \texttt{\textit{objectName}.\textit{methodName}(\textit{args})} (not recommended)
+\begin{itemize}
+	\item Main method can be non-static, but it is recommended to be static. 
+	\item \textbf{Factory method}: Static method that invokes constructors
+	\item Initializing objects is not needed to use static method.
+	\item Static methods can only access static data fields. Non-static methods can access both data fields.
+	\item It is recommended that rather than non-static methods, static methods are used to handle static data.
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\begin{verbatim}
+		public class Circle {
+		    static final double PI = 3.14159;
+		    static int count = 0;
+		    double radius;
+		    Circle(double radius) {
+		        this.radius = radius;
+		        count++;
+		    }
+		    
+		    // Factory method
+		    static Circle fromRadius(double radius) {
+		        return new Circle(radius);
+		    }
+		    static int getCount() {return count;}
+		    double getArea() {
+		        // Math.pow(...) is a static method in Math class.
+		        // If it is not static, we need to create a new Math object, which is indesirable.
+		        return PI * Math.pow(radius, 2);
+		    }
+		    static void main() {
+		        Circle c1 = new Circle(2);
+		        System.out.println(Circle.getCount()) // 1
+		        System.out.println(c1.getCount())     // 1 (not recommended)
+		        Circle c2 = new Circle(4);
+		        Circle c3 = Circle.fromRadius(5);
+		        System.out.println(Circle.count);     // 3
+		        System.out.println(c2.count);         // 3 (not recommended)
+		        System.out.println(c3.getArea());     // 78.53975
+		    }
+		}
+	\end{verbatim}
+\end{figure}
+\newpage
+
+In large project, classes are usually divided into different packages for easier code management.\\
+We can change the visibility of a class or its member by adding visibility modifiers.
+\begin{itemize}
+	\item \textbf{Public}: Declare with the \texttt{public} modifier. (+ in UML)\\
+	The class or its member can be accessed by classes in other packages.
+	\item \textbf{Protected}: Declare with the \texttt{protected} modifier. Related to superclass or subclass. (\# in UML)\\
+	Class cannot be declared protected.
+	\item \textbf{Default}: Declare without any modifier. ($\sim$ in UML)\\
+	The class or its member can only be accessed by classes in the same package.
+	\item \textbf{Private}: Declare with the \texttt{private} modifier. (- in UML)\\
+	Class member can be accessed only by its class and cannot be accessed by other classes, even in the same package.\\
+	Class cannot be declared private.
+\end{itemize}
+Reasons why we need to make data fields private:
+\begin{enumerate}
+	\item Security: Some data fields are only for internal logic and shouldn't be known by users.
+	\item Immutability: Users can see the data fields but shouldn't be able to change them.\\
+	\textbf{Accessor (getter) method:} Non-private method that returns the value of private data field (in different format)
+	\item Data validation: Prevent invalid change with dot operator\\
+	\textbf{Mutator/Setter}: Non-private method that accepts a parameter and users it to update the private field's value.
+\end{enumerate}
+\textbf{Data field encapsulation}: Add corresponding accessor and mutator methods if private data fields need access or change.\\
+Reasons why we need to make methods private:
+\begin{enumerate}
+	\item Cleanness: Reduce the methods displayed to users.
+	\item Security: Stop users from invoking the method inappropriately.
+	\item Maintainability: We can change this method when necessary without worry of causing errors on code from other classes.
+\end{enumerate}
+With visibility modifiers, we can control what users can see and how users can change.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.3\textwidth]{ISOM3320_L9(3).png}
+	\caption{UML Class Diagram with modifiers}
+\end{figure}
+\newpage
+
+\null
+\newpage
+\section{Input/Output}
+\textbf{File class}: Class used to handle objects for files or file folders.\\
+Create a File object for the given path: \texttt{File \textit{fileVar} = new File(\textit{filePath});}
+\begin{itemize}
+	\item \texttt{\textit{fileVar}.isDirectory()}: Check whether the object represents a directory (file folder).
+	\item \texttt{\textit{fileVar}.isFile()}: Check whether the object represents a file.
+	\item It also contains methods for obtaining properties of a file/directory, renaming and deleting the file/directory.
+\end{itemize}
+\textbf{PrintWriter class}: Class that is used to write data to a file.\\
+Before using the PrintWriter class, we need to import the package at the top of the file first.
+
+\begin{figure}[h]
+	\begin{verbatim}
+		import java.util.Scanner;   // Only imports the Scanner class
+		import java.io.PrintWriter; // Only imports the PrintWriter class
+	\end{verbatim}
+\end{figure}
+
+To user the methods in the PrintWriter class, we need to create an object of it.\\
+After creating the PrintWriter class, we can use \texttt{print}, \texttt{println} and \texttt{printf} methods to write data.\\
+\texttt{PrintWriter(System.out)} is just the standard console output.
+Finally, use the \texttt{close()} method to close the object.
+
+\begin{figure}[h]
+	\begin{verbatim}
+		Scanner input = new Scanner(System.in);           // Read the data
+		// Read the data and do something
+		PrintWriter output = new PrintWriter(System.out); // Write the data
+		// Overwrite the data in the file
+	\end{verbatim}
+\end{figure}
+
+However, when we wants to create a Scanner object or a PrintWriter object with a File object, it may throw an error.\\
+Therefore, every method that creates them need to tell Java that the \textbf{Exception class} is needed.\\
+After finishing everything, we must close the object by calling \texttt{close()} method.\\
+Syntax: \texttt{\textit{modifiers} \textit{returnType} \textit{methodName}(\textit{parameterList}) throws Exception \{...\}}
+
+\begin{figure}[h]
+	\begin{verbatim}
+		public static void write(String s) throws Exception {
+		    // Using print from PrintWriter(System.out) is the same as regular print methods
+		    File file = new File("log.txt");
+		    PrintWriter writer = new PrintWriter(file);
+		    writer.println(s); // Write string to log.txt file
+		    writer.close();
+		}
+	\end{verbatim}
+\end{figure}
+
+We can ensure that we close the object with the \textbf{try-with-resources} structure.\\
+Syntax:
+\texttt{try (\\
+\hspace*{2em}\textit{initializeStatements}\\
+) \{\\
+\hspace*{2em}\textit{statementsAfterInitialization}\\
+\}}
+
+\begin{figure}[h!]
+	\centering
+	\begin{subfigure}[h]{.49\textwidth}
+		\begin{verbatim}
+			File file = new File("log.txt");
+			try (Scanner sc = new Scanner(file)) {
+			    while (sc.hasNext()) {
+			        System.out.println(sc.next());
+			    }
+			}
+		\end{verbatim}
+	\end{subfigure}
+	\begin{subfigure}[h]{.49\textwidth}
+		\begin{verbatim}
+			File file = new File("log.txt");
+			try (PrintWriter pw = new PrintWriter(file);) {
+			    pw.print(...);
+			}
+		\end{verbatim}
+	\end{subfigure}
+\end{figure}
+
+\newpage
+
+\textbf{Token}: A data point.\\
+\textbf{Delimiter}: The string signalling the end of a token (default: space)\\
+The Scanner object has a method \texttt{useDelimiter(string)} to change the delimiter to string. Reset with \texttt{reset()}.
+
+\begin{figure}[h]
+	\begin{verbatim}
+		File file = new File("data.txt");
+		Scanner sc = new Scanner(file);
+		
+		sc.useDelimiter(".|\\n"); // Separators are either , or newline \n
+		
+		while (sc.hasNext()) {
+		    System.out.println(sc.next());
+		}
+		sc.close();
+	\end{verbatim}
+\end{figure}
+
+PrintWriter and Scanner classes are text I/O, which directly input and output text.\\
+InputStream and OutputStream are binary I/O, which convert text to ASCII before writing or ASCII to text after reading.\\
+Usually, binary I/O is more efficient than text I/O.\\
+\textbf{FileInputStream class / FileOutputStream class}: Read/write only byte data from/to file.\\
+Again we need to first import the package at the top of the file first.
+
+\begin{figure}[h]
+	\begin{verbatim}
+		import java.io.FileInputStream;
+		import java.io.FileOutputStream;
+	\end{verbatim}
+\end{figure}
+
+Similar to scanner and PrintWriter, we need to throw exceptions.\\
+We can create a FileInputStream object to read tokens one-by-one from a file using the \texttt{read()} method.\\
+If all data has been read, the next value read from the file is \texttt{-1}.\\
+We can also use \texttt{available()} method to returns the number of remaining tokens.\\
+We can then create a FileOutputStream object to write into a file using the \texttt{write()} method.
+\begin{figure}[h]
+	\begin{verbatim}
+		try (FileInputStream input = new FileInputStream(new File("original.txt"));
+		     // Second arg: true means append to the end, false means new content replaces current content
+		     FileOutputStream output = new FileOutputStream(new File("copy.txt"), true)) {     
+		    
+		    // Append the data from original.txt to copy.txt
+		    int i;
+		    while (input.available() > 0) { // This can also be done by (i = input.read()) != -1
+		        i = input.read();
+		        output.write(i);
+		    }
+		}
+	\end{verbatim}
+\end{figure}
+\newpage
+
+\textbf{DataInputStream class / DataOutputStream class}: Handle more types of data.
+
+\begin{figure}[h]
+	\begin{verbatim}
+		import java.io.DataInputStream;
+		import java.io.DataOutputStream;
+	\end{verbatim}
+\end{figure}
+
+We can create a DataInputStream object from FileInputStream and a DataOutputStream object from FileOutputStream.\\
+Other methods are similar to the FileInputStream/FileOutputStream.
+
+\begin{table}[h!]
+	\centering
+	\begin{NiceTabular}{||ll||}[hvlines]
+		\RowStyle{\bfseries}Method & Description\\
+		\texttt{readBoolean()} & Reads a Boolean from the input stream\\
+		\texttt{readByte()} & Reads a byte from the input stream\\
+		\texttt{readChar()} & Reads a character from the input stream\\
+		\texttt{readFloat()} & Reads a float from the input stream\\
+		\texttt{readDouble()} & Reads a double from the input stream\\
+		\texttt{readInt()} & Reads an integer from the input stream\\
+		\texttt{readLong()} & Reads a long from the input stream\\
+		\texttt{readShort()} & Reads a short from the input stream\\
+		\texttt{readLine()} & Reads a line from input\\
+		\texttt{readUTF()} & Reads a String in UTF format
+	\end{NiceTabular}
+	\caption{Methods of DataInputStream}
+\end{table}
+
+\begin{table}[h!]
+	\centering
+	\begin{NiceTabular}{||ll||}[hvlines]
+		\RowStyle{\bfseries}Method & Description\\
+		\texttt{writeBoolean(b)} & Writes a Boolean to the output stream\\
+		\texttt{writeByte(i)} & Writes the eight low-order bits of the argument to the output stream\\
+		\texttt{writeBytes(s)} & Write the lower byte of the characters in a string to the output stream\\
+		\texttt{writeChar(ch)} & Writes a character (2 bytes) to the output stream\\
+		\texttt{writeChars(s)} & Write every character in the string to the output stream, 2 bytes per character\\
+		\texttt{writeFloat()} & Writes a float to the output stream\\
+		\texttt{writeDouble()} & Writes a double to the output stream\\
+		\texttt{writeInt()} & Writes an integer to the output stream\\
+		\texttt{writeLong()} & Writes a long to the output stream\\
+		\texttt{writeShort()} & Writes a short to the output stream\\
+		\texttt{writeUTF()} & Writes a String in UTF format
+	\end{NiceTabular}
+	\caption{Methods of DataOutputStream}
+\end{table}
+
+\begin{figure}[h!]
+	\begin{verbatim}
+		try (DataInputStream din = new DataInputStream(new FileInputStream("original.txt"));
+		     DataOutputStream dout = new DataOutputStream(new FileOutputStream("copy.txt"))) {...}
+	\end{verbatim}
+\end{figure}
+
+\textbf{BufferedInputStream class / BufferedOutputStream class}: Efficient in handling large byte datasets.
+
+\begin{figure}[h!]
+	\begin{verbatim}
+		import java.io.BufferedInputStream;
+		import java.io.BufferedOutputStream;
+	\end{verbatim}
+\end{figure}
+
+Methods are the same as FileInputStream/FileOutputStream.\\
+Maintains an internal buffer instead of reading one byte at a time.
+
+\begin{figure}[h!]
+	\begin{verbatim}
+		try (BufferedInputStream bin = new BufferedInputStream(new FileInputStream("original.txt"));
+		     BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream("copy.txt"))) {...}
+	\end{verbatim}
+\end{figure}
+\newpage
+
+\null
+\newpage
+
+\section{Inheritance and Polymorphism}
+Three pillars of object-oriented programming: Encapsulation (Ch.9), inheritance, and polymorphism.\\
+
+\textbf{Superclass/Parent class/Base class}: Class which other classes inherit properties and behaviours from.\\
+\textbf{Subclass/Child class/Extended class/Derived class}: Inherits properties and behaviours from another class.\\
+\textbf{Supertype}: A variable's type defined by its superclass.\\
+\textbf{Subtype}: A variable's type defined by a subclass.\\
+Syntax: \texttt{public class \textit{subClass} extends \textit{superClass}}\\
+
+Subclass does not inherit superclass's constructors.\\
+We use \texttt{super()} with arguments if necessary to invoke superclass constructor from subclass constructor.\\
+If explicitly invoked, it must be the first statement. If not, it will automatically put it with no args as the first statement.
+
+\begin{figure}[h]
+	\begin{verbatim}
+		public class Vehicle {
+		    String brand;
+		    Vehicle(String brand) {
+		        this.brand = brand;
+		    } 
+		}
+		public class Car extends Vehicle {
+		    String model;
+		    Car(String brand, String model) {
+		        super(brand);
+		        this.model = model;
+		    }
+		}
+	\end{verbatim}
+\end{figure}
+
+A subclass inherits non-private data fields and methods from the superclass.\\
+\textbf{Protected}: Declared with the \texttt{protected} modifier.\\
+Protected members in a public class can be accessed by classes in the same package and its subclasses in different packages.\\
+Visibility: $\texttt{public} > \texttt{protected} > \texttt{default} > \texttt{private}$
+
+\begin{table}[h!]
+	\centering
+	\begin{NiceTabular}{||lcccc||}[hvlines]
+		\RowStyle{\bfseries} & \Block{1-4}{Accessed From}\\
+		\RowStyle{\bfseries}Modifiers & Same class & Same package & Subclass & Different package\\
+		\texttt{public} & \checkmark & \checkmark & \checkmark & \checkmark\\
+		\texttt{protected} & \checkmark & \checkmark & \checkmark & $\times$\\
+		\texttt{default} & \checkmark & \checkmark & $\times$ & $\times$\\
+		\texttt{private} & \checkmark & $\times$ & $\times$ & $\times$
+	\end{NiceTabular}
+\end{table}
+
+\textbf{Method Overriding}: Define a method in the subclass with the same signature of a method in a superclass.\\
+Subclass method must have the same or compatible return type of the method in the superclass.\\
+Method overriding cannot weaken the method visibility.\\
+E.g. If the method is protected in the superclass, then it must be protected or public in the subclass.\\
+We can invoke the method from superclass in subclass by \texttt{super.\textit{methodName}()}.\\
+Some notes:
+\begin{itemize}
+	\item Static method cannot be overridden but it can be inherited.\\
+	Defining a static method with same signature in the subclass is not overriding.
+	\item Private method cannot be overridden and inherited.\\
+	Defining a private method with same signature in the subclass is not overriding.
+\end{itemize}
+
+Method Overloading can be performed with same name but different parameter lists in different classes related by inheritance.
+\newpage
+
+\textbf{Object class}: Base superclass of all Java classes (any type except primitive data types)\\
+If no inheritance is specified when defining a class, the immediate superclass is Object.\\
+Object has \texttt{toString()} that returns a string representation of the object, which we can override.
+
+\begin{figure}[h]
+	\begin{verbatim}
+		public class Person {
+		    private String name;
+		    private int age;
+		    
+		    public Person(String name, int age) {
+		        this.name = name;
+		        this.age = age;
+		    }
+		    
+		    @Override 		// Inform the system that you intend to override, optional but best practice
+		    public String toString() {
+		        return "Person[name: " + name + ", age = " + age + "]";
+		    }
+		}
+	\end{verbatim}
+\end{figure}
+
+\textbf{Polymorphism}: A reference variable of a superclass can store an object of the subclass.\\
+\textbf{Dynamic method dispatch}: Invokes the method of the object referenced by the variable.
+\begin{itemize}
+	\item The variable class must still contain or inherit the method.
+	\item If the variable type and the object type are the same class, invoke the method defined in that class.
+	\item If the variable type is a superclass and the object type is a subclass, invoke the method defined in the subclass.
+	\item If the object type does not have this method, check if the method can be inherited from the superclass of the object.
+\end{itemize}
+
+\begin{figure}[h]
+	\begin{verbatim}
+		class Animal {
+		    void makeSound() {
+		        System.out.println("Animal makes a sound.");
+		    }
+		}
+		class Mammal extends Animal {}
+		class Cat extends Mammal {
+		    @Override
+		    void makeSound() {
+		        System.out.println("Meow");
+		    }
+		}
+		public class Main {
+		    public static void main() {
+		        Animal animal1 = new Cat(...);    // Cat is subclass, Animal is superclass.
+		        Animal animal2 = new Mammal(...); // Mammal is subclass, Animal is superclass.
+		        Mammal animal3 = new Cat(...);    // Cat is subclass, Mammal is superclass.
+		        Object animal4 = new Cat(...);    // Cat is subclass, Object is superclass.
+		        
+		        animal1.makeSound(); // Meow
+		        animal2.makeSound(); // Animal makes a sound.
+		        animal3.makeSound(); // Meow
+		        animal4.makeSound(); // Error, Object class does not have the method makeSound()
+		    }
+		}
+	\end{verbatim}
+\end{figure}
+
+Static methods are not dynamically dispatched.\\
+If the variable type is a superclass and the object type is a subclass, invoke the static method defined in the superclass.
+
+\newpage
+
+We can test whether an object is an instance of a class (including superclasses) by using the \texttt{instanceof} operator.\\
+If it is an instance of a class, the object can be cast into that class. Casting does not change the object type.\\
+We can also use \texttt{instanceof} to create and assign a new variable of the compatible type.
+
+\begin{figure}[h]
+	\begin{verbatim}
+		class Animal {
+		    void makeSound() {
+		        System.out.println("Animal makes a sound.");
+		    }
+		    ...
+		}
+		class Mammal extends Animal {...}
+		class Cat extends Mammal {
+		    @Override
+		    void makeSound() {
+		        System.out.println("Meow");
+		    }
+		    ...
+		}
+		public class Main {
+		    static void makeSound(Object object) {
+		        if (object instanceof Animal animal) {     // This combines checking and casting
+		            animal.makeSound() 		// Dynamic method dispatch still happens
+		    } 
+		    
+		    public static void main() {
+		        Object catObject = new Cat(...);
+		        
+		        System.out.println(catObject instanceof Cat);    // true
+		        System.out.println(catObject instanceof Mammal); // true
+		        System.out.println(catObject instanceof Animal); // true
+		        System.out.println(catObject instanceof Object); // true
+		        
+		        Object mammalObject = new Mammal(...);
+		        
+		        System.out.println(mammalObject instanceof Cat);    // false
+		        System.out.println(mammalObject instanceof Mammal); // true
+		        
+		        Mammal animal3 = (Mammal) catObject;  // catObject is an instance of Mammal, allowed
+		        Cat animal4 = (Cat) mammalObject;     // mammalObject is not an instance of Cat, error
+		        
+		        makeSound(new Cat());       // Meow
+		        makeSound(new Mammal());    // Animal makes a sound.
+		    }
+		}
+	\end{verbatim}
+\end{figure}
+
+\newpage
+
+\null
+\newpage
+
+\section{Graphical User Interface (GUI)}
+We can build a Java program with GUI using \textbf{JavaFX}, which contains a set of graphics and media packages.\\
+We can use JavaFX Scene Builder or other tools to create GUI of applications.\\
+To use JavaFX, the class must extend the \textbf{Application class}, which is an \textbf{abstract class}.\\
+Subclasses of an abstract class must override all abstract methods in the superclass (discussed in next chapter).\\
+Application class contains one abstract method \texttt{start(Stage primaryStage)}:
+\begin{itemize}
+	\item \textbf{Stage class} is the top level JavaFX container. A stage object is a window.
+	\item Multiple stages can be created for switching windows or adding subwindows.
+\end{itemize}
+
+\begin{figure}[h]
+	\begin{verbatim}
+		// Import necessary packages
+		import javafx.application.Application;
+		import javafx.stage.Stage;
+		
+		public class Demo extends Application {
+		    @Override // Override the abstract method in Application class
+		    public void start(Stage primaryStage) {
+		        primaryStage.setTitle("Main window"); // Set the title
+		        primaryStage.show();                  // Display the stage
+		        
+		        Stage secondStage = new Stage();      // Create a new Stage object
+		        secondStage.setTitle("Secomd window");
+		        secondStage.show();
+		    }
+		}
+		
+		public static void main(String[] args) {
+		    launch(args); // Launch the GUI
+		}
+	\end{verbatim}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=.8\textwidth]{ISOM3320_L12(1).png}
+\end{figure}
+
+\newpage
+
+Basic Structure of JavaFX:
+\begin{itemize}
+	\item \textbf{Stage}: Top-level container, representing the window itself.
+	\item \textbf{Scene}: Physical container for all contents displayed within the Stage.
+	\item \textbf{Node}: Visual contents within the scene, such as a button.
+\end{itemize}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=.3\textwidth]{ISOM3320_L12(2).png}
+\end{figure}
+
+\textbf{Scene} (javafx.scene.Scene): Mandatory to hold all visual elements.
+
+\begin{figure}[h]
+	\begin{verbatim}
+		@Override // Override the abstract method in Application class
+		public void start(Stage primaryStage) {
+		    Button button = new Button("Click Me!");
+			
+		    // Create a scene with width=500 and height=400, containing the button node
+		    Scene scene = new Scene(button, 500, 400); 
+		    primaryStage.setTitle("Main window"); // Set the title
+		    primaryStage.setScene(scene);         // Place the scene in the stage
+		    primaryStage.show();                  // Display the stage
+		}
+	\end{verbatim}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=.3\textwidth]{ISOM3320_L12(3).png}
+	\caption{Entire scene is a button}
+\end{figure}
+\newpage
+
+\textbf{Node}: Can be a shape, a UI control, an image view, a group, or a pane.
+\begin{itemize}
+	\item \textbf{Shape}: A text, line, circle, ellipse, rectangle, arc, polygon, polyline, etc.
+	\item \textbf{UI control}: A label, button, check box, radio button, text field, text area, etc.
+	\item \textbf{Image view}: A place to display an image
+	\item \textbf{Group/Pane}: Container for multiple nodes.
+\end{itemize}
+
+Java \textbf{Coordinate System}: Origin (0,0) at top left corner of the window.
+\begin{itemize}
+	\item X-axis: x-coordinate increases as node move to the right
+	\item Y-axis: y-coordinate increases as node move down
+\end{itemize}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=.2\textwidth]{ISOM3320_L12(4).png}
+\end{figure}
+
+There are different node types:
+\begin{itemize}
+	\item \textbf{Parents}: Can be directly placed on a scene.
+	\item \textbf{Non-parent nodes}: Have to be placed on a parent node. In most of the time, a group or pane is needed.
+	\item \textbf{Branch node}: Can include other nodes as its sub-nodes
+	\item \textbf{Leaf node}: Cannot have sub-nodes
+\end{itemize}
+
+\begin{table}[h]
+	\centering
+	\begin{NiceTabular}{||lll||}[hvlines]
+		\RowStyle{\bfseries} & Parent (\texttt{javafx.scene.Parent}) & Non-parent node\\
+		\textbf{Branch node} & Group, Pane & -\\
+		\textbf{Leaf node} & UI controls & Shape, Image View
+	\end{NiceTabular}
+\end{table}
+\newpage
+
+\textbf{Group class} (\texttt{javafx.scene.Group}): Group a collection of nodes together\\
+UML Diagram of Group (omitted the getter and setter methods for property value):
+
+\begin{table}[h!]
+	\centering
+	\begin{NiceTabular}{||>{\hangindent=2em}p{8cm}|>{\hangindent=2em}X[l]||}
+		\hline
+		\multicolumn{1}{c}{\bfseries \texttt{javafx.scene.Group}} &\\
+		\hline
+		\texttt{-autoSizeChildren: BooleanProperty} & Controls whether the Group resizes any resizable children\\
+		\hline
+		\texttt{+Group()} & Creates a group\\
+		\texttt{+Group(children: Node...)} & Creates a Group with given children\\
+		\texttt{+getChildren(): ObservableList<Node>} & Gets the list of children of this Group.\\
+		\hline
+	\end{NiceTabular}
+\end{table}
+
+\textbf{Observable List class} (\texttt{javafx.collections.ObservableList<E>}): A reference list of items shown in the node.\\
+In the list, \texttt{E} means any non-primitive type.
+
+\begin{table}[h!]
+	\centering
+	\begin{NiceTabular}{||>{\hangindent=2em}p{8cm}|>{\hangindent=2em}X[l]||}
+		\hline
+		\multicolumn{1}{c}{\bfseries \texttt{javafx.collections.ObservableList<E>}} &\\
+		\hline
+		\texttt{+sorted(): SortedList<E>} & Creates a SortedList wrapper with natural sorting\\
+		\texttt{+contains(o Object): boolean} & Returns true if the list contains the specified element\\
+		\texttt{+add(e: E): boolean} & Appends an element to the end\\
+		\texttt{+add(index: int, element: E): void} & Inserts an element at specified position\\
+		\texttt{+addAll(elements: E...): boolean} & Append all the elements to the end\\
+		\texttt{+set(index: int, element: E): E} & Replaces the element at specified position\\
+		\texttt{+setAll(elements: E...): boolean} & Clears the list and add all the elements\\
+		\texttt{+retainAll(elements: E...): boolean} & Retains only the elements specified in the list\\
+		\texttt{+remove(from: int, to: int): void} & Removes all the elements from start index (inclusive) to end index (exclusive)\\
+		\texttt{+removeAll(elements: E...): boolean} & Removes all the elements specified\\
+		\hline
+	\end{NiceTabular}
+\end{table}
+
+We can finally show more than one nodes by adding them in the group.
+\begin{figure}[h!]
+	\begin{verbatim}
+		@Override
+		public void start(Stage primaryStage) {
+			// Create the nodes
+		    Button button = new Button("I am a button.");
+		    Text hello = new Text(100, 50, "Hello");
+		    Text world = new Text();
+		    world.setX(150);
+		    world.setY(100);
+		    world.setText("World");
+		    
+		    // Create a group to hold more than one node
+		    Group group = new Group();
+		    group.getChildren().add(button);          // Add a node to the group
+		    group.getChildren().addAll(hello, world); // Add multiple nodes to the group at once
+			
+		    Scene scene = new Scene(group, 300, 150); 
+		    primaryStage.setTitle("Main window");
+		    primaryStage.setScene(scene);
+		    primaryStage.show();
+		}
+	\end{verbatim}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=.2\textwidth]{ISOM3320_L12(5).png}
+\end{figure}
+
+By default, everything is placed at the upper-left corner of the group, overlapping.\\
+This works well when the nodes are placed in specific positions, not for nodes such as buttons.
+\newpage
+
+\textbf{Text class} (\texttt{javafx.scene.text.Text}): Shape that displays text\\
+UML Diagram of Text (omitted the getter and setter methods for property values and getter for property itself):
+
+\begin{table}[h!]
+	\centering
+	\begin{NiceTabular}{||>{\hangindent=2em}p{8cm}|>{\hangindent=2em}X[l]||}
+		\hline
+		\multicolumn{1}{c}{\bfseries \texttt{javafx.scene.text.Text}} &\\
+		\hline
+		\texttt{-text: StringProperty} & Defines the displayed text\\
+		\texttt{-x: DoubleProperty} & Defines the x-coordinate of text (default: 0)\\
+		\texttt{-y: DoubleProperty} & Defines the y-coordinate of text (default: 0)\\
+		\texttt{-underline: BooleanProperty} & Defines if text is underlined (default: false)\\
+		\texttt{-strikethrough: BooleanProperty} & Defines if there is a line through the text (default: false)\\
+		\texttt{-font: ObjectProperty<Font>} & Defines the font of the text\\
+		\hline
+		\texttt{+Text()} & Creates a Text\\
+		\texttt{+Text(text: String)} &\\
+		\texttt{+Text(x: double, y: double, text: String)} &\\
+		\hline
+	\end{NiceTabular}
+\end{table}
+
+\textbf{Font class} (\texttt{javafx.scene.text.Font}): Defines the font for text\\
+Some classes contains the setter method to alter how the text is displayed.\\
+For example, \texttt{setFont(Font font)} in the Text class.\\
+UML Diagram of Font (omitted the getter methods for property values):
+
+\begin{table}[h!]
+	\centering
+	\begin{NiceTabular}{||>{\hangindent=2em}p{8cm}|>{\hangindent=2em}X[l]||}
+		\hline
+		\multicolumn{1}{c}{\bfseries \texttt{javafx.scene.text.Font}} &\\
+		\hline
+		\texttt{-size: double} & Size of this font\\
+		\texttt{-name: String} & Name of this font\\
+		\texttt{-family: String} & Family of this font\\
+		\hline
+		\texttt{+Font(size: double)} & Creates a Font\\
+		\texttt{+Font(name: String, size: double)} &\\
+		\texttt{+font(name: String, size: double): Font} & Creates a Font\\
+		\texttt{+font(name: String, w: FontWeight, size: double): Font} &\\
+		\texttt{+font(name: String, w: FontWeight, p: FontPosture, size: double): Font} &\\
+		\texttt{+getFamilies(): List<String>} & Returns a list of font family names\\
+		\texttt{+getFontNames(): List<String>} & Returns a list of full font names including family and weight\\
+		\texttt{+getFontNames(family: String): List<String>} & Returns a list of font names for the given family\\
+		\hline
+	\end{NiceTabular}
+\end{table}
+\newpage
+
+\textbf{Circle class} (\texttt{javafx.scene.shape.Circle}): Shape that draws a circle\\
+UML Diagram of Circle (omitted the getter and setter methods for property values and getter for property itself):
+
+\begin{table}[h!]
+	\centering
+	\begin{NiceTabular}{||>{\hangindent=2em}p{8cm}|>{\hangindent=2em}X[l]||}
+		\hline
+		\multicolumn{1}{c}{\bfseries \texttt{javafx.scene.shape.Circle}} &\\
+		\hline
+		\texttt{-centerX: DoubleProperty} & Defines the x-coordinate of the circle's center\\
+		\texttt{-centerY: DoubleProperty} & Defines the y-coordinate of the circle's center\\
+		\texttt{-radius: DoubleProperty} & Defines the radius of the circle\\
+		\hline
+		\texttt{+Circle()} & Creates a Circle\\
+		\texttt{+Circle(radius: double)} &\\
+		\texttt{+Circle(radius: double, fill: Paint)}&\\
+		\texttt{+Circle(centerX: double, centerY: double, radius: double)}&\\
+		\texttt{+Circle(centerX: double, centerY: double, radius: double, fill: Paint)}&\\
+		\hline
+	\end{NiceTabular}
+\end{table}
+
+\textbf{Rectangle class} (\texttt{javafx.scene.shape.Rectangle}): Shape that draws a rectangle\\
+UML Diagram of Rectangle (omitted the getter and setter methods for property values and getter for property itself):
+
+\begin{table}[h!]
+	\centering
+	\begin{NiceTabular}{||>{\hangindent=2em}p{8cm}|>{\hangindent=2em}X[l]||}
+		\hline
+		\multicolumn{1}{c}{\bfseries \texttt{javafx.scene.shape.Rectangle}} &\\
+		\hline
+		\texttt{-x: DoubleProperty} & Defines the x-coordinate of the upper-left corner of the rectangle\\
+		\texttt{-y: DoubleProperty} & Defines the y-coordinate of the upper-left corner of the rectangle\\
+		\texttt{-width: DoubleProperty} & Defines the width of the circle (default: 0)\\
+		\texttt{-height: DoubleProperty} & Defines the height of the circle (default: 0)\\
+		\texttt{-arcWidth: DoubleProperty} & Defines the horizontal diameter of the arcs at the corner (default: 0)\\
+		\texttt{-arcHeight: DoubleProperty} & Defines the vertical diameter of the arcs at the corner (default: 0)\\
+		\hline
+		\texttt{+Rectangle()} & Creates a Rectangle\\
+		\texttt{+Rectangle(width: double, height: double)} &\\
+		\texttt{+Rectangle(width: double, height: double, fill: Paint)} &\\
+		\texttt{+Rectangle(x: double, y: double, width: double, height: double)} &\\
+		\hline
+	\end{NiceTabular}
+\end{table}
+
+There are some other shapes such as Ellipse, Polygon, Path, Line, Arc, etc.\\
+
+\textbf{Color class} (\texttt{javafx.scene.paint.Color}): Defines the color (subclass of the Paint class used to fill the shape)\\
+UML Diagram of Color (omitted the getter methods of property values):
+
+\begin{table}[h!]
+	\centering
+	\begin{NiceTabular}{||>{\hangindent=2em}p{8cm}|>{\hangindent=2em}X[l]||}
+		\hline
+		\multicolumn{1}{c}{\bfseries \texttt{javafx.scene.paint.Color}} &\\
+		\hline
+		\texttt{-red: double} & Red value of the Color (between 0.0 and 1.0)\\
+		\texttt{-green: double} & Green value of the Color (between 0.0 and 1.0)\\
+		\texttt{-blue: double} & Blue value of the Color (between 0.0 and 1.0)\\
+		\texttt{-opacity: double} & Opacity of the Color (between 0.0 and 1.0)\\
+		\hline
+		\texttt{+Color(r: double, g: double, b: double, opacity: double)} & Creates a Color with specified red, green, and blue values in the range from 0.0 to 1.0\\
+		\texttt{+color(r: double, g: double, b: double): Color} & Creates a Color with specified red, green, and blue values in the range from 0.0 to 1.0\\
+		\texttt{+color(r: double, g: double, b: double, opacity: double): Color} &\\
+		\texttt{+rgb(r: int, g: int, b: int): Color} & Creates a Color with specified red, green, and blue values in the range from 0 to 255\\
+		\texttt{+rgb(r: int, g: int, b: int, opacity: double): Color} &\\
+		\texttt{+brighter(): Color} & Creates a Color that is a brighter version of this color\\
+		\texttt{+darker(): Color} & Creates a Color that is a darker version of this color\\
+		\hline
+	\end{NiceTabular}
+\end{table}
+\newpage
+
+\textbf{ImageView Class} (\texttt{javafx.scene.image.ImageView}): Displays an image\\
+UML Diagram of ImageView (omitted the getter and setter methods for property values and getter for property itself):
+
+\begin{table}[h!]
+	\centering
+	\begin{NiceTabular}{||>{\hangindent=2em}p{8cm}|>{\hangindent=2em}X[l]||}
+		\hline
+		\multicolumn{1}{c}{\bfseries \texttt{javafx.scene.image.ImageView}} &\\
+		\hline
+		\texttt{-fitHeight: DoubleProperty} & Defines the height of the bounding box which the image is resized to fit\\
+		\texttt{-fitWidth: DoubleProperty} & Defines the width of the bounding box which the image is resized to fit\\
+		\texttt{-x: DoubleProperty} & Defines the x-coordinate of the upper-left corner of the ImageView\\
+		\texttt{-y: DoubleProperty} & Defines the y-coordinate of the upper-left corner of the ImageView\\
+		\texttt{-image: ObjectProperty} & Defines the image to be painted\\
+		\hline
+		\texttt{+ImageView()} & Creates an ImageView\\
+		\texttt{+ImageView(image: Image)} &\\
+		\texttt{+ImageView(filenameOrURL: String)} & Creates an ImageView with image loaded from specified URL\\
+		\hline
+	\end{NiceTabular}
+\end{table}
+
+\textbf{Image Class} (\texttt{javafx.scene.image.Image}): Loads an image on the window\\
+UML Diagram of Image (omitted the getter methods for property values and getter for property itself):
+
+\begin{table}[h!]
+	\centering
+	\begin{NiceTabular}{||>{\hangindent=2em}p{8cm}|>{\hangindent=2em}X[l]||}
+		\hline
+		\multicolumn{1}{c}{\bfseries \texttt{javafx.scene.image.Image}} &\\
+		\hline
+		\texttt{-height: ReadOnlyDoubleProperty} & Image height or 0 if the image loading fails\\
+		\texttt{-width: ReadOnlyDoubleProperty} &  Image width or 0 if the image loading fails\\
+		\texttt{-progress: ReadOnlyDoubleProperty} & Approximate percentage of image's loading completed\\
+		\texttt{-error: ReadOnlyBooleanProperty} & Indicates whether an error was detected while loading an image\\
+		\hline
+		\texttt{+Image(filenameOrURL: String)} & Constructs an Image with content loaded from specified URL\\
+		\hline
+	\end{NiceTabular}
+\end{table}
+
+In addition to Group class, we can also use layout panes to group the nodes together in a specific layout.\\
+\textbf{Pane Class} (\texttt{javafx.scene.layout.Pane}): Base class for layout panes.\\
+There are other types of panes:
+\begin{table}[h]
+	\centering
+	\begin{NiceTabular}{||l|l||}[hvlines]
+		\RowStyle{\bfseries} Class & Description\\
+		\texttt{Pane} & Base class for layout panes\\
+		\texttt{StackPane} & Places the nodes on top of each other in the center of the pane\\
+		\texttt{FlowPane} & Places the nodes row-by-row horizontally or column-by-column vertically\\
+		\texttt{GridPane} & Places the nodes in the cells in a two-dimensional grid\\
+		\texttt{BorderPane} & Places the nodes in the top, right, bottom, left, and center regions\\
+		\texttt{HBox} & Places the nodes in a single row\\
+		\texttt{VBox} & Places the nodes in a single column\\
+	\end{NiceTabular}
+\end{table}
+
+UML Diagram of Pane (only including important items):
+
+\begin{table}[h!]
+	\centering
+	\begin{NiceTabular}{||>{\hangindent=2em}p{8cm}|>{\hangindent=2em}X[l]||}
+		\hline
+		\multicolumn{1}{c}{\bfseries \texttt{javafx.scene.layout.Pane}} &\\
+		\hline
+		\texttt{+Pane()} & Creates a Pane\\
+		\texttt{+Pane(children: Node...)} &\\
+		\texttt{+getChildren(): ObservableList<Node>} & Gets the list of children of this Pane.\\
+		\texttt{+setPadding(value: Insets): void} & Sets the padding\\
+		\hline
+	\end{NiceTabular}
+\end{table}
+
+Similar to Group, we can add nodes by using the \texttt{getChildren()} method.
+\begin{figure}[h!]
+	\begin{verbatim}
+		// Add a node to a pane
+		pane.getChildren().add(node);
+		
+		// Set the x-coordinate of the circle to the center of the pane
+		// If the width of the pane changes, the x-coordinate of the circle will also change
+		circle.centerXProperty().bind(pane.widthProperty().divide(2))
+	\end{verbatim}
+\end{figure}
+\newpage
+
+\textbf{Insets Class} (\texttt{javafx.geometry.Insets}): A set of inside offsets for the four side of a rectangular area. Useful for defining paddings (distance between node and border)\\
+UML Diagram of Insets (omitted getter methods):
+
+\begin{table}[h!]
+	\centering
+	\begin{NiceTabular}{||>{\hangindent=2em}p{8cm}|>{\hangindent=2em}X[l]||}
+		\hline
+		\multicolumn{1}{c}{\bfseries \texttt{javafx.geometry.Insets}} &\\
+		\hline
+		\texttt{+Insets(topRightBottomLeft: double)} & Creates a Insets with same value for all four offsets\\
+		\texttt{+Insets(top: double, right: double, bottom: double, left: double)} & Creates a Insets with four different offsets\\
+		\hline
+	\end{NiceTabular}
+\end{table}
+
+\textbf{FlowPane} (\texttt{javafx.scene.layout.FlowPane}): Places the nodes row-by-row horizontally or column-by-column vertically\\
+UML Diagram of FlowPane (omitted the getter and setter methods for property values and getter for property itself):
+
+\begin{table}[h!]
+	\centering
+	\begin{NiceTabular}{||>{\hangindent=2em}p{8cm}|>{\hangindent=2em}X[l]||}
+		\hline
+		\multicolumn{1}{c}{\bfseries \texttt{javafx.scene.layout.FlowPane}} &\\
+		\hline
+		\texttt{-alignment: ObjectProperty<Pos>} & Overall alignment of the content (default: \texttt{Pos.LEFT})\\
+		\texttt{-orientation: ObjectProperty<Orientation>} & Orientation in this pane (default: Orientation.HORIZONTAL)\\
+		\texttt{-hgap: DoubleProperty} & Horizontal gap between the sub-nodes (default: 0)\\
+		\texttt{-vgap: DoubleProperty} & Vetical gap between the sub-nodes (default: 0)\\
+		\hline
+		\texttt{+FlowPane()} & Creates a FlowPane\\
+		\texttt{+FlowPane(children: Node...)} &\\
+		\texttt{+FlowPane(hgap: double, vgap: double)} &\\
+		\texttt{+FlowPane(hgap: double, vgap: double, children: Node...)} &\\
+		\texttt{+FlowPane(orientation: ObjectProperty<Orientation>)} &\\
+		\texttt{+FlowPane(orientation: ObjectProperty<Orientation>, hgap: double, vgap: double)} &\\
+		\hline
+	\end{NiceTabular}
+\end{table}
+
+\begin{figure}[h!]
+	\begin{verbatim}
+		@Override
+		public void start(Stage primaryStage) {
+		    // Create a flow pane
+		    FlowPane flowPane = new FlowPane(50, 20); // Hgap: 50, Vgap: 20
+		    flowPane.setPadding(new Insets(10));      // Padding: 10
+		    flowPane.getChildren().addAll(
+		        new Label("Hello!"),
+		        new Label("This is Houston."),
+		        new Label("I am reporting an incident.")
+			);
+			
+		    Scene scene = new Scene(flowPane, 300, 100); 
+		    primaryStage.setTitle("Flow Pane");
+		    primaryStage.setScene(scene);
+		    primaryStage.show();
+		}
+	\end{verbatim}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=.4\textwidth]{ISOM3320_L12(6).png}
+\end{figure}
+\newpage
+
+\textbf{GridPane} (\texttt{javafx.scene.layout.GridPane}): Places the nodes in the cells in a two-dimensional grid\\
+UML Diagram of GridPane (omitted the getter and setter methods for property values and getter for property itself):
+
+\begin{table}[h!]
+	\centering
+	\begin{NiceTabular}{||>{\hangindent=2em}p{8cm}|>{\hangindent=2em}X[l]||}
+		\hline
+		\multicolumn{1}{c}{\bfseries \texttt{javafx.scene.layout.GridPane}} &\\
+		\hline
+		\texttt{-alignment: ObjectProperty<Pos>} & Overall alignment of the content (default: \texttt{Pos.LEFT})\\
+		\texttt{-gridLineVisible: BooleanProperty} & Indicates grid line visible or not\\
+		\texttt{-hgap: DoubleProperty} & Horizontal gap between the sub-nodes (default: 0)\\
+		\texttt{-vgap: DoubleProperty} & Vetical gap between the sub-nodes (default: 0)\\
+		\hline
+		\texttt{+GridPane()} & Creates a GridPane\\
+		\texttt{+add(child: Node, columnIndex: int, rowIndex: int): void} & Add a node in specified column and row\\
+		\texttt{+addColumn(columnIndex: int, children: Node...): void} & Add multiple nodes to specific column\\
+		\texttt{+addRow(rowIndex: int, children: Node...): void} & Add multiple nodes to specific row\\
+		\texttt{+getColumnIndex(child: Node): int} & Gets the column index for specific node\\
+		\texttt{+setColumnIndex(child: Node, columnIndex: int): void} & Sets a node to a new column\\
+		\texttt{+getRowIndex(child: Node): int} & Gets the row index for specific node\\
+		\texttt{+setRowIndex(child: Node, rowIndex: int): void} & Sets a node to a new row\\
+		\texttt{+setHalignment(child: Node, value: HPos): void} & Sets the horizontal alignment for the node\\
+		\texttt{+setValignment(child: Node, value: VPos): void} & Sets the vertical alignment for the node\\
+		\hline
+	\end{NiceTabular}
+\end{table}
+
+\begin{figure}[h!]
+	\begin{verbatim}
+		@Override
+		public void start(Stage primaryStage) {
+		    // Create a grid pane
+		    GridPane gridPane = new GridPane(20, 5); // Hgap: 20, Vgap: 5
+		    gridPane.setGridLinesVisible(true);
+		    gridPane.setPadding(new Insets(10));     // Padding: 10
+		    gridPane.add(new Label("Username:"), 0, 0);
+		    gridPane.add(new TextField(), 1, 0);
+		    gridPane.addRow(1, new Label("Password:"), new TextField());
+			
+		    Button submitButton = new Button("Submit");
+		    gridPane.add(submitButton, 1, 2);
+		    GridPane.setHalignment(submitButton, HPos.RIGHT); // This is a static method
+			
+		    Scene scene = new Scene(gridPane, 300, 100); 
+		    primaryStage.setTitle("Grid Pane");
+		    primaryStage.setScene(scene);
+		    primaryStage.show();
+		}
+	\end{verbatim}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=.4\textwidth]{ISOM3320_L12(7).png}
+\end{figure}
+\newpage
+
+\textbf{BorderPane} (\texttt{javafx.scene.layout.BorderPane}): Places the nodes in the top, right, bottom, left, and center regions\\
+UML Diagram of BorderPane (omitted the getter and setter methods for property values and getter for property itself):
+
+\begin{table}[h!]
+	\centering
+	\begin{NiceTabular}{||>{\hangindent=2em}p{8cm}|>{\hangindent=2em}X[l]||}
+		\hline
+		\multicolumn{1}{c}{\bfseries \texttt{javafx.scene.layout.BorderPane}} &\\
+		\hline
+		\texttt{-top: ObjectProperty<Node>} & Node placed in the top region (default: null)\\
+		\texttt{-right: ObjectProperty<Node>} & Node placed in the right region (default: null)\\
+		\texttt{-bottom: ObjectProperty<Node>} & Node placed in the bottom region (default: null)\\
+		\texttt{-left: ObjectProperty<Node>} & Node placed in the left region (default: null)\\
+		\texttt{-center: ObjectProperty<Node>} & Node placed in the center region (default: null)\\
+		\hline
+		\texttt{+BorderPane()} & Creates a BorderPane\\
+		\texttt{+BorderPane(center: Node)} &\\
+		\texttt{+BorderPane(center: Node, top: Node, right: Node, bottom: Node, left: Node)} &\\
+		\texttt{+setAlignment(child: Node, pos: Pos): void} & Sets the alignment for the node (static method)\\
+		\hline
+	\end{NiceTabular}
+\end{table}
+
+\begin{figure}[h!]
+	\begin{verbatim}
+		@Override
+		public void start(Stage primaryStage) {
+		    // Create a border pane
+		    BorderPane borderPane = new BorderPane(20, 5); // Hgap: 20, Vgap: 5
+		    borderPane.setRight(new Label("Right"));
+		    borderPane.setBottom(new Label("Bottom"));
+		    borderPane.setCenter(new Label("Center"));
+			
+		    Scene scene = new Scene(borderPane, 150, 105); 
+		    primaryStage.setTitle("Border Pane");
+		    primaryStage.setScene(scene);
+		    primaryStage.show();
+		}
+	\end{verbatim}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=.2\textwidth]{ISOM3320_L12(8).png}
+\end{figure}
+\newpage
+
+\textbf{HBox} (\texttt{javafx.scene.layout.HBox}): Lays out the children in a single horizontal row.\\
+UML Diagram of HBox (omitted the getter and setter methods for property values and getter for property itself):
+
+\begin{table}[h!]
+	\centering
+	\begin{NiceTabular}{||>{\hangindent=2em}p{8cm}|>{\hangindent=2em}X[l]||}
+		\hline
+		\multicolumn{1}{c}{\bfseries \texttt{javafx.scene.layout.HBox}} &\\
+		\hline
+		\texttt{-alignment: ObjectProperty<Pos>} & Overall alignment of the children (default: \texttt{Pos.TOP\_LEFT})\\
+		\texttt{-fillHeight: BooleanProperty} & Indicates whether resizable children fill the full height of the box (default: true)\\
+		\texttt{-spacing: DoubleProperty} & Horizontal gap between two nodes (default: 0)\\
+		\hline
+		\texttt{+HBox()} & Creates a HBox\\
+		\texttt{+HBox(children: Node...)} &\\
+		\texttt{+HBox(spacing: double)} &\\
+		\texttt{+HBox(spacing: double, children: Node...)} &\\
+		\texttt{+setMargin(node: Node, value: Insets): void} & Sets the margin for the sub-nodes\\
+		\hline
+	\end{NiceTabular}
+\end{table}
+
+\textbf{VBox} (\texttt{javafx.scene.layout.VBox}): Lays out the children in a single vertical column.\\
+UML Diagram of HBox (omitted the getter and setter methods for property values and getter for property itself):
+
+\begin{table}[h!]
+	\centering
+	\begin{NiceTabular}{||>{\hangindent=2em}p{8cm}|>{\hangindent=2em}X[l]||}
+		\hline
+		\multicolumn{1}{c}{\bfseries \texttt{javafx.scene.layout.VBox}} &\\
+		\hline
+		\texttt{-alignment: ObjectProperty<Pos>} & Overall alignment of the children (default: \texttt{Pos.TOP\_LEFT})\\
+		\texttt{-fillWidth: BooleanProperty} & Indicates whether resizable children fill the full width of the box (default: true)\\
+		\texttt{-spacing: DoubleProperty} & Vertical gap between two nodes (default: 0)\\
+		\hline
+		\texttt{+VBox()} & Creates a VBox\\
+		\texttt{+VBox(children: Node...)} &\\
+		\texttt{+VBox(spacing: double)} &\\
+		\texttt{+VBox(spacing: double, children: Node...)} &\\
+		\texttt{+setMargin(node: Node, value: Insets): void} & Sets the margin for the sub-nodes\\
+		\hline
+	\end{NiceTabular}
+\end{table}
+\newpage
+
+\null
+\newpage
+
+\section{Abstract Class}
+\textbf{Abstract method}: Does not have the method body. Declared with the \texttt{abstract} modifier.\\
+Syntax: \texttt{abstract \textit{returnValueType} \textit{methodName}(\textit{parameterList})}
+\begin{itemize}
+	\item If all subclasses need the method with same method body, we can declare it a regular method in the superclass.\\
+	All subclasses inherit it automatically.
+	\item If all subclasses need the method with different method body, we can declare it an abstract method in the superclass.\\
+	All subclasses override it manually.
+\end{itemize}
+\textbf{Abstract class}: The class contains some abstract methods. Declared with the \texttt{abstract} modifier.\\
+The class must be declared as abstract when it includes an abstract method.
+\begin{itemize}
+	\item It is a restricted class that cannot be used to create objects (\texttt{new AbstractClass()} is not allowed)
+	\item It can contain constructors, which is called by the subclasses.
+	\item It does not change the inheritance rule. It can be used as the type of a reference variable.
+	\item Abstract methods cannot be static or private because a static or private method cannot be overridden.
+	\item If a subclass inherits abstract method from superclass but doesn't override it, the subclass needs to be abstract as well.
+\end{itemize}
+\textbf{Interface}: Declared with the \texttt{interface} keyword.\\
+Interface syntax: \texttt{public interface \textit{interfaceName} \{...\}}\\
+Implementing an interface syntax:\\
+\texttt{public class \textit{className} implements \textit{interfaceName} \{...\}}\\
+\texttt{public class \textit{subClassName} extends \textit{superClassName} implements \textit{interfaceName} \{...\}}
+\begin{itemize}
+	\item If an interface has abstract methods, the class implementing it must override all abstract methods inherited.
+	\item A subclass can only have one superclass, but it can implements multiple interfaces, separated by comma.
+	\item Interface acts as a superclass. If a superclass and an interface have the same method, the one in the superclass is chosen.
+	\item Interface cannot hold instance variables and constructors.
+	\item Interface can extends other interfaces, but it cannot implements any interfaces.
+	\item Interfaces with same class variables can be implemented together, which we access by \texttt{\textit{interfaceName}.\textit{dataFieldName}}.
+	\item Interfaces with same static method can be implemented together, which we access by \texttt{\textit{interfaceName}.\textit{methodName}(...)}.
+	\item Interfaces having non-static methods with the same signature and compatible return value types can be implemented together, but we need to override it. It is accessed by \texttt{interfaceName.super.methodName(...)}.\\
+	If the return types are incompatible, the interfaces cannot be implemented together.
+\end{itemize}
+
+\textbf{Comparable Class}: Allows comparisons between two objects. When implementing it, we need to add a class after it.\\
+Syntax: \texttt{\textit{className} implements Comparable <\textit{className}> \{...\}}
+\begin{itemize}
+	\item You needs to override the abstract \texttt{compareTo()} method inside the Comparable class:\\
+	\texttt{public int compareTo(\textit{className} object2) \{...\}}
+	\item In numerical sense:
+	\begin{itemize}
+		\item \texttt{object1 < object2}: Returns negative
+		\item \texttt{object1 = object2}: Returns zero
+		\item \texttt{object1 > object2}: Returns positive
+	\end{itemize}
+	\item This is useful when we use \texttt{Arrays.sort()} for sorting arrays. We can claim that the class is comparable.
+\end{itemize}
+\newpage
+
+\null
+\newpage
+
+\section{Event-driven Programming}
+\textbf{Procedural Programming}: Code is executed in procedural order\\
+\textbf{Event-driven Programming}: Code is executed upon activation of events\\
+\textbf{Event source object}: The object where the event is triggered.\\
+GUI elements usually have a set of event-handler properties named in a way like \texttt{"on"+\textit{eventName}}.\\
+The type of event-handler property is an event-handler class, which defines what to do when a certain event is fired.\\
+JavaFX has a unified handler interface \texttt{EventHandler<\textit{EventType}>} containing an abstract method \texttt{handle(\textit{EventType} e)}.\\
+When an event happens, Java automatically create an event object to store the information about the event. GUI events usually have the similar data flow:
+\begin{enumerate}
+	\item Clicking a button (event source object) fires an action event.
+	\item An event is an object.
+	\item The event handler processes the event.
+\end{enumerate}
+
+There are different event classes describing different events, which the most notable one is shown below:
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=.7\textwidth]{ISOM3320_L14(1).png}
+\end{figure}
+
+We can get the event source object which the Event initially occurred by the \texttt{getSource()} method.\\
+
+Common source objects and event types:
+\begin{table}[h]
+	\centering
+	\begin{NiceTabular}{||X|l|l|l||}[hvlines]
+		\RowStyle{\bfseries} User Action & Source Object & Event Type Fired & Event Registration Method\\
+		Click a button & \texttt{Button} & \Block{5-1}{\texttt{ActionEvent}} & \Block{5-1}{\texttt{setOnAction(EventHandler<ActionEvent>)}}\\
+		Press Enter in a text field & \texttt{TextField} & &\\
+		Check or uncheck & \texttt{RadioButton} & &\\
+		Check or uncheck & \texttt{CheckBox} & &\\
+		Select a new item & \texttt{ComboBox} & &\\
+		Mouse pressed & \Block{7-1}{\texttt{Node}, \texttt{Scene}} & \Block{7-1}{\texttt{MouseEvent}} & \texttt{setOnMousePressed(EventHandler<MouseEvent>)}\\
+		Mouse released & & & \texttt{setOnMouseReleased(EventHandler<MouseEvent>)}\\
+		Mouse clicked & & & \texttt{setOnMouseClicked(EventHandler<MouseEvent>)}\\
+		Mouse entered & & & \texttt{setOnMouseEntered(EventHandler<MouseEvent>)}\\
+		Mouse exited & & & \texttt{setOnMouseExited(EventHandler<MouseEvent>)}\\
+		Mouse moved & & & \texttt{setOnMouseMoved(EventHandler<MouseEvent>)}\\
+		Mouse dragged & & & \texttt{setOnMouseDragged(EventHandler<MouseEvent>)}\\
+		Key pressed & \Block{3-1}{\texttt{Node}, \texttt{Scene}} & \Block{3-1}{\texttt{KeyEvent}} & \texttt{setOnKeyPressed(EventHandler<KeyEvent>)}\\
+		Key released & & & \texttt{setOnKeyReleased(EventHandler<KeyEvent>)}\\
+		Key typed & & & \texttt{setOnKeyTyped(EventHandler<KeyEvent>)}
+	\end{NiceTabular}
+\end{table}
+
+\newpage
+
+Event handler class is designed for a specific node in a specific class to handle event in tailor-made and customized manner.\\
+We define the event handler class as an \textbf{inner class} as a member of the \textbf{outer class} like data fields and methods.
+\begin{itemize}
+	\item Inner class can directly access the data fields and methods defined in the outer class.
+	\item Inner class can be defined as static. Static inner class can be used in other classes.\\
+	Syntax: \texttt{\textit{OuterClassName}.\textit{InnerClassName} \textit{varName} = \textit{OuterClassName}.new \textit{InnerClassName}()}
+	\item Inner class can use visibility modifiers. Non-private inner class can be used in other classes (subjected to visibility).\\
+	Syntax: \texttt{\textit{OuterClassName}.\textit{InnerClassName} \textit{varName} = \textit{OuterClassObjectName}.new \textit{InnerClassName}()}
+	\item Inner class is compiled to \texttt{\textit{OuterClassName}\$\textit{InnerClassName}.class}
+\end{itemize}
+
+\begin{figure}[h]
+	\begin{verbatim}
+		public class OuterClass {
+		    private int num;
+		    public void func() {...}
+		    private class InnerClass { // Allow private because it is a member of outer class
+		        public void infunc() {
+		            num++;
+		            func();
+		        }
+		    }
+		}
+	\end{verbatim}
+\end{figure}
+
+An event-handler class is often written for one node, and thus creating a class formally is not necessary.\\
+\textbf{Anonymous Inner Classes}: Inner class without a name. Combining declaring an inner class and creating an instance.\\
+Syntax:\\
+\texttt{new \texttt{SuperClassName/InterfaceName}() \{\\
+\hspace*{2em}// Implement or override methods\\
+\}}
+\begin{itemize}
+	\item This class is only used at the declaration location. It will create an object at the same time.
+	\item The anonymous inner class still needs to override all abstract methods in the superclass or the interface.
+\end{itemize}
+
+\textbf{Lambda Expression}: Anonymous method\\
+Syntax:\\
+\texttt{(\textit{parameterList}) -> \{\\
+\hspace*{2em}\textit{statements}\\
+\}}
+\begin{itemize}
+	\item In the parameter list, data type for a parameter may be explicitly declared or implicitly inferred by the compiler.
+	\item Parentheses can be omitted if there is only one parameter without an explicit data type.
+\end{itemize}
+
+\textbf{Single Abstract Method (SAM) interface} / \textbf{functional interface}: Interface with exactly one abstract method\\
+\textbf{Function object}: Object that performs a function by invoking single method.\\
+If the interface is a SAM interface, instead of using anonymous inner class, we can directly use lambda expression.\\
+If the inner class have multiple abstract methods, we cannot use lambda expression to simplify.
+
+\begin{figure}[h!]
+	\centering
+	\begin{subfigure}[h]{.49\textwidth}
+		\begin{verbatim}
+			btn.setOnAction(
+			    new EventHandler<ActionEvent>() {
+			        @Override
+			        public void handle(ActionEvent e) {
+			            // Processing event e
+			        }
+			    }
+			)
+		\end{verbatim}
+	\end{subfigure}
+	\begin{subfigure}[h]{.49\textwidth}
+		\begin{verbatim}
+			btn.setOnAction(e -> {
+			    // Processing event e
+			})
+		\end{verbatim}
+	\end{subfigure}
+	\caption{EventHandler interface contains exactly one abstract method}
+\end{figure}
+
+\newpage
+
+\textbf{MouseEvent Class} (\texttt{javafx.scene.input.MouseEvent}): Handle mouse events\\
+UML Diagram of MouseEvent:
+
+\begin{table}[h!]
+	\centering
+	\begin{NiceTabular}{||>{\hangindent=2em}p{7cm}|>{\hangindent=2em}X[l]||}
+		\hline
+		\multicolumn{1}{c}{\bfseries \texttt{javafx.scene.input.MouseEvent}} &\\
+		\hline
+		\texttt{+getButton(): MouseButton} & Indicates which mouse button has been clicked\\
+		\texttt{+getClickCount(): int} & Returns the number of mouse clicks\\
+		\texttt{+getX(): double} & Returns the x-coordinate of the mouse point in the event source node\\
+		\texttt{+getY(): double} & Returns the y-coordinate of the mouse point in the event source node\\
+		\texttt{+getSceneX(): double} & Returns the x-coordinate of the mouse point in the scene\\
+		\texttt{+getSceneY(): double} & Returns the y-coordinate of the mouse point in the scene\\
+		\texttt{+getScreenX(): double} & Returns the x-coordinate of the mouse point in the screen\\
+		\texttt{+getScreenY(): double} & Returns the y-coordinate of the mouse point in the screen\\
+		\texttt{+isAltDown(): boolean} & Returns true if the \texttt{Alt} key is pressed\\
+		\texttt{+isControlDown(): boolean} & Returns true if the \texttt{Control} key is pressed\\
+		\texttt{+isMetaDown(): boolean} & Returns true if the mouse \texttt{Meta} button is pressed\\
+		\texttt{+isShiftDown(): boolean} & Returns true if the \texttt{Shift} key is pressed\\
+		\hline
+	\end{NiceTabular}
+\end{table}
+
+\textbf{KeyEvent Class} (\texttt{javafx.scene.input.KeyEvent}): Enables the use of keys to control and perform actions, or get input from keyboard.
+\begin{itemize}
+	\item When the EventHandler is registered to a node, we need to let the node get a focus by using \texttt{\textit{nodeName}.requestFocus()}.
+\end{itemize}
+\begin{figure}[h!]
+	\begin{verbatim}
+		textField.setFocusTraversable(true); // Make sure the node can accept focus
+		textField.setOnKeyPressed(e -> {
+		    if (event.getCode() == KeyCode.ENTER) {
+		        ...
+		    }
+		})
+		stage.show();
+		textField.requestFocus();
+	\end{verbatim}
+\end{figure}
+UML Diagram of KeyEvent:
+
+\begin{table}[h!]
+	\centering
+	\begin{NiceTabular}{||>{\hangindent=2em}p{7cm}|>{\hangindent=2em}X[l]||}
+		\hline
+		\multicolumn{1}{c}{\bfseries \texttt{javafx.scene.input.KeyEvent}} &\\
+		\hline
+		\texttt{+getCharacter(): String} & Returns the character associated with the key\\
+		\texttt{+getCode(): KeyCode} & Returns the key code associated with the key\\
+		\texttt{+getText(): String} & Returns a string describing the key code\\
+		\texttt{+isAltDown(): boolean} & Returns true if the \texttt{Alt} key is pressed\\
+		\texttt{+isControlDown(): boolean} & Returns true if the \texttt{Control} key is pressed\\
+		\texttt{+isMetaDown(): boolean} & Returns true if the mouse \texttt{Meta} button is pressed\\
+		\texttt{+isShiftDown(): boolean} & Returns true if the \texttt{Shift} key is pressed\\
+		\hline
+	\end{NiceTabular}
+\end{table}
+
+\textbf{KeyCode Constants}: An enum-type object. It represents a group of constants.
+
+\begin{table}[h!]
+	\centering
+	\begin{NiceTabular}{||p{2cm}p{5cm}||p{2cm}p{5cm}||}[hvlines]
+		\RowStyle{\bfseries} Constant & Description & Constant & Description\\
+		\texttt{HOME} & Home key & \texttt{CONTROL} & Control Key\\
+		\texttt{END} & End key & \texttt{SHIFT} & Shift key\\
+		\texttt{PAGE\_UP} & Page Up key & \texttt{BACK\_SPACE} & Backspace key\\
+		\texttt{PAGE\_DOWN} & Page Down key & \texttt{CAPS} & Caps Lock key\\
+		\texttt{UP} & Up-arrow key & \texttt{NUM\_LOCK} & Num Lock key\\
+		\texttt{DOWN} & Down-arrow key & \texttt{ENTER} & Enter Key\\
+		\texttt{LEFT} & Left-arrow key & \texttt{UNDEFINED} & \texttt{keyCode} unknown\\
+		\texttt{RIGHT} & Right-arrow key & \texttt{F1} to \texttt{F12} & Function keys from F1 to F12\\
+		\texttt{ESCAPE} & Esc key & \texttt{0} to \texttt{9} & Number keys from 0 to 9\\
+		\texttt{TAB} & Tab key & \texttt{A} to \texttt{Z} & Letter keys from A to Z
+	\end{NiceTabular}
+\end{table}
+
+\newpage
+
+\texttt{Listener Class}: Handles when the property of a node changes.
+\begin{itemize}
+	\item It implements the \texttt{InvalidationListener} interface, which has one abstract method \texttt{invalidate(Observable ov)}.
+	\item Every binding property has the \texttt{addListener(InvalidationListener listener)} method.
+	\item Objects that add a listener must implement the \texttt{Observable} interface. Every binding property is an Observable object.
+\end{itemize}
+
+
+\end{document}
